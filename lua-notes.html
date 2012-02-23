@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
+<title>Lua 阅读笔记</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="lua">
+<h1 class="title">Lua 阅读笔记</h1>
+
+<p>某天在 reddit 上面看到 LuaJIT 作者推荐的 Lua源码阅读顺序 ：</p>
+<blockquote>
+<ol class="arabic simple">
+<li>lmathlib.c, lstrlib.c: get familiar with the external C API. Don't bother with the pattern matcher though. Just the easy functions.</li>
+<li>lapi.c: Check how the API is implemented internally. Only skim this to get a feeling for the code. Cross-reference to lua.h and luaconf.h as needed.</li>
+<li>lobject.h: tagged values and object representation. skim through this first. you'll want to keep a window with this file open all the time.</li>
+<li>lstate.h: state objects. ditto.</li>
+<li>lopcodes.h: bytecode instruction format and opcode definitions. easy.</li>
+<li>lvm.c: scroll down to luaV_execute, the main interpreter loop. see how all of the instructions are implemented. skip the details for now. reread later.</li>
+<li>ldo.c: calls, stacks, exceptions, coroutines. tough read.</li>
+<li>lstring.c: string interning. cute, huh?</li>
+<li>ltable.c: hash tables and arrays. tricky code.</li>
+<li>ltm.c: metamethod handling, reread all of lvm.c now.</li>
+<li>You may want to reread lapi.c now.</li>
+<li>ldebug.c: surprise waiting for you. abstract interpretation is used to find object names for tracebacks. does bytecode verification, too.</li>
+<li>lparser.c, lcode.c: recursive descent parser, targetting a register-based VM. start from chunk() and work your way through. read the expression parser and the code generator parts last.</li>
+<li>lgc.c: incremental garbage collector. take your time.</li>
+<li>Read all the other files as you see references to them. Don't let your stack get too deep though.</li>
+</ol>
+</blockquote>
+<p>感觉很有道理，所以……就按他说的来吧~</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p>唔，插一句…… GNU Global 真是神器！</p>
+<p class="last">再插一句，其实他漏掉了第零步：Lua 文档</p>
+</div>
+<div class="section" id="lapi-c">
+<h1>lapi.c</h1>
+</div>
+<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="lua-notes.rst">View document source</a>.
+
+</div>
+</body>
+</html>

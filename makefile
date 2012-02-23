@@ -8,6 +8,6 @@ EXTRA=-s --input-encoding=cp936 --output-encoding=utf-8
 
 all: $(HTMLS)
 
-%.html: %.rst
+%.html: %.rst $(TEMPLATE)
 	rst2html.py $< --stylesheet=$(STYLE) --link-stylesheet --template=$(TEMPLATE) $(EXTRA) > $@
 

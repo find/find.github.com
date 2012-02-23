@@ -1,14 +1,15 @@
 body { font-family: Verdana, '微软雅黑', sans-serif; font-size: 18px; line-height: 1.5em; color: #1f0909; text-align: left; background-color: #ffffff; width: 36em; margin: 2em auto; }
+.document > h1 { text-align:center; border-bottom: 2px solid #c5c5c5; }
+.document > h1:before { content:none }
 a { color: #065588; }
-a:visited { color: #1f0909; }
+a:visited { color: #1f0909; text-decoration: none }
 @media print { body.footnote_links__on_print a, body.footnote_links__on_print a:hover { color: #1f0909 !important; text-decoration: none !important; } }
 body.footnote_links__always a, body.footnote_links__always a:hover { color: #1f0909 !important; text-decoration: none !important; }
-img { border-color: #1f0909; }
+img { border-color: #1f0909; margin-left: auto; margin-right: auto; display: block; }
 a img { border-color: #065588; }
 a:visited img { border-color: #1f0909; }
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a
 a h1, a h2, a h3, a h4, a h5, a h6 { color: #1f0909; text-decoration: none; }
-hr { border-color: #1f0909; }
 #rtl_box { background-color: #1f0909; color: #ffffff; }
 #rtl_box a { color: #ffffff; }
 html.rtl #body  { text-align: justify !important; }
@@ -17,7 +18,7 @@ html.rtl h1, html.rtl h2, html.rtl h3, html.rtl h4, html.rtl h5, html.rtl h6 { t
 blockquote { border-color: #bababa; color: #656565; font-style: italic; }
 thead { background-color: #dadada; }
 tr:nth-child(even) { background: #e8e7e7; }
-hr { border-color: #c5c5c5; }
+hr { border-color: #c5c5c5; border-style:solid; border-bottom:none }
 h1,  h2,  h3,  h4,  h5,  h6 { font-family: 'Helvetica', 'Arial', '微软雅黑', sans-serif; font-weight: bold; margin: 2em 0 1em 0; line-height: 1.5em; }
 h1:before,  h2:before,  h3:before,  h4:before,  h5:before,  h6:before { content:"§ "; }
 p,  div,  li { font-family: 'Segoe UI', 'Calibri', 'Dejavu Sans', 'Verdana', '微软雅黑', sans-serif; }
@@ -30,6 +31,9 @@ caption, th, td {text-align:left;font-weight:normal;float:none !important;}
 table, th, td {vertical-align:middle;}
 footer { margin-top: 100px; }
 .footer, footer { font-size: x-small; text-align: center; }
+
+.admonition-title { display:none; }
+.note { font-style:italic; font-size:small; margin: 0 0 0 2em; }
 
 /* autumn theme */
 .highlight pre .hll { background-color: #ffffcc }

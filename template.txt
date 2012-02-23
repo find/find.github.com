@@ -5,5 +5,5 @@
 %(body_pre_docinfo)s
 %(docinfo)s
 %(body)s
-<footer>Copyright &copy; If.</footer>
+<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
 %(body_suffix)s
