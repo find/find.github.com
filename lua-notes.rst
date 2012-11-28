@@ -1,7 +1,10 @@
-============
-Lua 阅读笔记
-============
+=================
+Lua 源码阅读笔记
+=================
 
+.. contents:: 目录
+
+---------------
 
 某天在 reddit 上面看到 LuaJIT 作者推荐的 Lua源码阅读顺序 ：
 
@@ -31,5 +34,200 @@ Lua 阅读笔记
 
 lapi.c
 =======
+
+在 `lapi.c` 中，最重要的函数可以说是 ``index2addr`` 了吧：
+
+.. _index2addr:
+
+**index2addr** :
+
+.. code-block:: c
+
+    static TValue *index2addr (lua_State *L, int idx) {
+      CallInfo *ci = L->ci;
+      if (idx > 0) {
+        TValue *o = ci->func + idx;
+        api_check(L, idx <= ci->top - (ci->func + 1), "unacceptable index");
+        if (o >= L->top) return NONVALIDVALUE;
+        else return o;
+      }
+      else if (idx > LUA_REGISTRYINDEX) {
+        api_check(L, idx != 0 && -idx <= L->top - (ci->func + 1), "invalid index");
+        return L->top + idx;
+      }
+      else if (idx == LUA_REGISTRYINDEX)
+        return &G(L)->l_registry;
+      else {  /* upvalues */
+        idx = LUA_REGISTRYINDEX - idx;
+        api_check(L, idx <= MAXUPVAL + 1, "upvalue index too large");
+        if (ttislcf(ci->func))  /* light C function? */
+          return NONVALIDVALUE;  /* it has no upvalues */
+        else {
+          CClosure *func = clCvalue(ci->func);
+          return (idx <= func->nupvalues) ? &func->upvalue[idx-1] : NONVALIDVALUE;
+        }
+      }
+    }
+
+几乎所有其他的函数都是建立在它的功能之上的 —— 回忆 Lua 文档，
+很多的 Lua API 函数都会接受一个 index 参数，用来指定参数在栈上\
+的位置，比如 ``lua_settop``, ``lua_remove``, ``lua_insert``, 
+``lua_replace`` 等等，而这个 `index2addr`_ 函数的作用就是通过\
+给定的 index 参数取出对应的 TValue_ 类型的对象指针
+
+关于 Registry 的应用可以回忆 `Lua 文档上对于 Registry 的介绍`__ 。
+  
+.. __: http://www.lua.org/manual/5.2/manual.html#4.5
+
+而结合 `Pseudo Index`_ 可以看出该函数的逻辑如下：
+
+===================================== ============================================
+当 index > 0 时                       在当前 function 的栈空间找对应的 TValue
+当 LUA_REGISTRYINDEX < index <= 0 时  在当前 function 的栈空间逆向找对应的 TValue
+当 index == LUA_REGISTRYINDEX 时      返回 registry
+否则( index < LUA_REGISTRYINDEX 时 )  查找 upvalue
+===================================== ============================================
+
+lobject.h
+==========
+
+.. _TValue:
+
+**TValue** :
+
+.. code-block:: c
+
+    typedef struct lua_TValue TValue;
+
+    struct lua_TValue {
+      TValuefields;
+    };
+
+    #define TValuefields	Value value_; int tt_
+
+.. note::
+
+   #define LUA_NANTRICK 之后， TValuefields 会有不同的定义，不过基本原理不便，此处暂且假定
+   **没有使用 LUA_NANTRICK**
+
+`value_` 项用于保存数据， `tt_` 项用于保存数据类型；
+可选的数据类型有：
+
+.. _`数据类型`:
+
+.. code-block:: c
+
+    #define LUA_TNONE          (-1)
+
+    #define LUA_TNIL           0 
+    #define LUA_TBOOLEAN       1 
+    #define LUA_TLIGHTUSERDATA 2 
+    #define LUA_TNUMBER        3 
+    #define LUA_TSTRING        4 
+    #define LUA_TTABLE         5 
+    #define LUA_TFUNCTION      6 
+    #define LUA_TUSERDATA      7 
+    #define LUA_TTHREAD        8 
+
+BTW 其中 function 类型又有三种区分：
+
+* lua function
+* light C function
+* C function
+
+其中 light C function 与 C function 的区别在于前者只是一个 C 函数指针，
+而后者可以有自己的 upvalue，即可以构成一个 closure。
+
+string 类型有两种区分：
+
+* short string
+* long string
+
+这两者的区别则在于前者会计算 hash 值，保证相同的短字符串全局唯一；
+而为了避免 `hash dos`_ ，长字符串并不计算 hash 值
+
+.. _`hash dos`: http://lua-users.org/wiki/HashDos
+
+.. code-block:: c
+
+    /* Variant tags for functions */
+    #define LUA_TLCL	(LUA_TFUNCTION | (0 << 4))  /* Lua closure */
+    #define LUA_TLCF	(LUA_TFUNCTION | (1 << 4))  /* light C function */
+    #define LUA_TCCL	(LUA_TFUNCTION | (2 << 4))  /* C closure */
+
+    /*
+    ** LUA_TSTRING variants */
+    #define LUA_TSHRSTR	(LUA_TSTRING | (0 << 4))  /* short strings */
+    #define LUA_TLNGSTR	(LUA_TSTRING | (1 << 4))  /* long strings */
+
+.. _Value:
+
+**Value** :
+
+.. code-block:: c
+
+    union Value {
+      GCObject *gc;    /* collectable objects */
+      void *p;         /* light userdata */
+      int b;           /* booleans */
+      lua_CFunction f; /* light C functions */
+      numfield         /* numbers */
+    };
+
+    typedef union GCObject GCObject;
+
+可以看出除了按值引用的数据（ light userdata, boolean, light C function, number ），
+其他（ string, table, function, userdata, thread ）都是以 GCObject_ 指针形式保存，
+以便用于垃圾回收
+
+
+.. _`Pseudo Index`:
+
+**Pseudo Index** :
+
+.. code-block:: c
+
+    #define LUAI_FIRSTPSEUDOIDX	(-LUAI_MAXSTACK - 1000)
+
+    #define LUA_REGISTRYINDEX	LUAI_FIRSTPSEUDOIDX
+    #define lua_upvalueindex(i)	(LUA_REGISTRYINDEX - (i))
+
+
+**CommonHeader** :
+
+.. code-block:: c
+
+    /*
+    ** Common Header for all collectable objects (in macro form, to be
+    ** included in other objects)
+    */
+    #define CommonHeader	GCObject *next; lu_byte tt; lu_byte marked
+
+
+CommonHeader 是 Lua 用于垃圾回收的结构，其中 GCObject_ * next 指向下一个可回收对象，
+构成了一个单向链表，tt `依旧是`__ 用于保存数据类型，而 marked 则是用于标记垃圾回收的状态
+
+.. __: TValue_
+
+
+lstate.h
+=========
+
+.. _GCObject:
+
+**GCObject** :
+
+.. code-block:: c
+
+    union GCObject {
+      GCheader gch;  /* common header */
+      union TString ts;
+      union Udata u;
+      union Closure cl;
+      struct Table h;
+      struct Proto p;
+      struct UpVal uv;
+      struct lua_State th;  /* thread */
+    };
 
 
