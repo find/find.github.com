@@ -314,8 +314,316 @@ Project Euler 题解第一页
 
     println( row[21] )
 
+16
+---
 
-// 困了，明天继续
+求 2^1000 的每位数字的和
+
+.. code:: julia
+
+    println(reduce((a,c)->a+(c-'0'), 0, string(BigInt(2)^1000)))
+
+17
+---
+
+求用英语写出 1 .. 1000 每一个数字，一共有多少个字母
+
+.. code:: julia
+
+    dic = [
+    1=>"one",
+    2=>"two",
+    3=>"three",
+    4=>"four",
+    5=>"five",
+    6=>"six",
+    7=>"seven",
+    8=>"eight",
+    9=>"nine",
+    10=>"ten",
+    11=>"eleven",
+    12=>"twelve",
+    13=>"thirteen",
+    14=>"fourteen",
+    15=>"fifteen",
+    16=>"sixteen",
+    17=>"seventeen",
+    18=>"eighteen",
+    19=>"nineteen",
+    20=>"twenty",
+    30=>"thirty",
+    40=>"forty",
+    50=>"fifty",
+    60=>"sixty",
+    70=>"seventy",
+    80=>"eighty",
+    90=>"ninety",
+    100=>"hundred",
+    1000=>"thousand",
+    ]
+
+    +(s1::String, s2::String) = "$s1$s2"
+
+    function toeng(n)
+        assert(n>0 && n<=1000)
+        if n<=20
+            return dic[n]
+        end
+        if n == 1000
+            return "one thousand"
+        end
+
+        a = int(floor(n/100))
+        b = int(floor((n-a*100)/10))
+        c = int(floor((n-a*100-b*10)))
+
+        en = ""
+        if a > 0
+            en = dic[a] + " " + dic[100]
+            if b > 0 || c > 0
+                en = en + " and "
+            end
+        end
+        
+        if b == 1 || b == 0 && c > 0
+            en = en + dic[b*10+c]
+        elseif b > 1
+            en = en + dic[b*10]
+            if c > 0
+                en = en + "-" + dic[c]
+            end
+        elseif c>0
+            en = en + dic[c]
+        end
+        return en
+    end
+
+    # println(toeng(342))
+    n = 0
+    for i in 1:1000
+        n = reduce( (n, c)->if c>='a' && c<='z' n+1 else n end, n, toeng(i) )
+    end
+    println(n)
+
+18
+---
+
+求从数字三角形顶部走到底，路过的每一位数字相加所能得到的最大值
+
+从底部向上递推就好了
+
+.. code:: julia
+
+    m = [
+    75 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    95 64 00 00 00 00 00 00 00 00 00 00 00 00 00
+    17 47 82 00 00 00 00 00 00 00 00 00 00 00 00
+    18 35 87 10 00 00 00 00 00 00 00 00 00 00 00
+    20 04 82 47 65 00 00 00 00 00 00 00 00 00 00
+    19 01 23 75 03 34 00 00 00 00 00 00 00 00 00
+    88 02 77 73 07 63 67 00 00 00 00 00 00 00 00
+    99 65 04 28 06 16 70 92 00 00 00 00 00 00 00
+    41 41 26 56 83 40 80 70 33 00 00 00 00 00 00
+    41 48 72 33 47 32 37 16 94 29 00 00 00 00 00
+    53 71 44 65 25 43 91 52 97 51 14 00 00 00 00
+    70 11 33 28 77 73 17 78 39 68 17 57 00 00 00
+    91 71 52 38 17 14 91 43 58 50 27 29 48 00 00
+    63 66 04 68 89 53 67 30 73 16 69 87 40 31 00 
+    04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
+    ]
+
+    for i in 14:-1:1
+        for j in 1:i
+            m[i,j] += max(m[i+1, j], m[i+1, j+1])
+        end
+    end
+
+    println(m[1, 1])
+
+19
+---
+
+求 1901年1月1日 到 2000年12月30日 之间有几个星期天是在月初的
+
+首先呢，Pkg.add("Datetime") // 这真的是作弊好吗！
+
+.. code:: julia
+
+    using Datetime
+    println(length(filter(d->dayofweek(d)==0, date(1901,1,1):months(1):date(2000,12,31))))
+
+20
+---
+
+求 200! 的每位数字之和
+
+.. code:: julia
+
+    println(sum(map(c->c-'0', collect(string(factorial(BigInt(100)))))))
+
+21
+---
+
+求 1000 以下满足 ``a`` 的所有因数加起来等于 ``b`` 且 ``b`` 的所有因数加起来等于 ``a`` 的 ``a``\ 、\ ``b`` 之和
+
+.. code:: julia
+
+    function factors(x)
+        f = [1]
+        for (p,n) in factor(x)
+            f = reduce( vcat, f,
+                [f * p^i for i in 1:n] )
+        end
+        return f
+    end
+
+    d(n) = sum(factors(n)) - n
+
+    s = 0
+    for i in 1:9999
+        v = d(i)
+        if 0<v<=9999 && i!=v && i==d(v)
+            s += i # v will be calculated later
+        end
+    end
+
+    println(s)
+
+22
+---
+
+求一个名字列表里面(每个名字的(字母序之和)与(它在列表中的字典序)的积)的和
+
+.. code:: julia
+
+    names=[ "MARY", ... ,"ALONSO"]
+    sort!(names)
+
+    av(str) = sum(map(c->c-'A'+1, collect(str)))
+
+    assert(names[938]=="COLIN")
+
+    s = BigInt(0)
+    for i in 1:length(names)
+        s += i * av(names[i])
+    end
+    println(s)
+
+23
+---
+
+求所有(不能用两个(因子之和大于本身的数)之和表示的数字)的和
+
+.. code:: julia
+
+    function factors(x)
+        f = [1]
+        for (p,n) in factor(x)
+            f = reduce( vcat, f,
+                [f * p^i for i in 1:n] )
+        end
+        return f
+    end
+
+    d(n) = sum(factors(n)) - n
+
+    isabundant = [false for i in 1:28123]
+    for i in 1:28123
+        if d(i)>i
+            isabundant[i] = true
+        end
+    end
+
+    s = 1
+    for i=2:28123
+        b = false
+        for j=1:int(ceil(i/2))
+            if isabundant[j] && isabundant[i-j]
+                b = true
+                break
+            end
+        end
+        if !b
+            s += i
+        end
+    end
+    println(s)
+
+24
+---
+
+求 0 .. 9 的排列组合中字典序的第 1000000 位是什么
+
+.. code:: julia
+
+    ps = [p for p in permutations([0:9])]
+    println(ps[1000000])
+
+25
+---
+
+求斐波拉切数列从哪一位开始大于 1000 位数字
+
+.. code:: julia
+
+    a = BigInt(1)
+    b = BigInt(1)
+    c = BigInt(0)
+    i = 3
+
+    T = BigInt(10)^999
+    while true
+        c = a+b
+        if c>=T
+            break
+        end
+        a = b
+        b = c
+        i += 1
+    end
+
+    println(i)
+
+26
+---
+
+求 d=[2..1000) 的区间内使 1/d 的循环节最长的 d
+
+.. code:: julia
+
+    function recurringCycleLen(n) # length of recurrying cycle of 1/n
+        R = Int[] # all occured reminders
+        r = 1
+        c = 0;
+        len = 0;
+        while r>0 && !in(r,R)
+            c = int(floor(r/n))
+            if n<r
+                push!(R, r)
+                r -= c * n
+            end
+            r *= 10
+        end
+        if r==0
+            return 0
+        end
+        return length(R)-findfirst(R,r)+1
+    end
+
+    maxn = 0
+    maxl = 0
+    for i in 1:1000
+        l = recurringCycleLen(i)
+        if l>maxl
+            maxn = i
+            maxl = l
+        end
+    end
+    println(maxn)
+
+----
+
+明天继续
 
 .. _Julia: http://julialang.org/
 .. _`Project Euler`: http://projecteuler.net
