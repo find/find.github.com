@@ -32,6 +32,43 @@ Lua 源码阅读笔记
 
     再插一句，其实他漏掉了第零步：Lua 文档
 
+Be Prepared
+===========
+
+* 去看看 `Lua Manual`_
+* 去 `Lua Wiki`_ 看看 Lua 代码的组织方式和代码风格
+* 打开 `Lua Source`_ 对着看
+
+Lua 代码风格：
+
+::
+
+    luaA_ - lapi.c
+    luaB_ - lbaselib.c
+    luaC_ - lgc.c
+    luaD_ - ldo.c
+    luaE_ - lstate.c
+    luaF_ - lfunc.c
+    luaG_ - ldebug.c
+    luaH_ - ltable.c
+    luaI_ - lauxlib.c
+    luaK_ - lcode.c
+    luaL_ - lauxlib.c/h, linit.c (public functions)
+    luaM_ - lmem.c
+    luaO_ - lobject.c
+    luaP_ - lopcodes.c
+    luaS_ - lstring.c
+    luaT_ - ltm.c
+    luaU_ - lundump.c
+    luaV_ - lvm.c
+    luaX_ - llex.c
+    luaY_ - lparser.c
+    luaZ_ - lzio.c
+    lua_  - lapi.c/h + luaconf.h, debug.c
+    luai_ - luaconf.h
+    luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
+                                      loadlib.c, loslib.c, lstrlib.c, ltablib.c)
+
 lapi.c
 =======
 
@@ -230,4 +267,51 @@ lstate.h
       struct lua_State th;  /* thread */
     };
 
+.. _CallInfo:
 
+**CallInfo** :
+
+.. code-block:: c
+
+    /*
+    ** information about a call
+    */
+    typedef struct CallInfo {
+      StkId func;  /* function index in the stack */
+      StkId	top;  /* top for this function */
+      struct CallInfo *previous, *next;  /* dynamic call link */
+      short nresults;  /* expected number of results from this function */
+      lu_byte callstatus;
+      ptrdiff_t extra;
+      union {
+        struct {  /* only for Lua functions */
+          StkId base;  /* base for this function */
+          const Instruction *savedpc;
+        } l;
+        struct {  /* only for C functions */
+          int ctx;  /* context info. in case of yields */
+          lua_CFunction k;  /* continuation in case of yields */
+          ptrdiff_t old_errfunc;
+          lu_byte old_allowhook;
+          lu_byte status;
+        } c;
+      } u;
+    } CallInfo;
+
+    /*
+    ** Bits in CallInfo status
+    */
+    #define CIST_LUA	(1<<0)	/* call is running a Lua function */
+    #define CIST_HOOKED	(1<<1)	/* call is running a debug hook */
+    #define CIST_REENTRY	(1<<2)	/* call is running on same invocation of
+                                       luaV_execute of previous call */
+    #define CIST_YIELDED	(1<<3)	/* call reentered after suspension */
+    #define CIST_YPCALL	(1<<4)	/* call is a yieldable protected call */
+    #define CIST_STAT	(1<<5)	/* call has an error status (pcall) */
+    #define CIST_TAIL	(1<<6)	/* call was tail called */
+    #define CIST_HOOKYIELD	(1<<7)	/* last hook called yielded */
+
+
+.. _`Lua Manual`: http://www.lua.org/manual/5.2/manual.html
+.. _`Lua Wiki`: http://lua-users.org/wiki/LuaSource
+.. _`Lua Source`: http://www.lua.org/source/5.2/
