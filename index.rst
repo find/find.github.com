@@ -5,9 +5,12 @@ Finding My Answers
 Coding
 ============
 
+* `Project Euler Ìâ½â I`__
 * `Lua ÔÄ¶Á±Ê¼Ç`__
 
+.. __: project-euler-1.html
 .. __: lua-notes.html
+
 
 
 

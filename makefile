@@ -2,7 +2,7 @@ RSTS=$(wildcard *.rst)
 HTMLS=${RSTS:.rst=.html}
 STYLE=style.css
 TEMPLATE=template.txt
-EXTRA=-s --input-encoding=cp936 --output-encoding=utf-8
+EXTRA=-s --input-encoding=cp936 --output-encoding=utf-8 --syntax-highlight=short
 
 .SUFFIXES: .html .rst
 

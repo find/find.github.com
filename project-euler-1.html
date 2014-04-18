@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>Project Euler 题解第一页</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="project-euler">
+<h1 class="title">Project Euler 题解第一页</h1>
+
+<p>用 <a class="reference external" href="http://julialang.org/">Julia</a> 做 <a class="reference external" href="http://projecteuler.net">Project Euler</a> 上的题目简直比作弊还简单 ...</p>
+<div class="section" id="id1">
+<h1>1</h1>
+<p>找出 1000 以下 3 或 5 的倍数的和</p>
+<p>不用讲解 - -</p>
+<pre class="code julia literal-block">
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">i</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">999</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id2">
+<h1>2</h1>
+<p>斐波拉切数列的偶数项和</p>
+<p>还是不用讲解 - -</p>
+<pre class="code julia literal-block">
+<span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">sum</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">while</span> <span class="n">true</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">&gt;</span><span class="mi">4000000</span> <span class="n">then</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">then</span>
+        <span class="n">sum</span> <span class="o">=</span> <span class="n">sum</span> <span class="o">+</span> <span class="n">c</span>
+    <span class="k">end</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">b</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">c</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id3">
+<h1>3</h1>
+<p>600851475143 的最大质数因子</p>
+<p>对于 julia 这么一种 IMBA 的语言 …… 还是不用讲解</p>
+<pre class="code julia literal-block">
+<span class="n">v</span> <span class="o">=</span> <span class="mi">600851475143</span>
+<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">([</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="k">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">v</span><span class="p">)]))</span>
+</pre>
+</div>
+<div class="section" id="id4">
+<h1>4</h1>
+<p>找出三位数相乘组成的最大回文数</p>
+<p>依然不用讲解</p>
+<pre class="code julia literal-block">
+<span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span>
+    <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span>
+        <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span>
+        <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span>
+    <span class="k">end</span>
+<span class="n">isPalindrome</span><span class="p">(</span><span class="n">i</span><span class="p">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">isPalindrome</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="mi">100</span><span class="p">:</span><span class="mi">999</span><span class="p">,</span> <span class="n">b</span> <span class="k">in</span> <span class="mi">100</span><span class="p">:</span><span class="mi">999</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id5">
+<h1>5</h1>
+<p>1 .. 20 的最小公倍数</p>
+<pre class="code julia literal-block">
+<span class="n">println</span><span class="p">(</span><span class="n">lcm</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">...</span><span class="p">))</span>
+</pre>
+</div>
+<div class="section" id="id6">
+<h1>6</h1>
+<p>1 .. 100 和的平方与平方和的差</p>
+<pre class="code julia literal-block">
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">100</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id7">
+<h1>7</h1>
+<p>第 10001 个质数是什么呢</p>
+<pre class="code julia literal-block">
+<span class="n">println</span><span class="p">(</span><span class="n">primes</span><span class="p">(</span><span class="mi">500000</span><span class="p">)[</span><span class="mi">10001</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="id8">
+<h1>8</h1>
+<p>在那一串数字中找到最大的五个连续的数字的积 ……</p>
+<pre class="code julia literal-block">
+<span class="n">s</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span>
+<span class="s">&quot;
+73167176531330624919225119674426574742355349194934
+96983520312774506326239578318016984801869478851843
+85861560789112949495459501737958331952853208805511
+12540698747158523863050715693290963295227443043557
+66896648950445244523161731856403098711121722383113
+62229893423380308135336276614282806444486645238749
+30358907296290491560440772390713810515859307960866
+70172427121883998797908792274921901699720888093776
+65727333001053367881220235421809751254540594752243
+52584907711670556013604839586446706324415722155397
+53697817977846174064955149290862569321978468622482
+83972241375657056057490261407972968652414535100474
+82166370484403199890008895243450658541227588666881
+16427171479924442928230863465674813919123162824586
+17866458359124566529476545682848912883142607690042
+24219022671055626321111109370544217506941658960408
+07198403850962455444362981230987879927244284909188
+84580156166097919133875499200524063689912560717606
+05886116467109405077541002256983155200055935729725
+71636269561882670428252483600823257530420752963450
+&quot;</span>
+<span class="p">,</span> <span class="n">r</span><span class="s">&quot;\s&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">5</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="n">reduce</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id9">
+<h1>9</h1>
+<p>找到满足 a^2 + b^2 == c^2 且 a + b + c == 1000 的 a, b, c</p>
+<pre class="code julia literal-block">
+<span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="o">&gt;</span> <span class="mi">1000</span>
+            <span class="k">continue</span>
+        <span class="k">end</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="n">b</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1000</span>
+                <span class="k">break</span>
+            <span class="k">end</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">b</span><span class="o">^</span><span class="mi">2</span> <span class="o">==</span> <span class="n">c</span><span class="o">^</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1000</span>
+                <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="s">a * </span><span class="si">$</span><span class="s">b * </span><span class="si">$</span><span class="s">c = </span><span class="si">$</span><span class="s">(a*b*c)&quot;</span><span class="p">)</span>
+                <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">end</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id10">
+<h1>10</h1>
+<p>求 2000000 以下的质数的和</p>
+<pre class="code julia literal-block">
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">primes</span><span class="p">(</span><span class="mi">2000000</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+</pre>
+</div>
+<div class="section" id="id11">
+<h1>11</h1>
+<p>求一个矩阵中沿某一方向连续的四个数的最大乘积</p>
+<pre class="code julia literal-block">
+<span class="n">m</span> <span class="o">=</span> <span class="p">[</span>
+<span class="mi">08</span> <span class="mi">02</span> <span class="mi">22</span> <span class="mi">97</span> <span class="mi">38</span> <span class="mi">15</span> <span class="mi">00</span> <span class="mi">40</span> <span class="mi">00</span> <span class="mi">75</span> <span class="mi">04</span> <span class="mi">05</span> <span class="mi">07</span> <span class="mi">78</span> <span class="mi">52</span> <span class="mi">12</span> <span class="mi">50</span> <span class="mi">77</span> <span class="mi">91</span> <span class="mi">08</span>
+<span class="mi">49</span> <span class="mi">49</span> <span class="mi">99</span> <span class="mi">40</span> <span class="mi">17</span> <span class="mi">81</span> <span class="mi">18</span> <span class="mi">57</span> <span class="mi">60</span> <span class="mi">87</span> <span class="mi">17</span> <span class="mi">40</span> <span class="mi">98</span> <span class="mi">43</span> <span class="mi">69</span> <span class="mi">48</span> <span class="mi">04</span> <span class="mi">56</span> <span class="mi">62</span> <span class="mi">00</span>
+<span class="mi">81</span> <span class="mi">49</span> <span class="mi">31</span> <span class="mi">73</span> <span class="mi">55</span> <span class="mi">79</span> <span class="mi">14</span> <span class="mi">29</span> <span class="mi">93</span> <span class="mi">71</span> <span class="mi">40</span> <span class="mi">67</span> <span class="mi">53</span> <span class="mi">88</span> <span class="mi">30</span> <span class="mi">03</span> <span class="mi">49</span> <span class="mi">13</span> <span class="mi">36</span> <span class="mi">65</span>
+<span class="mi">52</span> <span class="mi">70</span> <span class="mi">95</span> <span class="mi">23</span> <span class="mi">04</span> <span class="mi">60</span> <span class="mi">11</span> <span class="mi">42</span> <span class="mi">69</span> <span class="mi">24</span> <span class="mi">68</span> <span class="mi">56</span> <span class="mi">01</span> <span class="mi">32</span> <span class="mi">56</span> <span class="mi">71</span> <span class="mi">37</span> <span class="mi">02</span> <span class="mi">36</span> <span class="mi">91</span>
+<span class="mi">22</span> <span class="mi">31</span> <span class="mi">16</span> <span class="mi">71</span> <span class="mi">51</span> <span class="mi">67</span> <span class="mi">63</span> <span class="mi">89</span> <span class="mi">41</span> <span class="mi">92</span> <span class="mi">36</span> <span class="mi">54</span> <span class="mi">22</span> <span class="mi">40</span> <span class="mi">40</span> <span class="mi">28</span> <span class="mi">66</span> <span class="mi">33</span> <span class="mi">13</span> <span class="mi">80</span>
+<span class="mi">24</span> <span class="mi">47</span> <span class="mi">32</span> <span class="mi">60</span> <span class="mi">99</span> <span class="mi">03</span> <span class="mi">45</span> <span class="mi">02</span> <span class="mi">44</span> <span class="mi">75</span> <span class="mi">33</span> <span class="mi">53</span> <span class="mi">78</span> <span class="mi">36</span> <span class="mi">84</span> <span class="mi">20</span> <span class="mi">35</span> <span class="mi">17</span> <span class="mi">12</span> <span class="mi">50</span>
+<span class="mi">32</span> <span class="mi">98</span> <span class="mi">81</span> <span class="mi">28</span> <span class="mi">64</span> <span class="mi">23</span> <span class="mi">67</span> <span class="mi">10</span> <span class="mi">26</span> <span class="mi">38</span> <span class="mi">40</span> <span class="mi">67</span> <span class="mi">59</span> <span class="mi">54</span> <span class="mi">70</span> <span class="mi">66</span> <span class="mi">18</span> <span class="mi">38</span> <span class="mi">64</span> <span class="mi">70</span>
+<span class="mi">67</span> <span class="mi">26</span> <span class="mi">20</span> <span class="mi">68</span> <span class="mi">02</span> <span class="mi">62</span> <span class="mi">12</span> <span class="mi">20</span> <span class="mi">95</span> <span class="mi">63</span> <span class="mi">94</span> <span class="mi">39</span> <span class="mi">63</span> <span class="mi">08</span> <span class="mi">40</span> <span class="mi">91</span> <span class="mi">66</span> <span class="mi">49</span> <span class="mi">94</span> <span class="mi">21</span>
+<span class="mi">24</span> <span class="mi">55</span> <span class="mi">58</span> <span class="mi">05</span> <span class="mi">66</span> <span class="mi">73</span> <span class="mi">99</span> <span class="mi">26</span> <span class="mi">97</span> <span class="mi">17</span> <span class="mi">78</span> <span class="mi">78</span> <span class="mi">96</span> <span class="mi">83</span> <span class="mi">14</span> <span class="mi">88</span> <span class="mi">34</span> <span class="mi">89</span> <span class="mi">63</span> <span class="mi">72</span>
+<span class="mi">21</span> <span class="mi">36</span> <span class="mi">23</span> <span class="mi">09</span> <span class="mi">75</span> <span class="mi">00</span> <span class="mi">76</span> <span class="mi">44</span> <span class="mi">20</span> <span class="mi">45</span> <span class="mi">35</span> <span class="mi">14</span> <span class="mi">00</span> <span class="mi">61</span> <span class="mi">33</span> <span class="mi">97</span> <span class="mi">34</span> <span class="mi">31</span> <span class="mi">33</span> <span class="mi">95</span>
+<span class="mi">78</span> <span class="mi">17</span> <span class="mi">53</span> <span class="mi">28</span> <span class="mi">22</span> <span class="mi">75</span> <span class="mi">31</span> <span class="mi">67</span> <span class="mi">15</span> <span class="mi">94</span> <span class="mi">03</span> <span class="mi">80</span> <span class="mi">04</span> <span class="mi">62</span> <span class="mi">16</span> <span class="mi">14</span> <span class="mi">09</span> <span class="mi">53</span> <span class="mi">56</span> <span class="mi">92</span>
+<span class="mi">16</span> <span class="mi">39</span> <span class="mi">05</span> <span class="mi">42</span> <span class="mi">96</span> <span class="mi">35</span> <span class="mi">31</span> <span class="mi">47</span> <span class="mi">55</span> <span class="mi">58</span> <span class="mi">88</span> <span class="mi">24</span> <span class="mi">00</span> <span class="mi">17</span> <span class="mi">54</span> <span class="mi">24</span> <span class="mi">36</span> <span class="mi">29</span> <span class="mi">85</span> <span class="mi">57</span>
+<span class="mi">86</span> <span class="mi">56</span> <span class="mi">00</span> <span class="mi">48</span> <span class="mi">35</span> <span class="mi">71</span> <span class="mi">89</span> <span class="mi">07</span> <span class="mi">05</span> <span class="mi">44</span> <span class="mi">44</span> <span class="mi">37</span> <span class="mi">44</span> <span class="mi">60</span> <span class="mi">21</span> <span class="mi">58</span> <span class="mi">51</span> <span class="mi">54</span> <span class="mi">17</span> <span class="mi">58</span>
+<span class="mi">19</span> <span class="mi">80</span> <span class="mi">81</span> <span class="mi">68</span> <span class="mi">05</span> <span class="mi">94</span> <span class="mi">47</span> <span class="mi">69</span> <span class="mi">28</span> <span class="mi">73</span> <span class="mi">92</span> <span class="mi">13</span> <span class="mi">86</span> <span class="mi">52</span> <span class="mi">17</span> <span class="mi">77</span> <span class="mi">04</span> <span class="mi">89</span> <span class="mi">55</span> <span class="mi">40</span>
+<span class="mi">04</span> <span class="mi">52</span> <span class="mi">08</span> <span class="mi">83</span> <span class="mi">97</span> <span class="mi">35</span> <span class="mi">99</span> <span class="mi">16</span> <span class="mi">07</span> <span class="mi">97</span> <span class="mi">57</span> <span class="mi">32</span> <span class="mi">16</span> <span class="mi">26</span> <span class="mi">26</span> <span class="mi">79</span> <span class="mi">33</span> <span class="mi">27</span> <span class="mi">98</span> <span class="mi">66</span>
+<span class="mi">88</span> <span class="mi">36</span> <span class="mi">68</span> <span class="mi">87</span> <span class="mi">57</span> <span class="mi">62</span> <span class="mi">20</span> <span class="mi">72</span> <span class="mi">03</span> <span class="mi">46</span> <span class="mi">33</span> <span class="mi">67</span> <span class="mi">46</span> <span class="mi">55</span> <span class="mi">12</span> <span class="mi">32</span> <span class="mi">63</span> <span class="mi">93</span> <span class="mi">53</span> <span class="mi">69</span>
+<span class="mi">04</span> <span class="mi">42</span> <span class="mi">16</span> <span class="mi">73</span> <span class="mi">38</span> <span class="mi">25</span> <span class="mi">39</span> <span class="mi">11</span> <span class="mi">24</span> <span class="mi">94</span> <span class="mi">72</span> <span class="mi">18</span> <span class="mi">08</span> <span class="mi">46</span> <span class="mi">29</span> <span class="mi">32</span> <span class="mi">40</span> <span class="mi">62</span> <span class="mi">76</span> <span class="mi">36</span>
+<span class="mi">20</span> <span class="mi">69</span> <span class="mi">36</span> <span class="mi">41</span> <span class="mi">72</span> <span class="mi">30</span> <span class="mi">23</span> <span class="mi">88</span> <span class="mi">34</span> <span class="mi">62</span> <span class="mi">99</span> <span class="mi">69</span> <span class="mi">82</span> <span class="mi">67</span> <span class="mi">59</span> <span class="mi">85</span> <span class="mi">74</span> <span class="mi">04</span> <span class="mi">36</span> <span class="mi">16</span>
+<span class="mi">20</span> <span class="mi">73</span> <span class="mi">35</span> <span class="mi">29</span> <span class="mi">78</span> <span class="mi">31</span> <span class="mi">90</span> <span class="mi">01</span> <span class="mi">74</span> <span class="mi">31</span> <span class="mi">49</span> <span class="mi">71</span> <span class="mi">48</span> <span class="mi">86</span> <span class="mi">81</span> <span class="mi">16</span> <span class="mi">23</span> <span class="mi">57</span> <span class="mi">05</span> <span class="mi">54</span>
+<span class="mi">01</span> <span class="mi">70</span> <span class="mi">54</span> <span class="mi">71</span> <span class="mi">83</span> <span class="mi">51</span> <span class="mi">54</span> <span class="mi">69</span> <span class="mi">16</span> <span class="mi">92</span> <span class="mi">33</span> <span class="mi">48</span> <span class="mi">61</span> <span class="mi">43</span> <span class="mi">52</span> <span class="mi">01</span> <span class="mi">89</span> <span class="mi">19</span> <span class="mi">67</span> <span class="mi">48</span>
+<span class="p">]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="mi">20</span> <span class="c"># dimension</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">r</span> <span class="k">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="n">d</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="n">d</span><span class="p">]</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">v</span><span class="p">,</span>
+            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="n">c</span><span class="p">]),</span>
+            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="p">]),</span>
+            <span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">2</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">2</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span> <span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id12">
+<h1>12</h1>
+<p>求因数的数量 // 即质因数的组合方式个数</p>
+<p>精髓在这一句 <tt class="docutils literal"><span class="pre">reduce((a,</span> <span class="pre">f)-&gt;a</span> * <span class="pre">(f[2]+1),</span> 1, factor(t))</tt></p>
+<p><tt class="docutils literal">factor(x)</tt> 返回 <tt class="docutils literal">x</tt> 的质因数及其次数列表</p>
+<pre class="code julia literal-block">
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">100000</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">+</span><span class="n">i</span>
+    <span class="k">if</span> <span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">factor</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">500</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id13">
+<h1>13</h1>
+<p>求一串大数的和</p>
+<pre class="code julia literal-block">
+<span class="n">nums</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">BigInt</span><span class="p">,[</span>
+<span class="s">&quot;37107287533902102798797998220837590246510135740250&quot;</span>
+<span class="o">...</span>
+<span class="s">&quot;53503534226472524250874054075591789781264330331690&quot;</span>
+<span class="p">])</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="id14">
+<h1>14</h1>
+<p>求使得 3n+1 数列最长的起点</p>
+<p>——本该用 DP 做的 …… 不过既然直接算时间也能接受 …… 那就不管了</p>
+<pre class="code julia literal-block">
+<span class="k">function</span><span class="nf"> chainlen</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">function</span><span class="nf"> f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="mi">2</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="mi">3</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">true</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">1</span>
+            <span class="k">break</span>
+        <span class="k">end</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">l</span>
+<span class="k">end</span>
+
+<span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">3</span><span class="p">:</span><span class="mi">1000000</span><span class="o">-</span><span class="mi">1</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="n">chainlen</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cl</span><span class="o">&gt;</span><span class="n">l</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">cl</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id15">
+<h1>15</h1>
+<p>求在 20x20 的格子上从一个角走到对角不走回头路的路径个数</p>
+<p>从一行 n 列开始递推 n 行 n 列的情况就很明确了</p>
+<p>需要留意的是 20x20 的格子有 21x21 行列 - -|||</p>
+<pre class="code julia literal-block">
+<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span>
+<span class="n">nextrow</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">20</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">21</span>
+        <span class="n">nextrow</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">nextrow</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">row</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+    <span class="k">end</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">nextrow</span> <span class="o">=</span> <span class="n">nextrow</span><span class="p">,</span> <span class="n">row</span>
+    <span class="c"># println(row)</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span> <span class="n">row</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="p">)</span>
+</pre>
+<p>// 困了，明天继续</p>
+</div>
+<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="project-euler-1.rst">View document source</a>.
+
+</div>
+</body>
+</html>
