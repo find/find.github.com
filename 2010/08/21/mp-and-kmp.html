@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>MP/KMP 算法详解</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="mp-kmp">
+<h1 class="title">MP/KMP 算法详解</h1>
+<h2 class="subtitle" id="by-if">By <a class="reference external" href="http://www.if-yu.info/">If</a></h2>
+
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="auto-toc simple">
+<li><a class="reference internal" href="#prologue" id="id12">1&nbsp;&nbsp;&nbsp;Prologue</a></li>
+<li><a class="reference internal" href="#notations" id="id13">2&nbsp;&nbsp;&nbsp;Notations</a></li>
+<li><a class="reference internal" href="#main-idea" id="id14">3&nbsp;&nbsp;&nbsp;Main Idea</a></li>
+<li><a class="reference internal" href="#mp" id="id15">4&nbsp;&nbsp;&nbsp;MP 算法</a><ul class="auto-toc">
+<li><a class="reference internal" href="#id1" id="id16">4.1&nbsp;&nbsp;&nbsp;原理</a></li>
+<li><a class="reference internal" href="#id2" id="id17">4.2&nbsp;&nbsp;&nbsp;跳转数组的计算</a></li>
+<li><a class="reference internal" href="#id3" id="id18">4.3&nbsp;&nbsp;&nbsp;另一种表示</a></li>
+<li><a class="reference internal" href="#id4" id="id19">4.4&nbsp;&nbsp;&nbsp;可是...</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#kmp" id="id20">5&nbsp;&nbsp;&nbsp;KMP 算法</a></li>
+<li><a class="reference internal" href="#id6" id="id21">6&nbsp;&nbsp;&nbsp;复杂度分析</a></li>
+<li><a class="reference internal" href="#id7" id="id22">7&nbsp;&nbsp;&nbsp;KMP 算法的最长停顿</a></li>
+<li><a class="reference internal" href="#id8" id="id23">8&nbsp;&nbsp;&nbsp;为什么费波拉契串这么神奇</a></li>
+<li><a class="reference internal" href="#ps" id="id24">9&nbsp;&nbsp;&nbsp;PS</a></li>
+<li><a class="reference internal" href="#references" id="id25">10&nbsp;&nbsp;&nbsp;References</a></li>
+</ul>
+</div>
+<div class="section" id="prologue">
+<h1><a class="toc-backref" href="#id12">1&nbsp;&nbsp;&nbsp;Prologue</a></h1>
+<p>本篇文章主要针对的是对字符串匹配有兴趣的生物以及被某版本数据结构与算法教材中的 KMP 算法讲解弄得不知所云但与此同时却还难能可贵地保持着旺盛求知欲的不幸生在了错误年代的可怜童鞋，其他生物阅读本文前请慎重考虑因为它 <strong>可能对您的大脑（如果有）、小脑甚至包括脊髓都造成严重且不可恢复的创伤</strong> 。</p>
+</div>
+<div class="section" id="notations">
+<h1><a class="toc-backref" href="#id13">2&nbsp;&nbsp;&nbsp;Notations</a></h1>
+<p>下文可能会提到 “模式串”、“文本串”、“窗口” 这些词，它们的定义如下，如果这些文字使你头晕，请及时做好救治准备。</p>
+<dl class="docutils">
+<dt><strong>模式串、文本串</strong></dt>
+<dd><div class="first last line-block">
+<div class="line">所谓 <cite>模式串</cite> ，是指你想要找到（或者得到位置 &amp;etc.）的字符串；而 <cite>文本串</cite> ，则是指搜索的目标字符串。</div>
+<div class="line">比如说你要在 &quot;<tt class="docutils literal">lucky dog</tt>&quot; 中寻找 &quot;<tt class="docutils literal">dog</tt>&quot; ，那么 &quot;<tt class="docutils literal">dog</tt>&quot; 是模式串， &quot;<tt class="docutils literal">lucky dog</tt>&quot; 则是文本串；</div>
+<div class="line">而你若要在 &quot;<tt class="docutils literal">If is a lucky dog</tt>&quot; 中寻找 &quot;<tt class="docutils literal">lucky dog</tt>&quot; ，那么 &quot;<tt class="docutils literal">lucky dog</tt>&quot; 便成了模式串， &quot;<tt class="docutils literal">If is a lucky dog</tt>&quot; 则是文本串。</div>
+<div class="line"><br /></div>
+<div class="line">Understand?</div>
+<div class="line"><br /></div>
+</div>
+</dd>
+<dt><strong>窗口</strong></dt>
+<dd><div class="first last line-block">
+<div class="line">无论用什么样的搜索算法，在搜索的过程中，总是需要将模式串与文本串进行比较，它们对齐的那部分区域，也就是们关心的那块区域，咱称为 <cite>窗口</cite> 。</div>
+<div class="line"><br /></div>
+</div>
+</dd>
+</dl>
+<p>另外，为了避免让已经适应 C/C++/C#/D/Java/JavaScript/Python/Go/... 语言思维的童鞋多绕一个弯，本文用到的数组下标都以 0 开始 —— 甚至包括费波拉契数列也如此。</p>
+</div>
+<div class="section" id="main-idea">
+<h1><a class="toc-backref" href="#id14">3&nbsp;&nbsp;&nbsp;Main Idea</a></h1>
+<p>MP/KMP 字符串搜索算法的思想精华在于利用已经匹配的部分包含的信息，加速搜索的过程。</p>
+<blockquote>
+<p>嗯——已经匹配的部分包含什么信息？</p>
+<p>它已经匹配了！</p>
+</blockquote>
+<p>举例说，在某个字符串中查找子串 <tt class="docutils literal">A B C D A B D A C</tt> 时，如果遇到 <tt class="docutils literal">A B C D A B</tt> ，而紧跟其后的不是 <tt class="docutils literal">D</tt> ，这时候我们可以将窗口右移四位（而不是一位），因为既然 <tt class="docutils literal">A B C D A B</tt> 已经匹配了， 那么移动当前窗口之后 <strong>已经匹配过的地方</strong> 肯定需要保证 <strong>依然匹配</strong> ，这里最好的做法即让 <tt class="docutils literal">A B</tt> 相互对齐:</p>
+<pre class="literal-block">
+. . A B C D A B ? . . . . . .
+    A B C D A B D A C
+
+=&gt;
+
+. . A B C D A B ? . . . . . .
+            A B C D A B D A C
+</pre>
+<p>因为，看呀，如果只右移一位，那么:</p>
+<pre class="literal-block">
+. . . . . . . . . . . . . . . // 先不用管这个字符串
+    A B C D A B . . .         // 已经匹配的部分
+=&gt;    A B C D A B D A C
+      |
+    糟糕！
+</pre>
+<p>如上面所示， <tt class="docutils literal">A B C D A B</tt> 匹配了，那么移动一位之后，第一个字符 <tt class="docutils literal">A</tt> 就肯定会对着 <tt class="docutils literal">B</tt> ，绝对不可能在这个地方找到匹配</p>
+<p>右移两位、三位或者四位时发生的状况可以依此类推；而右移四位时就不同了:</p>
+<pre class="literal-block">
+. . . . . . . . . . . . . . . // 暂时还不用管这个字符串
+    A B C D A B . . .         // 已经匹配的部分
+=&gt;          A B C D A B D A C
+</pre>
+<p>这个时候才 <em>可能</em> 成功匹配。</p>
+</div>
+<div class="section" id="mp">
+<h1><a class="toc-backref" href="#id15">4&nbsp;&nbsp;&nbsp;MP 算法</a></h1>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id16">4.1&nbsp;&nbsp;&nbsp;原理</a></h2>
+<p>MP 算法基于这样一种观察：</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">注意了，这里以及下面所说的 <cite>前缀</cite> 和 <cite>后缀</cite> 都是指 <strong>不包括自身</strong> 的“真”前缀或后缀
+( proper prefix/suffix )</p>
+</div>
+<p>发生了不匹配之后，移动窗口时，定要保证 <strong>将模式串已匹配部分的一个前缀和一个相同的后缀对齐，并使这个前缀尽可能长</strong> 。</p>
+<p>什么意思？</p>
+<p>首先让我们列出模式串 <tt class="docutils literal">A B C D A B</tt> 的所有前缀：</p>
+<pre class="literal-block">
+0: /*Empty*/
+1: A
+2: A B
+3: A B C
+4: A B C D
+5: A B C D A
+</pre>
+<p>我们再列出它所有的后缀：</p>
+<pre class="literal-block">
+0: /*Empty*/
+1: B
+2: A B
+3: D A B
+4: C D A B
+5: B C D A B
+</pre>
+<p>发现前缀 <tt class="docutils literal">A B</tt> == 后缀 <tt class="docutils literal">A B</tt> ，将它们对齐（即，接下来直接从第 3 位开始比较），完美了，前两位不必重复比较了。</p>
+<p>原理上说也不难理解： <strong>从左向右移动窗口的过程就是用前缀去匹配后缀的过程</strong> ，而第一次匹配成功的肯定是最长的相同前缀/后缀 —— 在上例中，两个空字串也相等，可是如果将它们对齐的话那可就“移过头了”。</p>
+<p>这么看，我们发现，在模式串的每一个位置上，匹配失败之后能最大限度的将窗口移动多少位 —— 即，与什么位置对齐， <strong>只与模式串在该位置前方的子串有关</strong> ，与文本串无关，与模式串在该点之后的字符也无关。</p>
+<p>于是，自然而然的就想到了，为什么不把这么个失败后对齐的位置存放在一个数组中呢，这样每次匹配失败之后就按照它的指示进行跳转。</p>
+<p>令 <cite>F[i] == max{ j | pattern[0:j) == pattern[i-j+1:i+1) and 0&lt;j&lt;i }</cite> ，也就是当前位置上保证前缀等于后缀的最大长度。</p>
+<p>对于模式串 <tt class="docutils literal">A B C D A B D A C</tt> , F 数组如下：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+</tr>
+<tr><td>Pattern</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>A</td>
+<td>B</td>
+<td>D</td>
+<td>A</td>
+<td>C</td>
+</tr>
+<tr><td>F</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>继续扯，在位置 i 匹配失败之后，可以将窗口继续右移一位，并从 F[i-1] 位置开始继续比较模式串与文本串（按照定义，pattern[ 0 : F[i-1] ) 已经保证匹配了），用代码表示的话就是这样：</p>
+<pre class="code c literal-block">
+<span class="kt">int</span> <span class="nf">MP</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">text</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="o">=</span><span class="n">strlen</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">F</span><span class="p">[</span><span class="n">m</span><span class="p">];</span>
+    <span class="n">calcF</span> <span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">F</span><span class="p">);</span> <span class="c1">// 计算跳转数组
+</span>    <span class="k">for</span><span class="p">(;</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="c1">// 第一个字符不匹配则右移窗口、从 0 开始比较
+</span>            <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">j</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// 对齐
+</span>        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>    <span class="c1">// 找到了！
+</span>            <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">m</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>—— 多和谐呀！</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>对了，内个 F 数组怎么算？</p>
+</div>
+<div class="section" id="id2">
+<h2><a class="toc-backref" href="#id17">4.2&nbsp;&nbsp;&nbsp;跳转数组的计算</a></h2>
+<p>观察一下，希望求出拥有相同后缀的最长前缀，这个过程不也是一个字符串匹配的过程吗：</p>
+<pre class="literal-block">
+1.  A B C D A B D A C
+    A B C D A B D A C
+    |
+    0  // 定义为 0
+
+2.    A B C D A B D A C
+    A B C D A B D A C
+      |
+      0 // 匹配部分的长度
+
+3.      A B C D A B D A C
+    A B C D A B D A C
+        |
+        0
+
+4.        A B C D A B D A C
+    A B C D A B D A C
+          |
+          0
+
+5.6.        A B C D A B D A C
+    A B C D A B D A C
+            | |
+            1 2
+
+7.              A B C D A B D A C
+    A B C D A B D A C
+                |
+                0
+
+8.                A B C D A B D A C
+    A B C D A B D A C
+                  |
+                  1
+
+9.                  A B C D A B D A C
+    A B C D A B D A C
+                    |
+                    0
+</pre>
+<p>如上面所示，将模式串向右移动，并与自身做比较，在位置 i 上，pattern[i:] 与 pattern 自身相匹配的部分的长度就是 <cite>F[i]</cite> 。</p>
+<p><strong>注意第6步到第7步！</strong> 为什么可以直接右移两位呢？</p>
+<p>—— 因为 F[1] 已经算出来了！于是我们可以将之前 MP 算法中的思想用在这里，聪明的你想到了没有？</p>
+<p>用代码来说就是这样的，看不懂的话我会很伤心：</p>
+<pre class="code c literal-block">
+<span class="kt">void</span> <span class="nf">calcF</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">F</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id18">4.3&nbsp;&nbsp;&nbsp;另一种表示</a></h2>
+<p>对了有没有人觉得 MP 算法中对于第一个字符不匹配时的特殊处理感觉到很生硬的？</p>
+<p>嗯，其实呢，考虑到第一个字符失败时的特殊情况其实也不怎么特殊，不如干脆把这种情况也放到 F 数组中去统一处理好了：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr><td>Pattern</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>D</td>
+<td>A</td>
+<td>B</td>
+<td>D</td>
+<td>A</td>
+<td>C</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>F</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>这样，MP 算法表达起来更简单了：</p>
+<pre class="code c literal-block">
+<span class="kt">int</span> <span class="nf">MP</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">text</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="o">=</span><span class="n">strlen</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">F</span><span class="p">[</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">calcF</span> <span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">F</span><span class="p">);</span> <span class="c1">// 计算跳转数组
+</span>    <span class="k">for</span><span class="p">(;</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>   <span class="c1">// 对齐
+</span>        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>    <span class="c1">// 找到了！
+</span>            <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">m</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>calcF 也并没有因此变复杂：</p>
+<pre class="code c literal-block">
+<span class="kt">void</span> <span class="nf">calcF</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">F</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>理解之后就会觉得，这种表示方法比较 “省事”；下面咱就都用这种表示得了。</p>
+<p>Nevertheless, 其实它们是一码事。</p>
+</div>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id19">4.4&nbsp;&nbsp;&nbsp;可是...</a></h2>
+<p>我们再停下来看看 “暴力” 搜索算法 —— 有没有可能暴力算法比 MP 算法还快呢？</p>
+<p>答案是 “Yes!”</p>
+<p>( 哈哈！你输了吧！ )</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p>让我们想象一下在一个字符集很大的串 —— 比如说 UTF-16 字符串吧，中寻找一段模式串；而模式串的第一个字符出现在文本串中的频率根本就不大，那么看看第一次匹配失败时它们两者工作的流程吧：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr><td><strong>MP 算法</strong></td>
+<td><strong>暴力算法</strong></td>
+</tr>
+<tr><td><ol class="first last arabic simple">
+<li>i&gt;=n?</li>
+<li>j&gt;=0?  ( 此时 j == 0  )</li>
+<li>比较 pattern[j] 与 text[i]</li>
+<li>j = F[j]</li>
+<li>j&gt;=0?  ( 此时 j == -1 )</li>
+<li>j = j+1</li>
+<li>j &gt;= m?</li>
+<li>i = i+1</li>
+<li>到第 1 步</li>
+</ol>
+</td>
+<td><ol class="first last arabic simple">
+<li>i&gt;=n?</li>
+<li>j = 0</li>
+<li>j &lt; m?</li>
+<li>比较 pattern[j] 与 text[i]</li>
+<li>i = i+1</li>
+<li>到第 1 步</li>
+</ol>
+</td>
+</tr>
+</tbody>
+</table>
+<p>嗯，所以说，这个地方是有优化空间的，Knuth、Morris、Pratt 的论文 <a class="footnote-reference" href="#id9" id="id5">[1]</a> 中有提到，俺就不展开了 —— 因为真正牛B的优化在下面：</p>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="section" id="kmp">
+<h1><a class="toc-backref" href="#id20">5&nbsp;&nbsp;&nbsp;KMP 算法</a></h1>
+<p>其实 MP 算法的效率还有提升的空间，不过从模式串 <tt class="docutils literal">A B C D A B D A C</tt> 中看不明显；我们试试这样一个模式串： <tt class="docutils literal">A B A B A B C</tt> 。</p>
+<p>假设在 <tt class="docutils literal">A B C A B C A B A B A B C A C</tt> 中查找 <tt class="docutils literal">A B A B A B C</tt> ，按照 MP 算法的思想，先算出 F 数组：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>Pattern</td>
+<td>A</td>
+<td>B</td>
+<td>A</td>
+<td>B</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>F</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>于是查找的过程就是这样的：</p>
+<pre class="literal-block">
+1.  A B C A B C A B A B A B C A C
+    A B A . . . .
+
+2.  A B C A B C A B A B A B C A C
+        A . . . . . .
+
+3.  A B C A B C A B A B A B C A C
+          A B A . . . .
+
+4.  A B C A B C A B A B A B C A C
+              A . . . . . .
+
+5.  A B C A B C A B A B A B C A C
+                A B A B A B C
+</pre>
+<p>从第 1 步到第 2 步、从第 3 步到第 4 步，我们发现，字符 <tt class="docutils literal">A</tt> 与 <tt class="docutils literal">C</tt> 的不匹配导致了第一次失败，然后紧接着又直接导致了第二次失败。</p>
+<p>如此，我们又惊喜的发现，在 <tt class="docutils literal">A B</tt> 之后若是遇到不是 <tt class="docutils literal">A</tt> 的字符，我们完全可以跳三步！因为跳两步的话算是把 <tt class="docutils literal">A</tt> 对齐了 —— 可是它们会被对齐到一个不是 <tt class="docutils literal">A</tt> 的、将会导致匹配失败的字符上面去。</p>
+<p>这样的规则有什么规律呢？我直接放出代码吧：</p>
+<pre class="code c literal-block">
+<span class="c1">// 这是我们计算 MP 算法中的 F 数组的函数：
+</span><span class="kt">void</span> <span class="nf">calcF</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">F</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>睁大眼睛准备找茬喽：</p>
+<pre class="code c literal-block">
+<span class="c1">// 只需要改一句话：
+</span><span class="kt">void</span> <span class="nf">calcF</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">F</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="c1">// !这里!
+</span>        <span class="n">F</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pattern</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span>
+                   <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">:</span>
+                   <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>为什么呢？因为对于同一个字符导致的失败，失败在前面应该跳到哪里，到后面就还是应该跳到哪里。</p>
+<p>另外，这个时候咱似乎就比较喜欢把这个数组称作 next 数组了 —— 其实还是同一回事。</p>
+<p>那么， <tt class="docutils literal">A B A B A B C</tt> 的 <cite>next</cite> 数组如下，请您欣赏：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>Index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>Pattern</td>
+<td>A</td>
+<td>B</td>
+<td>A</td>
+<td>B</td>
+<td>A</td>
+<td>B</td>
+<td>C</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>Next</td>
+<td>-1</td>
+<td>0</td>
+<td>-1</td>
+<td>0</td>
+<td>-1</td>
+<td>0</td>
+<td>4</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id6">
+<h1><a class="toc-backref" href="#id21">6&nbsp;&nbsp;&nbsp;复杂度分析</a></h1>
+<p>至于为什么 KMP 算法的复杂度是线性的，我们再回头看看 <a class="reference internal" href="#id3">另一种表示</a> 一节中的算法主体：</p>
+<pre class="code c literal-block">
+<span class="kt">int</span> <span class="nf">MP</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">pattern</span><span class="p">,</span> <span class="kt">char</span> <span class="k">const</span><span class="o">*</span> <span class="n">text</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">m</span><span class="o">=</span><span class="n">strlen</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">F</span><span class="p">[</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">calcF</span> <span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">F</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(;</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="o">++</span><span class="n">i</span><span class="p">,</span><span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// j 增大，i 增大
+</span>        <span class="k">while</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">pattern</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">!=</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">F</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>       <span class="c1">// j 减小
+</span>        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">m</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">m</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>i 只有增大的份，所以 ++i 最多执行 n 次，这个很显然。</p>
+<p>j 初始值为 0，一共增加了 n 次，而 j&gt;=-1 ，于是 j = F[j] 这一句最多也就执行了 n+1 次（否则就会出现 j&lt;-1 的情况了）。</p>
+<p>所以就是线性的了！</p>
+</div>
+<div class="section" id="id7">
+<h1><a class="toc-backref" href="#id22">7&nbsp;&nbsp;&nbsp;KMP 算法的最长停顿</a></h1>
+<p>为了说明 KMP 算法在文本串上的某一个字符上进行了很多次比较的极限情况（也就是所谓的停顿或者E文的 delay ），我们首先要介绍一下 “<strong>费波拉契串</strong>” —— 因为，很巧，它就是能使 KMP 算法达到最糟糕状况的模式串，一会儿我们会说到。</p>
+<p>提到 “费波拉契” ，相信不少人会直接想到 <tt class="docutils literal">1, 1, 2, 3, 5, 8, 13, 21, 34 ...</tt> ，是的，费波拉契串的定义也十分类似：</p>
+<p>设 P 是个费波拉契串，那么：</p>
+<pre class="literal-block">
+P[0] = b
+P[1] = a
+P[i] = P[i-1]P[i-2]
+</pre>
+<p>所以：</p>
+<pre class="literal-block">
+P[2] = ab
+P[3] = aba
+P[4] = abaab
+P[5] = abaababa
+P[6] = abaababaabaab
+P[7] = abaababaabaababaababa
+P[8] = abaababaabaababaababaabaababaabaab
+...
+</pre>
+<p>计算出 P[7] 的 F 数组和 Next 数组如下，我们一会儿要用到，你也可以先把它当作找规律的题看看：</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+</colgroup>
+<tbody valign="top">
+<tr><td>P</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>b</td>
+<td>a</td>
+<td>&nbsp;</td>
+</tr>
+<tr><td>n</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>12</td>
+<td>13</td>
+<td>14</td>
+<td>15</td>
+<td>16</td>
+<td>17</td>
+<td>18</td>
+<td>19</td>
+<td>20</td>
+<td>21</td>
+</tr>
+<tr><td>F</td>
+<td>-1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td>7</td>
+<td>8</td>
+</tr>
+<tr><td>Next</td>
+<td>-1</td>
+<td>0</td>
+<td>-1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+<td>3</td>
+<td>-1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+<td>6</td>
+<td>0</td>
+<td>-1</td>
+<td>3</td>
+<td>-1</td>
+<td>1</td>
+<td>0</td>
+<td>-1</td>
+<td>11</td>
+<td>-1</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>费波拉契串有几个性质值得注意一下：</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">文章前面已经假设了我的世界里费波拉契数列下标是从 0 开始的，这里再强调一遍。</p>
+</div>
+<ol class="arabic">
+<li><p class="first">strlen(P[n]) == Fibonacci[n] （这个应该很容易理解吧）</p>
+</li>
+<li><div class="first line-block">
+<div class="line">设函数 c(t) 的作用是交换字符串 t 的最后两个字符，例如 c(&quot;abcdef&quot;) == &quot;abcdfe&quot;，那么当 n&gt;=2 时 P[n-1]P[n-2] == c(P[n-2]P[n-1]) ：</div>
+<div class="line">n == 2 时这是显然的；</div>
+<div class="line">当 n&gt;2 时可以用数学归纳法证明：</div>
+<div class="line">c(P[n-2]P[n-1]) = P[n-2]c(P[n-1]) = P[n-2]P[n-3]P[n-2] = P[n-1]P[n-2]</div>
+</div>
+</li>
+<li><div class="first line-block">
+<div class="line">由上面两条性质我们又可以推导出：</div>
+<div class="line"><strong>Next[Fibonacci[n]-2] == F[Fibonacci[n]-2] == Fibonacci[n-1]-2, n&gt;=2</strong></div>
+<div class="line">这是因为，可以把一个费波拉契串分解开：</div>
+<div class="line">P[n] == P[n-1]P[n-2] == P[n-2]P[n-3]P[n-2] == c(P[n-3]P[n-2])P[n-2] == P[n-3]c(P[n-2])P[n-2] == ...</div>
+<div class="line">具体以 P[7] 为例，</div>
+<div class="line">P[7] == <tt class="docutils literal"><span class="pre">ab-ab-ba---ab------ba</span></tt></div>
+<div class="line">其中省略掉的部分根据 <cite>性质2</cite> 表现出的规律与前方相等，因此如果在 P[7] 的最后一个字符 b 处发生了不匹配，接下来应该在下列位置重新试着匹配：</div>
+<div class="line"><tt class="docutils literal"><span class="pre">ab-a--b----a-------b-</span></tt></div>
+<div class="line">它们正好占据着 Fibonacci[2]-2, Fibonacci[3]-2, .. , Fibonacci[7]-2, ... 的位置。</div>
+</div>
+</li>
+</ol>
+<p>因此，如果在费波拉契串的第 n 位，n == Fibonacci[k]-2 上发生了不匹配，接下来则还需要 k-1 次比较；</p>
+<p>
+又因为 Fibonacci[k-1] == (&phi;<sup>k</sup> - (-1)<sup>k</sup>&phi;<sup>-k</sup>)/sqrt(5) == round( &phi;<sup>k</sup> / sqrt(5) )，
+于是可以解得 k ~ log<sub>&phi;</sub>(n)，其中 &phi; 是黄金比例 (1+sqrt(5))/2 == 1.618...
+</p><p>—— k 便是文本串上的一个字符的最多比较次数。</p>
+</div>
+<div class="section" id="id8">
+<h1><a class="toc-backref" href="#id23">8&nbsp;&nbsp;&nbsp;为什么费波拉契串这么神奇</a></h1>
+<p>为了证明为何费波拉契串就是使停顿时间最长的模式串，我们再看看 MP 算法的基本思想：将字符串已匹配的一个前缀和一个对应的后缀匹配。</p>
+<p>假设字符串 S 有且仅有一个相等的前缀和后缀（设为 a ），那么 S 可以表示为</p>
+<p>S = aB = Ca</p>
+<p>再假设 a 本身也有且仅有一个相等的前缀和后缀（设为 e ），那么 a 也可以表示为</p>
+<p>a = eF = Ge</p>
+<p>对应 MP 算法，匹配 Ca 时若在 a 之后失败，则会将 aB 的 a 与其对齐：</p>
+<pre class="literal-block">
+Cax
+Cay
+
+==&gt;
+
+Cax
+ aBy
+</pre>
+<p>若在 B 的第一个字符处再次失败，则下一次对齐是这样的：</p>
+<pre class="literal-block">
+CGex
+ GeBy
+
+==&gt;
+
+CGex
+  eFBy
+</pre>
+<p>KMP 算法在这里还要求 F 的第一个字符和 B 的第一个字符不等（否则会跳过这一段）</p>
+<p>我们很容易可以证明想要 KMP 算法在这个地方停留尽可能长的时间需要满足
+|S| &lt;= |e| + |a| ：因为若 |e| + |a| &gt; |S|，那么令 d = |e| + |a| - |S|
+则 Ca = CGe = aB 算式中， a 和 e 将有长度为 d 的重叠，于是 B 的第一个字符等于
+e[d]；同理，在 aB = eFB = Ca 算式中，可以得到 F 的第一个字符为 a[d]，由 a = eF
+可以得到 a[d] = e[d]，和 KMP 的要求不符。</p>
+<p>于是 |S| == |e| + |a| 是使 KMP 算法的停顿时间达到最长的极限情况——很容易发现，满足这条件的便是费波拉契串了。</p>
+</div>
+<div class="section" id="ps">
+<h1><a class="toc-backref" href="#id24">9&nbsp;&nbsp;&nbsp;PS</a></h1>
+<p>对了，如果我要找出模式串在文本串中所有的出现怎么办？</p>
+<p>提示一下：目前为止 F 数组（或者 next 数组）的最后一个元素我们还没有用到过是不是？</p>
+</div>
+<div class="section" id="references">
+<h1><a class="toc-backref" href="#id25">10&nbsp;&nbsp;&nbsp;References</a></h1>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[1]</a></td><td>KNUTH D.E., MORRIS (Jr) J.H., PRATT V.R., 1977, Fast pattern matching in strings, SIAM Journal on Computing 6(1):323-350.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><a class="reference external" href="http://www-igm.univ-mlv.fr/~lecroq/string/node8.html#SECTION0080">http://www-igm.univ-mlv.fr/~lecroq/string/node8.html#SECTION0080</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><a class="reference external" href="http://www.topcoder.com/tc?module=Static&amp;d1=tutorials&amp;d2=stringSearching">http://www.topcoder.com/tc?module=Static&amp;d1=tutorials&amp;d2=stringSearching</a></td></tr>
+</tbody>
+</table>
+</div>
+<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="mp-and-kmp.rst">View document source</a>.
+
+</div>
+</body>
+</html>
