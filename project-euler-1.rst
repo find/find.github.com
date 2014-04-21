@@ -141,7 +141,7 @@ Project Euler 题解第一页
 9
 ---
 
-找到满足 a^2 + b^2 == c^2 且 a + b + c == 1000 的 a, b, c
+找到满足 :math:`a^2 + b^2 = c^2` 且 :math:`a + b + c = 1000` 的 :math:`a, b, c`
 
 .. code:: julia
 
@@ -317,7 +317,7 @@ Project Euler 题解第一页
 16
 ---
 
-求 2^1000 的每位数字的和
+求 :math:`2^1000` 的每位数字的和
 
 .. code:: julia
 
@@ -621,9 +621,132 @@ Project Euler 题解第一页
     end
     println(maxn)
 
-----
+27
+---
+
+求使得 :math:`\forall i \in [0,N] \ i^2 + a*i + b 为质数` 中的 N 取值最大的 :math:`a, b` 的乘积，
+其中 :math:`|a| < 1000` 且 :math:`|b| < 1000`
+
+.. code:: julia
+
+    maxlen = 0
+    maxa = 0
+    maxb = 0
+
+    for a = -1000:1000
+        for b = -1000:1000
+            len = 0
+            n = 0
+            while isprime(n^2 + a*n + b)
+                len+=1
+                n+=1
+            end
+            if len>maxlen
+                maxlen = len
+                maxa = a
+                maxb = b
+            end
+        end
+    end
+
+    println("a = $maxa, b = $maxb, maxlen = $maxlen, a*b=$(maxa*maxb)")
+
+28
+---
+
+求数字螺旋对角线上的值的和
+
+.. code:: julia
+
+    c = 1 # current
+    s = 1 # sum
+    step = 2
+    for i in 1:500
+        for j in 1:4
+            c += step
+            s += c
+        end
+        step += 2
+    end
+
+    println(s)
+
+29
+---
+
+求对于 :math:`2 \leq a \leq 100` 且 :math:`2 \leq b \leq 100`,
+:math:`a^b` 一共有多少个不重复的值
+
+任何一个理智的人都应该算出 :math:`99 \times 99` 然后减去重复的 …… 然而其实直接算也挺快的，不管了 ……
+
+.. code:: julia
+
+    li = ["4"=>1]
+    for i = 2:100
+        for j = 2:100
+            li[string(BigInt(i)^j)] = 1
+        end
+    end
+    println(length(li))
+
+30
+---
+
+求所有可以用自身每位数字的五次方相加表示的整数
+
+需要思考的问题只有 —— 上限是多少？
+
+若我们把一个大于 0 的 n 位数字表示为 :math:`\sum_{i=1}^{n}d_i \times 10^{n-i}`,
+其中 :math:`d_i` 表示其第 i 位的数字，那么不难看出，
+每位数字的五次方相加的值域是 :math:`1 \leq \sum_{i=1}^{n}{d_i}^5 \leq 9^5 \times n`, 
+而其自身的值域则是 :math:`10^{n-1} \leq \sum_{i=1}^{n}d_i \times 10^{n-i} \leq 10^n-1`
+
+于是，当 n>6 的时候， :math:`9^5*n < 10^{n-1}`, 从这里开始往后不可能有解了
+
+.. code:: julia
+
+    # when n>6, 9^5*n < 10^(n-1)
+    #  so set the upper limit to 9^5*6 is safe
+
+    ps = map(x->x^5, [0:9])
+    s = 0
+    for i in 2:9^5*6
+        if sum(map(c->ps[c-'0'+1], collect(string(i)))) == i
+            # println(i)
+            s += i
+        end
+    end
+    println(s)
+
+31
+---
+
+求使用面值 1p, 2p, 5p, 10p, 20p, 50p, ￡1, ￡2 面值的硬币，一共有多少种方式组成 ￡2, 
+其中 ￡1 = 100p
+
+经典的 DP 问题 ——若是已知不使用面值 x 的硬币，数字 a 有 N[a] 种表示法，
+显然加上 x 面值硬币之后，若 a>=x，数字 a 的表示方法将是 N[a] + N[a-x]，否则依然是 N[a]。
+于是可以这么递推出来 ——
+
+.. code:: julia
+
+    cs = [1,2,5,10,20,50,100,200]
+    ws = [0 for i in 1:200]
+
+    for c in cs
+        ws[c] += 1 # just c
+        for v in c+1:200
+            ws[v] += ws[v-c]
+        end
+    end
+
+    println(ws[200])
+
+
+-----
 
 明天继续
+
 
 .. _Julia: http://julialang.org/
 .. _`Project Euler`: http://projecteuler.net

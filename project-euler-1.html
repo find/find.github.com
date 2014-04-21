@@ -6,6 +6,7 @@
 <meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title>Project Euler 题解第一页</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="d:/Python33/lib/site-packages/docutils/writers/html4css1\math.css" type="text/css" />
 </head>
 <body>
 <div class="document" id="project-euler">
@@ -127,7 +128,10 @@
 </div>
 <div class="section" id="id9">
 <h1>9</h1>
-<p>找到满足 a^2 + b^2 == c^2 且 a + b + c == 1000 的 a, b, c</p>
+<p>找到满足 <span class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span>
+ 且 <span class="formula"><i>a</i> + <i>b</i> + <i>c</i> = 1000</span>
+ 的 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span>
+</p>
 <pre class="code julia literal-block">
 <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
@@ -284,7 +288,8 @@
 </div>
 <div class="section" id="id16">
 <h1>16</h1>
-<p>求 2^1000 的每位数字的和</p>
+<p>求 <span class="formula">2<sup>1000</sup></span>
+ 的每位数字的和</p>
 <pre class="code julia literal-block">
 <span class="n">println</span><span class="p">(</span><span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span><span class="o">+</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">string</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">^</span><span class="mi">1000</span><span class="p">)))</span>
 </pre>
@@ -563,6 +568,125 @@
     <span class="k">end</span>
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">maxn</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id27">
+<h1>27</h1>
+<p>求使得 <span class="formula">∀<i>i</i> ∈ [0, <i>N</i>] <i>i</i><sup>2</sup> + <i>a</i>*<i>i</i> + <i>b</i><i>为质数</i></span>
+ 中的 N 取值最大的 <span class="formula"><i>a</i>, <i>b</i></span>
+ 的乘积，
+其中 <span class="formula">|<i>a</i>| &lt; 1000</span>
+ 且 <span class="formula">|<i>b</i>| &lt; 1000</span>
+</p>
+<pre class="code julia literal-block">
+<span class="n">maxlen</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">maxa</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">maxb</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="p">:</span><span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="p">:</span><span class="mi">1000</span>
+        <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">isprime</span><span class="p">(</span><span class="n">n</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+            <span class="n">len</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">n</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">end</span>
+        <span class="k">if</span> <span class="n">len</span><span class="o">&gt;</span><span class="n">maxlen</span>
+            <span class="n">maxlen</span> <span class="o">=</span> <span class="n">len</span>
+            <span class="n">maxa</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="n">maxb</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;a = </span><span class="si">$</span><span class="s">maxa, b = </span><span class="si">$</span><span class="s">maxb, maxlen = </span><span class="si">$</span><span class="s">maxlen, a*b=</span><span class="si">$</span><span class="s">(maxa*maxb)&quot;</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id28">
+<h1>28</h1>
+<p>求数字螺旋对角线上的值的和</p>
+<pre class="code julia literal-block">
+<span class="n">c</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># current</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># sum</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">500</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">step</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">c</span>
+    <span class="k">end</span>
+    <span class="n">step</span> <span class="o">+=</span> <span class="mi">2</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id29">
+<h1>29</h1>
+<p>求对于 <span class="formula">2 ≤ <i>a</i> ≤ 100</span>
+ 且 <span class="formula">2 ≤ <i>b</i> ≤ 100</span>
+,
+<span class="formula"><i>a</i><sup><i>b</i></sup></span>
+ 一共有多少个不重复的值</p>
+<p>任何一个理智的人都应该算出 <span class="formula">99 × 99</span>
+ 然后减去重复的 …… 然而其实直接算也挺快的，不管了 ……</p>
+<pre class="code julia literal-block">
+<span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;4&quot;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span><span class="mi">100</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span><span class="mi">100</span>
+        <span class="n">li</span><span class="p">[</span><span class="n">string</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">^</span><span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
+</pre>
+</div>
+<div class="section" id="id30">
+<h1>30</h1>
+<p>求所有可以用自身每位数字的五次方相加表示的整数</p>
+<p>需要思考的问题只有 —— 上限是多少？</p>
+<p>若我们把一个大于 0 的 n 位数字表示为 <span class="formula"><span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup></span>
+,
+其中 <span class="formula"><i>d</i><sub><i>i</i></sub></span>
+ 表示其第 i 位的数字，那么不难看出，
+每位数字的五次方相加的值域是 <span class="formula">1 ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub><sup>5</sup> ≤ 9<sup>5</sup> × <i>n</i></span>
+,
+而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span>
+</p>
+<p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup>*<i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>
+, 从这里开始往后不可能有解了</p>
+<pre class="code julia literal-block">
+<span class="c"># when n&gt;6, 9^5*n &lt; 10^(n-1)</span>
+<span class="c">#  so set the upper limit to 9^5*6 is safe</span>
+
+<span class="n">ps</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">])</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">9</span><span class="o">^</span><span class="mi">5</span><span class="o">*</span><span class="mi">6</span>
+    <span class="k">if</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">ps</span><span class="p">[</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))))</span> <span class="o">==</span> <span class="n">i</span>
+        <span class="c"># println(i)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id31">
+<h1>31</h1>
+<p>求使用面值 1p, 2p, 5p, 10p, 20p, 50p, ￡1, ￡2 面值的硬币，一共有多少种方式组成 ￡2,
+其中 ￡1 = 100p</p>
+<p>经典的 DP 问题 ——若是已知不使用面值 x 的硬币，数字 a 有 N[a] 种表示法，
+显然加上 x 面值硬币之后，若 a&gt;=x，数字 a 的表示方法将是 N[a] + N[a-x]，否则依然是 N[a]。
+于是可以这么递推出来 ——</p>
+<pre class="code julia literal-block">
+<span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]</span>
+<span class="n">ws</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">200</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="n">cs</span>
+    <span class="n">ws</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c"># just c</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="k">in</span> <span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">200</span>
+        <span class="n">ws</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ws</span><span class="p">[</span><span class="n">v</span><span class="o">-</span><span class="n">c</span><span class="p">]</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="mi">200</span><span class="p">])</span>
 </pre>
 <hr class="docutils" />
 <p>明天继续</p>
