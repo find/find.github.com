@@ -592,7 +592,7 @@ Project Euler 题解第一页
 .. code:: julia
 
     function recurringCycleLen(n) # length of recurrying cycle of 1/n
-        R = Int[] # all occured reminders
+        R = Int[] # all occured remainders
         r = 1
         c = 0;
         len = 0;
