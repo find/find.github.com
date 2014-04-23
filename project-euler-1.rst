@@ -701,7 +701,7 @@ Project Euler 题解第一页
 每位数字的五次方相加的值域是 :math:`1 \leq \sum_{i=1}^{n}{d_i}^5 \leq 9^5 \times n`, 
 而其自身的值域则是 :math:`10^{n-1} \leq \sum_{i=1}^{n}d_i \times 10^{n-i} \leq 10^n-1`
 
-于是，当 n>6 的时候， :math:`9^5*n < 10^{n-1}`, 从这里开始往后不可能有解了
+于是，当 n>6 的时候， :math:`9^5 \times n < 10^{n-1}`, 从这里开始往后不可能有解了
 
 .. code:: julia
 
@@ -743,10 +743,123 @@ Project Euler 题解第一页
     println(ws[200])
 
 
------
+32
+---
+
+找出所有 :math:`a \times b = c` 且 :math:`a, b, c` 每一位数字组成的列表正好包含 1 .. 9 每个数字各一次
+
+.. code:: julia
+
+    ps = Int[]
+    one2nine = collect("123456789")
+
+    function hasrep(n)
+        s=string(n)
+        for i in 2:length(s)
+            if s[i-1]==s[i]
+                return true
+            end
+        end
+        return false
+    end
+
+    for i=2:2000
+        if hasrep(i)
+            continue
+        end
+        for j=i:2000
+            p = i*j
+            #if hasrep(j)
+            #    continue
+            #end
+            s = string(i,j,p)
+            if length(s)==9 && sort(collect(s))==one2nine
+                push!(ps,p)
+                println("$i x $j = $p");
+            end
+        end
+    end
+
+    sort!(ps)
+    s = 0
+    for i=2:length(ps)
+        if ps[i-1]!=ps[i]
+            s += ps[i-1]
+        end
+    end
+    if ps[end]!=ps[end-1]
+        s += ps[end]
+    end
+    println(s)
+
+33
+---
+
+找出分子分母各是两位数且能够从分子分母上各删除同一个数字其值不变的分数
+
+:math:`11/22 = 1/2` 或是 :math:`10/20 = 1/2` 这种显然成立的除外
+
+.. code:: julia
+
+    fs = Rational{Int64}[]
+
+    for i in 12:98
+        for j in i+1:99 
+            # i = a*10 + b
+            # j = c*10 + d
+            a = int(floor(i/10))
+            b = i%10
+            c = int(floor(j/10))
+            d = j%10
+            if a==b || c==d
+                continue
+            end
+
+            if (i//j == b//c && a==d ||
+                i//j == a//d && b==c)
+                push!(fs, i//j)
+            end
+        end
+    end
+
+    println(prod(fs))
+
+34
+---
+
+找出所有(每一位数字的阶乘的和等于自身)的数字的和
+
+与 30_ 题相似的是，只要找到值域就好算了
+
+.. code:: julia
+
+    # factorial(9) = 362880
+    # for number has n digits, 1 <= sum of its factorial digits <= 362880n
+    # for number has n digits, 10^(n-1) <= its value < 10^n
+
+    fac = [(i=>factorial(i)) for i in 0:9]
+
+    function digifacsum(n)
+        s = 0
+        while n>=1
+            s += fac[n%10]
+            n = int(floor(n/10))
+        end
+        return s
+    end
+
+    s = 0
+    for i in 3:fac[9]*8
+        if digifacsum(i)==i
+            println(i)
+            s += i
+        end
+    end
+    println(s)
+
+----
 
 明天继续
-
 
 .. _Julia: http://julialang.org/
 .. _`Project Euler`: http://projecteuler.net

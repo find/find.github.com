@@ -6,7 +6,7 @@
 <meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title>Project Euler 题解第一页</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
-<link rel="stylesheet" href="d:/Python33/lib/site-packages/docutils/writers/html4css1\math.css" type="text/css" />
+<link rel="stylesheet" href="math.css" type="text/css" />
 </head>
 <body>
 <div class="document" id="project-euler">
@@ -651,7 +651,7 @@
 ,
 而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span>
 </p>
-<p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup>*<i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>
+<p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup> × <i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>
 , 从这里开始往后不可能有解了</p>
 <pre class="code julia literal-block">
 <span class="c"># when n&gt;6, 9^5*n &lt; 10^(n-1)</span>
@@ -687,6 +687,116 @@
 <span class="k">end</span>
 
 <span class="n">println</span><span class="p">(</span><span class="n">ws</span><span class="p">[</span><span class="mi">200</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="id32">
+<h1>32</h1>
+<p>找出所有 <span class="formula"><i>a</i> × <i>b</i> = <i>c</i></span>
+ 且 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span>
+ 每一位数字组成的列表正好包含 1 .. 9 每个数字各一次</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
+<span class="n">one2nine</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
+
+<span class="k">function</span><span class="nf"> hasrep</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">string</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">true</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">false</span>
+<span class="k">end</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="mi">2000</span>
+    <span class="k">if</span> <span class="n">hasrep</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="k">end</span>
+    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">:</span><span class="mi">2000</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">j</span>
+        <span class="c">#if hasrep(j)</span>
+        <span class="c">#    continue</span>
+        <span class="c">#end</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">==</span><span class="mi">9</span> <span class="o">&amp;&amp;</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">s</span><span class="p">))</span><span class="o">==</span><span class="n">one2nine</span>
+            <span class="n">push</span><span class="o">!</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="s">i x </span><span class="si">$</span><span class="s">j = </span><span class="si">$</span><span class="s">p&quot;</span><span class="p">);</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">sort</span><span class="o">!</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="k">if</span> <span class="n">ps</span><span class="p">[</span><span class="k">end</span><span class="p">]</span><span class="o">!=</span><span class="n">ps</span><span class="p">[</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="n">ps</span><span class="p">[</span><span class="k">end</span><span class="p">]</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id33">
+<h1>33</h1>
+<p>找出分子分母各是两位数且能够从分子分母上各删除同一个数字其值不变的分数</p>
+<p><span class="formula">11 ⁄ 22 = 1 ⁄ 2</span>
+ 或是 <span class="formula">10 ⁄ 20 = 1 ⁄ 2</span>
+ 这种显然成立的除外</p>
+<pre class="code julia literal-block">
+<span class="n">fs</span> <span class="o">=</span> <span class="n">Rational</span><span class="p">{</span><span class="kt">Int64</span><span class="p">}[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">12</span><span class="p">:</span><span class="mi">98</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">99</span>
+        <span class="c"># i = a*10 + b</span>
+        <span class="c"># j = c*10 + d</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span><span class="mi">10</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">j</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">j</span><span class="o">%</span><span class="mi">10</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">==</span><span class="n">b</span> <span class="o">||</span> <span class="n">c</span><span class="o">==</span><span class="n">d</span>
+            <span class="k">continue</span>
+        <span class="k">end</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">//</span><span class="n">j</span> <span class="o">==</span> <span class="n">b</span><span class="o">//</span><span class="n">c</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">==</span><span class="n">d</span> <span class="o">||</span>
+            <span class="n">i</span><span class="o">//</span><span class="n">j</span> <span class="o">==</span> <span class="n">a</span><span class="o">//</span><span class="n">d</span> <span class="o">&amp;&amp;</span> <span class="n">b</span><span class="o">==</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">push</span><span class="o">!</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">i</span><span class="o">//</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">prod</span><span class="p">(</span><span class="n">fs</span><span class="p">))</span>
+</pre>
+</div>
+<div class="section" id="id34">
+<h1>34</h1>
+<p>找出所有(每一位数字的阶乘的和等于自身)的数字的和</p>
+<p>与 <a class="reference internal" href="#id30">30</a> 题相似的是，只要找到值域就好算了</p>
+<pre class="code julia literal-block">
+<span class="c"># factorial(9) = 362880</span>
+<span class="c"># for number has n digits, 1 &lt;= sum of its factorial digits &lt;= 362880n</span>
+<span class="c"># for number has n digits, 10^(n-1) &lt;= its value &lt; 10^n</span>
+
+<span class="n">fac</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">=&gt;</span><span class="n">factorial</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="k">function</span><span class="nf"> digifacsum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">n</span><span class="o">&gt;=</span><span class="mi">1</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">fac</span><span class="p">[</span><span class="n">n</span><span class="o">%</span><span class="mi">10</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">s</span>
+<span class="k">end</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">3</span><span class="p">:</span><span class="n">fac</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
+    <span class="k">if</span> <span class="n">digifacsum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="n">i</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre>
 <hr class="docutils" />
 <p>明天继续</p>
