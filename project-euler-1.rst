@@ -857,6 +857,107 @@ Project Euler 题解第一页
     end
     println(s)
 
+35
+---
+
+:math:`10^6` 以下有几个质数随意循环移位还是质数
+
+.. code:: julia
+
+    function tonum(carr)
+        v = 0
+        for d in carr
+            v *= 10
+            v += d-'0'
+        end
+        return v
+    end
+
+    function circular(prm)
+        res = Int[]
+        col = collect(string(prm))
+        for i in 2:length(col)
+            push!(res, tonum(vcat(col[i:end], col[1:i-1])))
+        end
+        return res
+    end
+
+    cnt = 0
+    for p in primes(1000000)
+        iscircular = true
+        for x in circular(p)
+            if !isprime(x)
+                iscircular = false
+                break
+            end
+        end
+        if iscircular
+            # println(p)
+            cnt += 1
+        end
+    end
+    println(cnt)
+
+
+36
+---
+
+求 :math:`10^6` 以下在十进制与二进制下都是回文数的数字之和
+
+.. code:: julia
+
+    function ispalindrome(s::String)
+        if length(s)<=2
+            return s[1]==s[end]
+        end
+        return s[1]==s[end] && ispalindrome(s[2:end-1])
+    end
+
+    println(sum(filter(i->ispalindrome(string(i)) && ispalindrome(base(2,i)),
+        [1:1000000])))
+
+
+37
+---
+
+求从左到由每次删掉一位数字依然是质数的质数之和，已知一共有 11 个这样的质数
+
+.. code:: julia
+
+    ps = primes(1000000) # just guess
+
+    function istruncatable(n)
+        if n<10
+            return false
+        end
+        x = n
+        while x>=1
+            if !isprime(x) return false end
+            x = int(floor(x/10))
+        end
+        s = string(n)
+        for i=2:length(s)
+            if !isprime(int(s[i:end])) return false end
+        end
+        return true
+    end
+
+    cnt = 0
+    s = 0
+    for p in ps
+        if istruncatable(p)
+            println(p)
+            s += p
+            ++cnt
+            if cnt==11
+                break
+            end
+        end
+    end
+    println(s)
+
+
+
 ----
 
 明天继续
