@@ -798,6 +798,99 @@
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre>
+</div>
+<div class="section" id="id35">
+<h1>35</h1>
+<p><span class="formula">10<sup>6</sup></span>
+ 以下有几个质数随意循环移位还是质数</p>
+<pre class="code julia literal-block">
+<span class="k">function</span><span class="nf"> tonum</span><span class="p">(</span><span class="n">carr</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="k">in</span> <span class="n">carr</span>
+        <span class="n">v</span> <span class="o">*=</span> <span class="mi">10</span>
+        <span class="n">v</span> <span class="o">+=</span> <span class="n">d</span><span class="o">-</span><span class="sc">'0'</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">v</span>
+<span class="k">end</span>
+
+<span class="k">function</span><span class="nf"> circular</span><span class="p">(</span><span class="n">prm</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">prm</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">push</span><span class="o">!</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">tonum</span><span class="p">(</span><span class="n">vcat</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="k">end</span><span class="p">],</span> <span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">res</span>
+<span class="k">end</span>
+
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">iscircular</span> <span class="o">=</span> <span class="n">true</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">circular</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">iscircular</span> <span class="o">=</span> <span class="n">false</span>
+            <span class="k">break</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">iscircular</span>
+        <span class="c"># println(p)</span>
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">cnt</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id36">
+<h1>36</h1>
+<p>求 <span class="formula">10<sup>6</sup></span>
+ 以下在十进制与二进制下都是回文数的数字之和</p>
+<pre class="code julia literal-block">
+<span class="k">function</span><span class="nf"> ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">ispalindrome</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="p">)),</span>
+    <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id37">
+<h1>37</h1>
+<p>求从左到由每次删掉一位数字依然是质数的质数之和，已知一共有 11 个这样的质数</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span> <span class="c"># just guess</span>
+
+<span class="k">function</span><span class="nf"> istruncatable</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">10</span>
+        <span class="k">return</span> <span class="n">false</span>
+    <span class="k">end</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="k">while</span> <span class="n">x</span><span class="o">&gt;=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">return</span> <span class="n">false</span> <span class="k">end</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
+    <span class="k">end</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="k">end</span><span class="p">]))</span> <span class="k">return</span> <span class="n">false</span> <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">true</span>
+<span class="k">end</span>
+
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span>
+    <span class="k">if</span> <span class="n">istruncatable</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">p</span>
+        <span class="o">++</span><span class="n">cnt</span>
+        <span class="k">if</span> <span class="n">cnt</span><span class="o">==</span><span class="mi">11</span>
+            <span class="k">break</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre>
 <hr class="docutils" />
 <p>明天继续</p>
 </div>
