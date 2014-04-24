@@ -78,7 +78,7 @@ lapi.c
 
 **index2addr** :
 
-.. code-block:: c
+.. code:: c
 
     static TValue *index2addr (lua_State *L, int idx) {
       CallInfo *ci = L->ci;
@@ -132,7 +132,7 @@ lobject.h
 
 **TValue** :
 
-.. code-block:: c
+.. code:: c
 
     typedef struct lua_TValue TValue;
 
@@ -152,7 +152,7 @@ lobject.h
 
 .. _`数据类型`:
 
-.. code-block:: c
+.. code:: c
 
     #define LUA_TNONE          (-1)
 
@@ -185,7 +185,7 @@ string 类型有两种区分：
 
 .. _`hash dos`: http://lua-users.org/wiki/HashDos
 
-.. code-block:: c
+.. code:: c
 
     /* Variant tags for functions */
     #define LUA_TLCL	(LUA_TFUNCTION | (0 << 4))  /* Lua closure */
@@ -201,7 +201,7 @@ string 类型有两种区分：
 
 **Value** :
 
-.. code-block:: c
+.. code:: c
 
     union Value {
       GCObject *gc;    /* collectable objects */
@@ -222,7 +222,7 @@ string 类型有两种区分：
 
 **Pseudo Index** :
 
-.. code-block:: c
+.. code:: c
 
     #define LUAI_FIRSTPSEUDOIDX	(-LUAI_MAXSTACK - 1000)
 
@@ -232,7 +232,7 @@ string 类型有两种区分：
 
 **CommonHeader** :
 
-.. code-block:: c
+.. code:: c
 
     /*
     ** Common Header for all collectable objects (in macro form, to be
@@ -254,7 +254,7 @@ lstate.h
 
 **GCObject** :
 
-.. code-block:: c
+.. code:: c
 
     union GCObject {
       GCheader gch;  /* common header */
@@ -271,7 +271,7 @@ lstate.h
 
 **CallInfo** :
 
-.. code-block:: c
+.. code:: c
 
     /*
     ** information about a call

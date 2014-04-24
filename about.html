@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>About</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="about">
+<h1 class="title">About</h1>
+
+<div class="section" id="me">
+<h1>Me</h1>
+<p>A human, male</p>
+<p>Currently working at Netease on an online game named <a class="reference external" href="http://tianyu.163.com/">天谕</a></p>
+</div>
+<div class="section" id="this-blog">
+<h1>This Blog</h1>
+<p>This blog is hosted on <a class="reference external" href="http://github.io/">github.io</a>, the 'blog system' is simply a makefile</p>
+<pre class="code makefile literal-block">
+<span class="nv">RSTS</span><span class="o">=</span><span class="k">$(</span>wildcard *.rst<span class="k">)</span>
+<span class="nv">HTMLS</span><span class="o">=</span><span class="k">${</span><span class="nv">RSTS</span><span class="p">:.rst=.html</span><span class="k">}</span>
+<span class="nv">STYLE</span><span class="o">=</span>style.css
+<span class="nv">TEMPLATE</span><span class="o">=</span>template.txt
+<span class="nv">EXTRA</span><span class="o">=</span>-s --input-encoding<span class="o">=</span>cp936 --output-encoding<span class="o">=</span>utf-8 --syntax-highlight<span class="o">=</span>short
+<span class="nv">ARGS</span><span class="o">=</span>--stylesheet<span class="o">=</span><span class="k">$(</span>STYLE<span class="k">)</span> --link-stylesheet --template<span class="o">=</span><span class="k">$(</span>TEMPLATE<span class="k">)</span> <span class="k">$(</span>EXTRA<span class="k">)</span>
+
+<span class="nf">.SUFFIXES</span><span class="o">:</span> <span class="m">.html .rst</span>
+
+<span class="nf">all</span><span class="o">:</span> <span class="m">$(HTMLS)</span>
+
+<span class="nf">%.html</span><span class="o">:</span> <span class="m">%.rst $(TEMPLATE)</span>
+        rst2html.py <span class="k">$(</span>ARGS<span class="k">)</span> <span class="nv">$&lt;</span> <span class="nv">$&#64;</span>
+</pre>
+</div>
+<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+</div>
+<div class="footer">
+<hr class="footer" />
+<a class="reference external" href="about.rst">View document source</a>.
+
+</div>
+</body>
+</html>

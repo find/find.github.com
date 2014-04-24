@@ -13,9 +13,6 @@ Coding
 
 
 
-
-
-
 Reading
 ============
 
@@ -33,6 +30,7 @@ Photos
 * `Random Shots`__
 
 .. __: http://foto.if-yu.info/
+
 
 
 TODOS
