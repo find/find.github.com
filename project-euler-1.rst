@@ -957,10 +957,356 @@ Project Euler 题解第一页
     println(s)
 
 
+38
+---
 
-----
+.. code:: julia
 
-明天继续
+    ispandigital(s::String) = sort(collect(s)) == collect("123456789")
+    +(s1::String,s2::String) = string(s1,s2)
+
+    function guesspandigital(x)
+        s = string(x)
+        i = 2
+        while length(s)<9
+            s += string(x*i)
+            i += 1
+        end
+        return s
+    end
+
+    ispandigitalmultiple(x) = ispandigital(guesspandigital(x))
+
+    largest = 0
+    for p in 2:10000 # 10000 -> 1000020000
+        s = guesspandigital(p)
+        if ispandigital(s) && largest<int(s)
+            largest = int(s)
+        end
+        p += 1
+    end
+
+    println(largest)
+
+
+39
+---
+
+问对于 :math:`p \leq 1000`, :math:`p` 取值多少的时候方程
+
+.. math::
+
+    \begin{cases}
+        a^2 + b^2 = c^2 \\
+        a < b < c \\
+        a+b+c = p 
+    \end{cases}
+
+有最多的解
+
+.. code:: julia
+
+    function numsolution(p)
+        cnt = 0
+        for a in 1:300
+            for b in a+1:(p-a)/2
+                c = sqrt(a*a+b*b)
+                if isinteger(c) && a+b+c == p
+                    cnt += 1
+                end
+            end
+        end
+        return cnt
+    end
+
+    x = 0
+    n = 0
+    for i in 1:1000
+        ns = numsolution(i)
+        if ns>n
+            n = ns
+            x = i
+        end
+    end
+    println(x)
+
+
+40
+---
+
+由于数据量太小（对于我的计算机），我就直接算出来了
+
+出题者意图肯定不是希望这么作弊的 - -
+
+.. code:: julia
+
+    +(s1::String,s2::String) = string(s1,s2)
+
+    s = sum(map(string,[1:1000000]))
+    println(prod(map(i->s[10^i]-'0', [0:6])))
+
+
+41
+---
+
+求最大的包含 :math:`[1, n]` 每个数字的 n 位质数
+
+显然 n 不会超过 9，直接从后往前找包含 :math:`[1, n]` 每个数字的数判断一下
+
+.. code:: julia
+
+    ps = Int[]
+    tonum(li) = sum(map(i->li[i]*10^(length(li)-i), [1:length(li)]))
+
+    for d in 9:-1:2
+        found = false
+        for p in permutations([d:-1:1])
+            if isprime(tonum(p))
+                push!(ps,tonum(p))
+                found = true
+                break
+            end
+        end
+        if found
+            break
+        end
+    end
+
+    println(sort(ps)[end])
+
+
+42
+---
+
+判断一个数是不是 :math:`n(n+1)/2` 的整数解，解出这个方程就好了 ……
+
+.. code:: julia
+
+    words = [...]
+    istrianglenum(n)  = isinteger((sqrt(1+8n)-1)/2)
+    istriangleword(w) = istrianglenum(sum(map(c->c-'A'+1, collect(w))))
+
+    println(length(filter(istriangleword, words)))
+
+
+43
+---
+
+这一题难度完全在于如何理解 `this property`
+
+... 然后呢它真就表示的是“这种性质”的字面意思—— :math:`d_2d_3d_4` 可以被 2 整除， :math:`d_3d_4d_5` 可以被 3 整除 ...
+
+所以 ——
+
+.. code:: julia
+
+    d   = [2,3,5,7,11,13,17]
+    idx = [2:8]
+
+    tonum(li) = sum(map(i->li[i]*10^(length(li)-i), [1:length(li)]))
+
+    s = BigInt(0)
+    for p in permutations([0:9])
+        if p[1] == 0
+            continue
+        end
+        m = true
+        for i in idx
+            if tonum(p[i:i+2])%d[i-1] != 0 
+                m = false
+                break
+            end
+        end
+        if m
+            println(tonum(p))
+            s += tonum(p)
+        end
+    end
+    println(s)
+
+
+44
+---
+
+同 42_, 判断一个数字是不是 `pentagonal`, 把方程 :math:`P_n=n(3n-1)/2` 解出来就好了
+
+.. code:: julia
+
+    ub = 5000 #upper bound, guess
+    pd = map(n->int(n*(3n-1)/2), [1:ub])
+    ispentagon(n) = isinteger((1 + sqrt(1 + 24n))/6)
+
+    # println(ispentagon(145))
+
+    D = 2^62
+    for i in [1:ub-1]
+        for j in [i+1:ub]
+            if  ispentagon(pd[i]+pd[j]) &&
+                ispentagon(pd[j]-pd[i])
+                # println("$i $j")
+                D = minimum([D, pd[j]-pd[i]])
+            end
+        end
+    end
+    println(D)
+
+
+45
+---
+
+同上
+
+.. code:: julia
+
+    istriangle(n) = isinteger((sqrt(1+8n) - 1)/2)
+    ispentagon(n) = isinteger((1 + sqrt(1 + 24n))/6)
+    ishexagonal(n) = isinteger((1 + sqrt(1 + 8n))/4)
+
+    P(n) = int(n*(3n-1)/2)
+    n = 165+1
+
+    while true
+        p = P(n)
+        if istriangle(p) && ishexagonal(p)
+            println(p)
+            break
+        end
+        n += 1
+    end
+
+
+46
+---
+
+求最小的不能表示为 :math:`prime + 2 \times x^2` 的合数
+
+.. code:: julia
+
+    ps = primes(1000000)
+
+    function candivide(x)
+        for p in ps
+            if p>=x
+                return false
+            end
+            if isinteger(sqrt((x-p)/2))
+                return true
+            end
+        end
+        return false
+    end
+
+    for i in 33:2:1000000
+        if !isprime(i) && !candivide(i)
+            println(i)
+            break
+        end
+    end
+
+
+47
+---
+
+求最小的连续四个各自有四个不同的质因数的整数
+
+.. code:: julia
+
+    numfactors = map(x->length(factor(x)), [1:1000000])
+    for i in 4:length(numfactors)
+        if numfactors[i] == numfactors[i-1] == numfactors[i-2] == numfactors[i-3] == 4
+            println(i-3)
+            break
+        end
+    end
+
+48
+---
+
+求 :math:`1^1 + 2^2 + 3^3 + ... + 1000^1000` 的最后十位数字
+
+做加法和乘法运算时都可以截止到最后十位数字 —— 需要注意的是两个十进制下的 10 位数用 64 位整数表示,
+乘法计算可能溢出
+
+.. code:: julia
+
+    LIMIT = 10^10
+    HALF  = 10^5
+
+    type Truncated
+        val::Int64
+    end
+
+    truncated(x::Int64) = Truncated(x%LIMIT)
+    +(a::Truncated,b::Truncated) = truncated((a.val + b.val)%LIMIT)
+    ==(a::Truncated,b::Truncated) = a.val == b.val
+    function *(a::Truncated,b::Truncated) 
+        a1 = int(floor(a.val/HALF))
+        a2 = a.val%HALF
+        b1 = int(floor(b.val/HALF))
+        b2 = b.val%HALF
+        low = a2 * b2 + a1 * b2 * HALF + a2 * b1 * HALF
+
+        truncated(low % LIMIT)
+    end
+    ^(a::Truncated,b::Int) = reduce(*, Truncated(1), [a for i in 1:b])
+
+    assert(sum(map(x->truncated(x)^x, [1:10]))==truncated(10405071317))
+
+    println(sum(map(x->truncated(x)^x, [1:1000])))
+
+
+49
+---
+
+求三个四位质数，它们成等差数列，且包含的数字仅有排列顺序不同
+
+.. code:: julia
+
+    ps = filter(x->x>1000, primes(9999))
+
+    function ispermuation(x,y,z)
+        return sort(collect(string(x))) == sort(collect(string(y))) == sort(collect(string(z)))
+    end
+
+    for i in 1:length(ps)-2
+        for j in i+1:length(ps)-1
+            if in(ps[j]*2-ps[i], ps) &&
+                ispermuation(ps[i], ps[j], ps[j]*2-ps[i])
+                println("$(ps[i]), $(ps[j]), $(ps[j]*2-ps[i])")
+            end
+        end
+    end
+
+
+50
+---
+
+求 1000000 以下能够用最多的连续递增质数列的和表示的质数
+
+.. code:: julia
+
+    ps = primes(10000) # guess
+    sm = [0, [p for p in ps]]
+    for i in 2:length(sm)
+        sm[i] += sm[i-1]
+    end
+
+    maxlen   = 1
+    maxprime = 2
+    for front in 1:length(sm)-1
+        for back in front+1:length(sm)
+            if sm[back]-sm[front]<1000000 && isprime(sm[back]-sm[front])
+                len = back-front
+                if len>maxlen
+                    maxlen = len
+                    maxprime = sm[back]-sm[front]
+                    #println("$maxprime = sum(primes($front .. $(back-1))))")
+                end
+            end
+        end
+    end
+    println("$maxprime -> $maxlen")
+
 
 .. _Julia: http://julialang.org/
 .. _`Project Euler`: http://projecteuler.net

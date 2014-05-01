@@ -891,8 +891,352 @@
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
 </pre>
-<hr class="docutils" />
-<p>明天继续</p>
+</div>
+<div class="section" id="id38">
+<h1>38</h1>
+<pre class="code julia literal-block">
+<span class="n">ispandigital</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">==</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
+<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="p">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
+
+<span class="k">function</span><span class="nf"> guesspandigital</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">while</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">9</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">string</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">s</span>
+<span class="k">end</span>
+
+<span class="n">ispandigitalmultiple</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">ispandigital</span><span class="p">(</span><span class="n">guesspandigital</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+<span class="n">largest</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">10000</span> <span class="c"># 10000 -&gt; 1000020000</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">guesspandigital</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ispandigital</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">largest</span><span class="o">&lt;</span><span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">largest</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">largest</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id39">
+<h1>39</h1>
+<p>问对于 <span class="formula"><i>p</i> ≤ 1000</span>
+, <span class="formula"><i>p</i></span>
+ 取值多少的时候方程</p>
+<div class="formula">
+<span class="array"><span class="arrayrow"><span class="bracket align-l">⎧</span></span><span class="arrayrow"><span class="bracket align-l">⎪</span></span><span class="arrayrow"><span class="bracket align-l">⎨</span></span><span class="arrayrow"><span class="bracket align-l">⎪</span></span><span class="arrayrow"><span class="bracket align-l">⎩</span></span></span><span class="bracketcases">
+<span class="arrayrow">
+<span class="case align-l">
+<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup> 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="case align-l">
+  
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="case align-l">
+<i>a</i> &lt; <i>b</i> &lt; <i>c</i> 
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="case align-l">
+  
+</span>
+
+</span>
+<span class="arrayrow">
+<span class="case align-l">
+<i>a</i> + <i>b</i> + <i>c</i> = <i>p</i> 
+</span>
+
+</span>
+
+</span>
+
+</div>
+<p>有最多的解</p>
+<pre class="code julia literal-block">
+<span class="k">function</span><span class="nf"> numsolution</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">300</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">:(</span><span class="n">p</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">b</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">isinteger</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span> <span class="o">==</span> <span class="n">p</span>
+                <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">end</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">cnt</span>
+<span class="k">end</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1000</span>
+    <span class="n">ns</span> <span class="o">=</span> <span class="n">numsolution</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ns</span><span class="o">&gt;</span><span class="n">n</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">ns</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id40">
+<h1>40</h1>
+<p>由于数据量太小（对于我的计算机），我就直接算出来了</p>
+<p>出题者意图肯定不是希望这么作弊的 - -</p>
+<pre class="code julia literal-block">
+<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="p">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">string</span><span class="p">,[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">]))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">prod</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="o">^</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="sc">'0'</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id41">
+<h1>41</h1>
+<p>求最大的包含 <span class="formula">[1, <i>n</i>]</span>
+ 每个数字的 n 位质数</p>
+<p>显然 n 不会超过 9，直接从后往前找包含 <span class="formula">[1, <i>n</i>]</span>
+ 每个数字的数判断一下</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
+<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
+
+<span class="k">for</span> <span class="n">d</span> <span class="k">in</span> <span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">false</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">permutations</span><span class="p">([</span><span class="n">d</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">isprime</span><span class="p">(</span><span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+            <span class="n">push</span><span class="o">!</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span><span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="n">true</span>
+            <span class="k">break</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">found</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">sort</span><span class="p">(</span><span class="n">ps</span><span class="p">)[</span><span class="k">end</span><span class="p">])</span>
+</pre>
+</div>
+<div class="section" id="id42">
+<h1>42</h1>
+<p>判断一个数是不是 <span class="formula"><i>n</i>(<i>n</i> + 1) ⁄ 2</span>
+ 的整数解，解出这个方程就好了 ……</p>
+<pre class="code julia literal-block">
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">istrianglenum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">8</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">istriangleword</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">=</span> <span class="n">istrianglenum</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">c</span><span class="o">-</span><span class="sc">'A'</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">collect</span><span class="p">(</span><span class="n">w</span><span class="p">))))</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">istriangleword</span><span class="p">,</span> <span class="n">words</span><span class="p">)))</span>
+</pre>
+</div>
+<div class="section" id="id43">
+<h1>43</h1>
+<p>这一题难度完全在于如何理解 <cite>this property</cite></p>
+<p>... 然后呢它真就表示的是“这种性质”的字面意思—— <span class="formula"><i>d</i><sub>2</sub><i>d</i><sub>3</sub><i>d</i><sub>4</sub></span>
+ 可以被 2 整除， <span class="formula"><i>d</i><sub>3</sub><i>d</i><sub>4</sub><i>d</i><sub>5</sub></span>
+ 可以被 3 整除 ...</p>
+<p>所以 ——</p>
+<pre class="code julia literal-block">
+<span class="n">d</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">17</span><span class="p">]</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+
+<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">permutations</span><span class="p">([</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">continue</span>
+    <span class="k">end</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">true</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">idx</span>
+        <span class="k">if</span> <span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">%</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">false</span>
+            <span class="k">break</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">m</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id44">
+<h1>44</h1>
+<p>同 <a class="reference internal" href="#id42">42</a>, 判断一个数字是不是 <cite>pentagonal</cite>, 把方程 <span class="formula"><i>P</i><sub><i>n</i></sub> = <i>n</i>(3<i>n</i> − 1) ⁄ 2</span>
+ 解出来就好了</p>
+<pre class="code julia literal-block">
+<span class="n">ub</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c">#upper bound, guess</span>
+<span class="n">pd</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="p">])</span>
+<span class="n">ispentagon</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">24</span><span class="n">n</span><span class="p">))</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
+
+<span class="c"># println(ispentagon(145))</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="mi">2</span><span class="o">^</span><span class="mi">62</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="p">]</span>
+        <span class="k">if</span>  <span class="n">ispentagon</span><span class="p">(</span><span class="n">pd</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">pd</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&amp;&amp;</span>
+            <span class="n">ispentagon</span><span class="p">(</span><span class="n">pd</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="n">pd</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c"># println(&quot;$i $j&quot;)</span>
+            <span class="n">D</span> <span class="o">=</span> <span class="n">minimum</span><span class="p">([</span><span class="n">D</span><span class="p">,</span> <span class="n">pd</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="n">pd</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="id45">
+<h1>45</h1>
+<p>同上</p>
+<pre class="code julia literal-block">
+<span class="n">istriangle</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">8</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ispentagon</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">24</span><span class="n">n</span><span class="p">))</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">ishexagonal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">8</span><span class="n">n</span><span class="p">))</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">P</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">165</span><span class="o">+</span><span class="mi">1</span>
+
+<span class="k">while</span> <span class="n">true</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">P</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">istriangle</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">ishexagonal</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+    <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id46">
+<h1>46</h1>
+<p>求最小的不能表示为 <span class="formula"><i>prime</i> + 2 × <i>x</i><sup>2</sup></span>
+ 的合数</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+
+<span class="k">function</span><span class="nf"> candivide</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">&gt;=</span><span class="n">x</span>
+            <span class="k">return</span> <span class="n">false</span>
+        <span class="k">end</span>
+        <span class="k">if</span> <span class="n">isinteger</span><span class="p">(</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">true</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">false</span>
+<span class="k">end</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">33</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="mi">1000000</span>
+    <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">candivide</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id47">
+<h1>47</h1>
+<p>求最小的连续四个各自有四个不同的质因数的整数</p>
+<pre class="code julia literal-block">
+<span class="n">numfactors</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">(</span><span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">4</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">numfactors</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">break</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id48">
+<h1>48</h1>
+<p>求 <span class="formula">1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 1000<sup>1000</sup></span>
+ 的最后十位数字</p>
+<p>做加法和乘法运算时都可以截止到最后十位数字 —— 需要注意的是两个十进制下的 10 位数用 64 位整数表示,
+乘法计算可能溢出</p>
+<pre class="code julia literal-block">
+<span class="n">LIMIT</span> <span class="o">=</span> <span class="mi">10</span><span class="o">^</span><span class="mi">10</span>
+<span class="n">HALF</span>  <span class="o">=</span> <span class="mi">10</span><span class="o">^</span><span class="mi">5</span>
+
+<span class="k">type</span><span class="nc"> Truncated</span>
+    <span class="n">val</span><span class="p">::</span><span class="kt">Int64</span>
+<span class="k">end</span>
+
+<span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span> <span class="o">=</span> <span class="n">Truncated</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
+<span class="o">+</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">truncated</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="p">)</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
+<span class="o">==</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span>
+<span class="k">function</span><span class="nf"> </span><span class="o">*(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">val</span><span class="o">/</span><span class="n">HALF</span><span class="p">))</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span><span class="o">%</span><span class="n">HALF</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="o">/</span><span class="n">HALF</span><span class="p">))</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="o">%</span><span class="n">HALF</span>
+    <span class="n">low</span> <span class="o">=</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">+</span> <span class="n">a1</span> <span class="o">*</span> <span class="n">b2</span> <span class="o">*</span> <span class="n">HALF</span> <span class="o">+</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">HALF</span>
+
+    <span class="n">truncated</span><span class="p">(</span><span class="n">low</span> <span class="o">%</span> <span class="n">LIMIT</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="o">^</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">Truncated</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">b</span><span class="p">])</span>
+
+<span class="nb">assert</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">]))</span><span class="o">==</span><span class="n">truncated</span><span class="p">(</span><span class="mi">10405071317</span><span class="p">))</span>
+
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000</span><span class="p">])))</span>
+</pre>
+</div>
+<div class="section" id="id49">
+<h1>49</h1>
+<p>求三个四位质数，它们成等差数列，且包含的数字仅有排列顺序不同</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="n">filter</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">1000</span><span class="p">,</span> <span class="n">primes</span><span class="p">(</span><span class="mi">9999</span><span class="p">))</span>
+
+<span class="k">function</span><span class="nf"> ispermuation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="o">==</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span> <span class="o">==</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">z</span><span class="p">)))</span>
+<span class="k">end</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="k">in</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ps</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+            <span class="n">ispermuation</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="s">(ps[i]), </span><span class="si">$</span><span class="s">(ps[j]), </span><span class="si">$</span><span class="s">(ps[j]*2-ps[i])&quot;</span><span class="p">)</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+<div class="section" id="id50">
+<h1>50</h1>
+<p>求 1000000 以下能够用最多的连续递增质数列的和表示的质数</p>
+<pre class="code julia literal-block">
+<span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="c"># guess</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
+    <span class="n">sm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">end</span>
+
+<span class="n">maxlen</span>   <span class="o">=</span> <span class="mi">1</span>
+<span class="n">maxprime</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="k">for</span> <span class="n">front</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">back</span> <span class="k">in</span> <span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sm</span><span class="p">[</span><span class="n">back</span><span class="p">]</span><span class="o">-</span><span class="n">sm</span><span class="p">[</span><span class="n">front</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1000000</span> <span class="o">&amp;&amp;</span> <span class="n">isprime</span><span class="p">(</span><span class="n">sm</span><span class="p">[</span><span class="n">back</span><span class="p">]</span><span class="o">-</span><span class="n">sm</span><span class="p">[</span><span class="n">front</span><span class="p">])</span>
+            <span class="n">len</span> <span class="o">=</span> <span class="n">back</span><span class="o">-</span><span class="n">front</span>
+            <span class="k">if</span> <span class="n">len</span><span class="o">&gt;</span><span class="n">maxlen</span>
+                <span class="n">maxlen</span> <span class="o">=</span> <span class="n">len</span>
+                <span class="n">maxprime</span> <span class="o">=</span> <span class="n">sm</span><span class="p">[</span><span class="n">back</span><span class="p">]</span><span class="o">-</span><span class="n">sm</span><span class="p">[</span><span class="n">front</span><span class="p">]</span>
+                <span class="c">#println(&quot;$maxprime = sum(primes($front .. $(back-1))))&quot;)</span>
+            <span class="k">end</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="s">maxprime -&gt; </span><span class="si">$</span><span class="s">maxlen&quot;</span><span class="p">)</span>
+</pre>
 </div>
 <footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
 </div>
