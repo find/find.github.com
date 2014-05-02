@@ -5,7 +5,7 @@ Finding My Answers
 Coding
 ============
 
-* `Project Euler 题解 I`__
+* `Project Euler 题解 1~50`__
 * `Lua 阅读笔记`__
 
 .. __: project-euler-1.html
@@ -32,6 +32,11 @@ Photos
 .. __: http://foto.if-yu.info/
 
 
+Me
+======
+
+* About_
+
 
 TODOS
 -------
@@ -40,5 +45,5 @@ TODOS
 * 《数学：确定性的丧失》
 * 《苏菲的世界》
 
-
+.. _About: about.html
 

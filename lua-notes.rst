@@ -2,6 +2,14 @@
 Lua 源码阅读笔记
 =================
 
+.. raw:: html
+
+    <style>
+        .document h2:before { content:""; }
+        .document h2:after  { content:" :"; }
+        .document h2 { font-weight: bold; }
+    </style>
+
 .. contents:: 目录
 
 ---------------
@@ -74,9 +82,8 @@ lapi.c
 
 在 `lapi.c` 中，最重要的函数可以说是 ``index2addr`` 了吧：
 
-.. _index2addr:
-
-**index2addr** :
+index2addr
+------------
 
 .. code:: c
 
@@ -128,9 +135,8 @@ lapi.c
 lobject.h
 ==========
 
-.. _TValue:
-
-**TValue** :
+TValue
+-------
 
 .. code:: c
 
@@ -197,9 +203,9 @@ string 类型有两种区分：
     #define LUA_TSHRSTR	(LUA_TSTRING | (0 << 4))  /* short strings */
     #define LUA_TLNGSTR	(LUA_TSTRING | (1 << 4))  /* long strings */
 
-.. _Value:
 
-**Value** :
+Value
+------
 
 .. code:: c
 
@@ -218,9 +224,8 @@ string 类型有两种区分：
 以便用于垃圾回收
 
 
-.. _`Pseudo Index`:
-
-**Pseudo Index** :
+Pseudo Index
+-------------
 
 .. code:: c
 
@@ -230,7 +235,8 @@ string 类型有两种区分：
     #define lua_upvalueindex(i)	(LUA_REGISTRYINDEX - (i))
 
 
-**CommonHeader** :
+CommonHeader
+-------------
 
 .. code:: c
 
@@ -250,9 +256,8 @@ CommonHeader 是 Lua 用于垃圾回收的结构，其中 GCObject_ * next 指向下一个可回收对
 lstate.h
 =========
 
-.. _GCObject:
-
-**GCObject** :
+GCObject
+---------
 
 .. code:: c
 
@@ -267,9 +272,8 @@ lstate.h
       struct lua_State th;  /* thread */
     };
 
-.. _CallInfo:
-
-**CallInfo** :
+CallInfo
+----------
 
 .. code:: c
 
@@ -310,6 +314,46 @@ lstate.h
     #define CIST_STAT	(1<<5)	/* call has an error status (pcall) */
     #define CIST_TAIL	(1<<6)	/* call was tail called */
     #define CIST_HOOKYIELD	(1<<7)	/* last hook called yielded */
+
+lua_State
+-----------
+
+这是每个 Lua 函数都会接受的表示当前状态的结构，最主要的成员包括运行栈 stack, 
+栈用于表示函数调用、传递参数及返回值
+
+.. code:: c
+
+    /*
+    ** `per thread' state
+    */
+    struct lua_State {
+      CommonHeader;
+      lu_byte status;
+      StkId top;  /* first free slot in the stack */
+      global_State *l_G;
+      CallInfo *ci;  /* call info for current function */
+      const Instruction *oldpc;  /* last pc traced */
+      StkId stack_last;  /* last free slot in the stack */
+      StkId stack;  /* stack base */
+      int stacksize;
+      unsigned short nny;  /* number of non-yieldable calls in stack */
+      unsigned short nCcalls;  /* number of nested C calls */
+      lu_byte hookmask;
+      lu_byte allowhook;
+      int basehookcount;
+      int hookcount;
+      lua_Hook hook;
+      GCObject *openupval;  /* list of open upvalues in this stack */
+      GCObject *gclist;
+      struct lua_longjmp *errorJmp;  /* current error recover point */
+      ptrdiff_t errfunc;  /* current error handling function (stack index) */
+      CallInfo base_ci;  /* CallInfo for first level (C calling Lua) */
+    };
+
+
+.. note::
+
+    to be continued ...
 
 
 .. _`Lua Manual`: http://www.lua.org/manual/5.2/manual.html
