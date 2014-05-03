@@ -36,6 +36,10 @@
 <li><a class="reference internal" href="#lua-state" id="id16">lua_State</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#lvm-c" id="id17">lvm.c</a><ul>
+<li><a class="reference internal" href="#luav-execute" id="id18">luaV_execute</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <hr class="docutils" />
@@ -356,6 +360,45 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
   <span class="n">CallInfo</span> <span class="n">base_ci</span><span class="p">;</span>  <span class="cm">/* CallInfo for first level (C calling Lua) */</span>
 <span class="p">};</span>
 </pre>
+</div>
+</div>
+<div class="section" id="lvm-c">
+<h1><a class="toc-backref" href="#id17">lvm.c</a></h1>
+<p>首先 <tt class="docutils literal">Instruction</tt> 的定义是 <tt class="docutils literal">uint32</tt></p>
+<p>留意一下 lvm.h 这一段很重要的注释</p>
+<pre class="code c literal-block">
+<span class="cm">/*===========================================================================
+  We assume that instructions are unsigned numbers.
+  All instructions have an opcode in the first 6 bits.
+  Instructions can have the following fields:
+    `A' : 8 bits
+    `B' : 9 bits
+    `C' : 9 bits
+    'Ax' : 26 bits ('A', 'B', and 'C' together)
+    `Bx' : 18 bits (`B' and `C' together)
+    `sBx' : signed Bx
+
+  A signed argument is represented in excess K; that is, the number
+  value is the unsigned value minus K. K is exactly the maximum value
+  for that argument (so that -max is represented by 0, and +max is
+  represented by 2*max), which is half the maximum for the corresponding
+  unsigned argument.
+===========================================================================*/</span>
+</pre>
+<p>我们可以发现体积最大的操作数 <tt class="docutils literal">Ax</tt> 加上 6bit 指令正好有 32 位 —— 不难猜出虚拟机的指令组织方式</p>
+<div class="section" id="luav-execute">
+<h2><a class="toc-backref" href="#id18">luaV_execute</a></h2>
+<p>虚拟机本体</p>
+<p>随便取一个指令的解析来看看：</p>
+<pre class="code c literal-block">
+<span class="n">vmcase</span><span class="p">(</span><span class="n">OP_MOVE</span><span class="p">,</span>
+    <span class="n">setobjs2s</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">ra</span><span class="p">,</span> <span class="n">RB</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="p">)</span>
+</pre>
+<p><tt class="docutils literal">ra</tt> 是用 <tt class="docutils literal">RA(</tt> <a class="reference internal" href="#callinfo">CallInfo</a>.u.l.savedpc <tt class="docutils literal">)</tt> 取出的，而 <tt class="docutils literal">RA</tt> 所做的事情是取出指令（此处即 <tt class="docutils literal">savedpc</tt> ）中的第 7-14 位的数值</p>
+<p><tt class="docutils literal">RB</tt> 做的也是类似的事情，所以这句话就是说遇到 <tt class="docutils literal">OP_MOVE</tt> 指令的时候对紧接在后面的 <tt class="docutils literal">A</tt>, <tt class="docutils literal">B</tt> 两个操作数执行 <tt class="docutils literal">setobjs2s</tt> 操作</p>
+<blockquote>
+PS. <tt class="docutils literal">newframe</tt> 标签看上去真是个万般无奈的解啊</blockquote>
 <div class="note">
 <p class="first admonition-title">Note</p>
 <p class="last">to be continued ...</p>

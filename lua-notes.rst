@@ -351,6 +351,60 @@ lua_State
     };
 
 
+lvm.c
+======
+
+首先 ``Instruction`` 的定义是 ``uint32``
+
+留意一下 lvm.h 这一段很重要的注释
+
+.. code:: c
+
+    /*===========================================================================
+      We assume that instructions are unsigned numbers.
+      All instructions have an opcode in the first 6 bits.
+      Instructions can have the following fields:
+        `A' : 8 bits
+        `B' : 9 bits
+        `C' : 9 bits
+        'Ax' : 26 bits ('A', 'B', and 'C' together)
+        `Bx' : 18 bits (`B' and `C' together)
+        `sBx' : signed Bx
+
+      A signed argument is represented in excess K; that is, the number
+      value is the unsigned value minus K. K is exactly the maximum value
+      for that argument (so that -max is represented by 0, and +max is
+      represented by 2*max), which is half the maximum for the corresponding
+      unsigned argument.
+    ===========================================================================*/
+
+我们可以发现体积最大的操作数 ``Ax`` 加上 6bit 指令正好有 32 位 —— 不难猜出虚拟机的指令组织方式
+
+
+luaV_execute
+-------------
+
+虚拟机本体
+
+随便取一个指令的解析来看看：
+
+.. code:: c
+
+    vmcase(OP_MOVE,
+        setobjs2s(L, ra, RB(i));
+    )
+
+``ra`` 是用 ``RA(`` CallInfo_.u.l.savedpc ``)`` 取出的，而 ``RA`` 所做的事情是\
+取出指令（此处即 ``savedpc`` ）中的第 7-14 位的数值
+
+``RB`` 做的也是类似的事情，所以这句话就是说遇到 ``OP_MOVE`` 指令的时候对紧接在\
+后面的 ``A``, ``B`` 两个操作数执行 ``setobjs2s`` 操作
+
+
+
+    PS. ``newframe`` 标签看上去真是个万般无奈的解啊
+
+
 .. note::
 
     to be continued ...
