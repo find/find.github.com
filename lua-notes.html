@@ -395,7 +395,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
     <span class="n">setobjs2s</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">ra</span><span class="p">,</span> <span class="n">RB</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
 <span class="p">)</span>
 </pre>
-<p><tt class="docutils literal">ra</tt> 是用 <tt class="docutils literal">RA(</tt> <a class="reference internal" href="#callinfo">CallInfo</a>.u.l.savedpc <tt class="docutils literal">)</tt> 取出的，而 <tt class="docutils literal">RA</tt> 所做的事情是取出指令（此处即 <tt class="docutils literal">savedpc</tt> ）中的第 7-14 位的数值</p>
+<p><tt class="docutils literal">ra</tt> 是用 <tt class="docutils literal">RA(</tt> <a class="reference internal" href="#callinfo">CallInfo</a>.u.l.savedpc <tt class="docutils literal">)</tt> 取出的，而 <tt class="docutils literal">RA</tt> 所做的事情是取出指令（此处即 <tt class="docutils literal">savedpc</tt> ）中的第 7-14 位的数值，然后加上 base 地址，获得一个 TValue 的指针</p>
 <p><tt class="docutils literal">RB</tt> 做的也是类似的事情，所以这句话就是说遇到 <tt class="docutils literal">OP_MOVE</tt> 指令的时候对紧接在后面的 <tt class="docutils literal">A</tt>, <tt class="docutils literal">B</tt> 两个操作数执行 <tt class="docutils literal">setobjs2s</tt> 操作</p>
 <blockquote>
 PS. <tt class="docutils literal">newframe</tt> 标签看上去真是个万般无奈的解啊</blockquote>
