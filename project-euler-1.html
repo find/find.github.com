@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
 <title>Project Euler 题解第一页</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
 <link rel="stylesheet" href="math.css" type="text/css" />
@@ -128,10 +128,7 @@
 </div>
 <div class="section" id="id9">
 <h1>9</h1>
-<p>找到满足 <span class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span>
- 且 <span class="formula"><i>a</i> + <i>b</i> + <i>c</i> = 1000</span>
- 的 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span>
-</p>
+<p>找到满足 <span class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span> 且 <span class="formula"><i>a</i> + <i>b</i> + <i>c</i> = 1000</span> 的 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span></p>
 <pre class="code julia literal-block">
 <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
@@ -288,8 +285,7 @@
 </div>
 <div class="section" id="id16">
 <h1>16</h1>
-<p>求 <span class="formula">2<sup>1000</sup></span>
- 的每位数字的和</p>
+<p>求 <span class="formula">2<sup>1000</sup></span> 的每位数字的和</p>
 <pre class="code julia literal-block">
 <span class="n">println</span><span class="p">(</span><span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span><span class="o">+</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">string</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">^</span><span class="mi">1000</span><span class="p">)))</span>
 </pre>
@@ -572,12 +568,8 @@
 </div>
 <div class="section" id="id27">
 <h1>27</h1>
-<p>求使得 <span class="formula">∀<i>i</i> ∈ [0, <i>N</i>] <i>i</i><sup>2</sup> + <i>a</i>*<i>i</i> + <i>b</i><i>为质数</i></span>
- 中的 N 取值最大的 <span class="formula"><i>a</i>, <i>b</i></span>
- 的乘积，
-其中 <span class="formula">|<i>a</i>| &lt; 1000</span>
- 且 <span class="formula">|<i>b</i>| &lt; 1000</span>
-</p>
+<p>求使得 <span class="formula">∀<i>i</i> ∈ [0, <i>N</i>] <i>i</i><sup>2</sup> + <i>a</i>*<i>i</i> + <i>b</i><i>为质数</i></span> 中的 N 取值最大的 <span class="formula"><i>a</i>, <i>b</i></span> 的乘积，
+其中 <span class="formula">|<i>a</i>| &lt; 1000</span> 且 <span class="formula">|<i>b</i>| &lt; 1000</span></p>
 <pre class="code julia literal-block">
 <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">maxa</span> <span class="o">=</span> <span class="mi">0</span>
@@ -622,13 +614,9 @@
 </div>
 <div class="section" id="id29">
 <h1>29</h1>
-<p>求对于 <span class="formula">2 ≤ <i>a</i> ≤ 100</span>
- 且 <span class="formula">2 ≤ <i>b</i> ≤ 100</span>
-,
-<span class="formula"><i>a</i><sup><i>b</i></sup></span>
- 一共有多少个不重复的值</p>
-<p>任何一个理智的人都应该算出 <span class="formula">99 × 99</span>
- 然后减去重复的 …… 然而其实直接算也挺快的，不管了 ……</p>
+<p>求对于 <span class="formula">2 ≤ <i>a</i> ≤ 100</span> 且 <span class="formula">2 ≤ <i>b</i> ≤ 100</span>,
+<span class="formula"><i>a</i><sup><i>b</i></sup></span> 一共有多少个不重复的值</p>
+<p>任何一个理智的人都应该算出 <span class="formula">99 × 99</span> 然后减去重复的 …… 然而其实直接算也挺快的，不管了 ……</p>
 <pre class="code julia literal-block">
 <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;4&quot;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span><span class="mi">100</span>
@@ -643,16 +631,11 @@
 <h1>30</h1>
 <p>求所有可以用自身每位数字的五次方相加表示的整数</p>
 <p>需要思考的问题只有 —— 上限是多少？</p>
-<p>若我们把一个大于 0 的 n 位数字表示为 <span class="formula"><span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup></span>
-,
-其中 <span class="formula"><i>d</i><sub><i>i</i></sub></span>
- 表示其第 i 位的数字，那么不难看出，
-每位数字的五次方相加的值域是 <span class="formula">1 ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub><sup>5</sup> ≤ 9<sup>5</sup> × <i>n</i></span>
-,
-而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span>
-</p>
-<p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup> × <i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>
-, 从这里开始往后不可能有解了</p>
+<p>若我们把一个大于 0 的 n 位数字表示为 <span class="formula"><span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup></span>,
+其中 <span class="formula"><i>d</i><sub><i>i</i></sub></span> 表示其第 i 位的数字，那么不难看出，
+每位数字的五次方相加的值域是 <span class="formula">1 ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub><sup>5</sup> ≤ 9<sup>5</sup> × <i>n</i></span>,
+而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span></p>
+<p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup> × <i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>, 从这里开始往后不可能有解了</p>
 <pre class="code julia literal-block">
 <span class="c"># when n&gt;6, 9^5*n &lt; 10^(n-1)</span>
 <span class="c">#  so set the upper limit to 9^5*6 is safe</span>
@@ -691,9 +674,7 @@
 </div>
 <div class="section" id="id32">
 <h1>32</h1>
-<p>找出所有 <span class="formula"><i>a</i> × <i>b</i> = <i>c</i></span>
- 且 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span>
- 每一位数字组成的列表正好包含 1 .. 9 每个数字各一次</p>
+<p>找出所有 <span class="formula"><i>a</i> × <i>b</i> = <i>c</i></span> 且 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span> 每一位数字组成的列表正好包含 1 .. 9 每个数字各一次</p>
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
 <span class="n">one2nine</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
@@ -741,9 +722,7 @@
 <div class="section" id="id33">
 <h1>33</h1>
 <p>找出分子分母各是两位数且能够从分子分母上各删除同一个数字其值不变的分数</p>
-<p><span class="formula">11 ⁄ 22 = 1 ⁄ 2</span>
- 或是 <span class="formula">10 ⁄ 20 = 1 ⁄ 2</span>
- 这种显然成立的除外</p>
+<p><span class="formula">11 ⁄ 22 = 1 ⁄ 2</span> 或是 <span class="formula">10 ⁄ 20 = 1 ⁄ 2</span> 这种显然成立的除外</p>
 <pre class="code julia literal-block">
 <span class="n">fs</span> <span class="o">=</span> <span class="n">Rational</span><span class="p">{</span><span class="kt">Int64</span><span class="p">}[]</span>
 
@@ -801,8 +780,7 @@
 </div>
 <div class="section" id="id35">
 <h1>35</h1>
-<p><span class="formula">10<sup>6</sup></span>
- 以下有几个质数随意循环移位还是质数</p>
+<p><span class="formula">10<sup>6</sup></span> 以下有几个质数随意循环移位还是质数</p>
 <pre class="code julia literal-block">
 <span class="k">function</span><span class="nf"> tonum</span><span class="p">(</span><span class="n">carr</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
@@ -841,8 +819,7 @@
 </div>
 <div class="section" id="id36">
 <h1>36</h1>
-<p>求 <span class="formula">10<sup>6</sup></span>
- 以下在十进制与二进制下都是回文数的数字之和</p>
+<p>求 <span class="formula">10<sup>6</sup></span> 以下在十进制与二进制下都是回文数的数字之和</p>
 <pre class="code julia literal-block">
 <span class="k">function</span><span class="nf"> ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">2</span>
@@ -924,9 +901,7 @@
 </div>
 <div class="section" id="id39">
 <h1>39</h1>
-<p>问对于 <span class="formula"><i>p</i> ≤ 1000</span>
-, <span class="formula"><i>p</i></span>
- 取值多少的时候方程</p>
+<p>问对于 <span class="formula"><i>p</i> ≤ 1000</span>, <span class="formula"><i>p</i></span> 取值多少的时候方程</p>
 <div class="formula">
 <span class="array"><span class="arrayrow"><span class="bracket align-l">⎧</span></span><span class="arrayrow"><span class="bracket align-l">⎪</span></span><span class="arrayrow"><span class="bracket align-l">⎨</span></span><span class="arrayrow"><span class="bracket align-l">⎪</span></span><span class="arrayrow"><span class="bracket align-l">⎩</span></span></span><span class="bracketcases">
 <span class="arrayrow">
@@ -1003,10 +978,8 @@
 </div>
 <div class="section" id="id41">
 <h1>41</h1>
-<p>求最大的包含 <span class="formula">[1, <i>n</i>]</span>
- 每个数字的 n 位质数</p>
-<p>显然 n 不会超过 9，直接从后往前找包含 <span class="formula">[1, <i>n</i>]</span>
- 每个数字的数判断一下</p>
+<p>求最大的包含 <span class="formula">[1, <i>n</i>]</span> 每个数字的 n 位质数</p>
+<p>显然 n 不会超过 9，直接从后往前找包含 <span class="formula">[1, <i>n</i>]</span> 每个数字的数判断一下</p>
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
 <span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
@@ -1030,8 +1003,7 @@
 </div>
 <div class="section" id="id42">
 <h1>42</h1>
-<p>判断一个数是不是 <span class="formula"><i>n</i>(<i>n</i> + 1) ⁄ 2</span>
- 的整数解，解出这个方程就好了 ……</p>
+<p>判断一个数是不是 <span class="formula"><i>n</i>(<i>n</i> + 1) ⁄ 2</span> 的整数解，解出这个方程就好了 ……</p>
 <pre class="code julia literal-block">
 <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
 <span class="n">istrianglenum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">8</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
@@ -1043,9 +1015,7 @@
 <div class="section" id="id43">
 <h1>43</h1>
 <p>这一题难度完全在于如何理解 <cite>this property</cite></p>
-<p>... 然后呢它真就表示的是“这种性质”的字面意思—— <span class="formula"><i>d</i><sub>2</sub><i>d</i><sub>3</sub><i>d</i><sub>4</sub></span>
- 可以被 2 整除， <span class="formula"><i>d</i><sub>3</sub><i>d</i><sub>4</sub><i>d</i><sub>5</sub></span>
- 可以被 3 整除 ...</p>
+<p>... 然后呢它真就表示的是“这种性质”的字面意思—— <span class="formula"><i>d</i><sub>2</sub><i>d</i><sub>3</sub><i>d</i><sub>4</sub></span> 可以被 2 整除， <span class="formula"><i>d</i><sub>3</sub><i>d</i><sub>4</sub><i>d</i><sub>5</sub></span> 可以被 3 整除 ...</p>
 <p>所以 ——</p>
 <pre class="code julia literal-block">
 <span class="n">d</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">17</span><span class="p">]</span>
@@ -1075,8 +1045,7 @@
 </div>
 <div class="section" id="id44">
 <h1>44</h1>
-<p>同 <a class="reference internal" href="#id42">42</a>, 判断一个数字是不是 <cite>pentagonal</cite>, 把方程 <span class="formula"><i>P</i><sub><i>n</i></sub> = <i>n</i>(3<i>n</i> − 1) ⁄ 2</span>
- 解出来就好了</p>
+<p>同 <a class="reference internal" href="#id42">42</a>, 判断一个数字是不是 <cite>pentagonal</cite>, 把方程 <span class="formula"><i>P</i><sub><i>n</i></sub> = <i>n</i>(3<i>n</i> − 1) ⁄ 2</span> 解出来就好了</p>
 <pre class="code julia literal-block">
 <span class="n">ub</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c">#upper bound, guess</span>
 <span class="n">pd</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="p">])</span>
@@ -1120,8 +1089,7 @@
 </div>
 <div class="section" id="id46">
 <h1>46</h1>
-<p>求最小的不能表示为 <span class="formula"><i>prime</i> + 2 × <i>x</i><sup>2</sup></span>
- 的合数</p>
+<p>求最小的不能表示为 <span class="formula"><i>prime</i> + 2 × <i>x</i><sup>2</sup></span> 的合数</p>
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
 
@@ -1160,8 +1128,7 @@
 </div>
 <div class="section" id="id48">
 <h1>48</h1>
-<p>求 <span class="formula">1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 1000<sup>1000</sup></span>
- 的最后十位数字</p>
+<p>求 <span class="formula">1<sup>1</sup> + 2<sup>2</sup> + 3<sup>3</sup> + ... + 1000<sup>1000</sup></span> 的最后十位数字</p>
 <p>做加法和乘法运算时都可以截止到最后十位数字 —— 需要注意的是两个十进制下的 10 位数用 64 位整数表示,
 乘法计算可能溢出</p>
 <pre class="code julia literal-block">
@@ -1238,7 +1205,13 @@
 <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="s">maxprime -&gt; </span><span class="si">$</span><span class="s">maxlen&quot;</span><span class="p">)</span>
 </pre>
 </div>
-<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+<footer>
+Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue on github</a>
+or
+mail to address in <a href="/about.html#public-key">my pub key</a>
+<br/>
+Copyright &copy; <a href="http://www.if-yu.info/">If</a>.
+</footer>
 </div>
 <div class="footer">
 <hr class="footer" />

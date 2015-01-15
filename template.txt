@@ -5,5 +5,11 @@
 %(body_pre_docinfo)s
 %(docinfo)s
 %(body)s
-<footer>Copyright &copy; <a href="http://www.if-yu.info/">If</a>.</footer>
+<footer>
+Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue on github</a>
+or
+mail to address in <a href="/about.html#public-key">my pub key</a>
+<br/>
+Copyright &copy; <a href="http://www.if-yu.info/">If</a>.
+</footer>
 %(body_suffix)s
