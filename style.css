@@ -25,12 +25,13 @@ p,  div,  li { font-family: 'Segoe UI', 'Calibri', 'Dejavu Sans', 'Verdana', '�
 code,  tt { border: 1px dashed silver; padding: 0 2px; }
 pre { background-color: #ffffff; border: 1px dashed gray; padding:8px; margin-bottom: 1.5em; font-size: small; line-height: 1.2em; }
 pre code,  pre tt { border: none; padding: 0; }
-pre, pre span, code, tt { font-family: "Droid Sans Mono", 'Consolas', 'Courier New', '微软雅黑', monospace; }
+pre, pre span, code, tt, #bottomnav { font-family: "Droid Sans Mono", 'Consolas', 'Courier New', '微软雅黑', monospace; }
 table {border-collapse:collapse;border-spacing:0; font-size:small}
 caption, th, td {text-align:left;font-weight:normal;float:none !important;}
 table, th, td {vertical-align:middle; padding:0 4px;}
 footer { margin-top: 100px; }
 .footer, footer { font-size: x-small; text-align: center; }
+#bottomnav { text-align: center; margin:4em 0 0 0; }
 
 .admonition-title { display:none; }
 .note { font-style:italic; font-size:small; margin: 0 0 0 2em; }

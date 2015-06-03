@@ -1,10 +1,13 @@
 %(head_prefix)s
 %(head)s
 %(stylesheet)s
+<script type="text/javascript" src="script.js"></script>
 %(body_prefix)s
+<div id="top"></div>
 %(body_pre_docinfo)s
 %(docinfo)s
 %(body)s
+<div id="bottomnav"><a id="gohome" href="/">cd ~</a> | <a id="gotop" href="#top">goto top;</a></div>
 <footer>
 Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue on github</a>
 or

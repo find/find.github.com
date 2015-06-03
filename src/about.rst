@@ -14,7 +14,7 @@ This Blog
 
 This blog is hosted on `github.io`_, the 'blog system' is simply a makefile
 
-.. include:: makefile
+.. include:: ../makefile
     :code: makefile
 
 Public Key
