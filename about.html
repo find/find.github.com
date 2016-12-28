@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
 <title>About</title>
@@ -29,12 +30,12 @@
 <span class="nv">EXTRA</span><span class="o">=</span>-s --input-encoding<span class="o">=</span>cp936 --output-encoding<span class="o">=</span>utf-8 --syntax-highlight<span class="o">=</span>short
 <span class="nv">ARGS</span><span class="o">=</span>--stylesheet<span class="o">=</span><span class="k">$(</span>STYLE<span class="k">)</span> --link-stylesheet --template<span class="o">=</span><span class="k">$(</span>TEMPLATE<span class="k">)</span> <span class="k">$(</span>EXTRA<span class="k">)</span>
 
-<span class="nf">.SUFFIXES</span><span class="o">:</span> <span class="m">.html .rst</span>
+<span class="nf">.SUFFIXES</span><span class="o">:</span> .<span class="n">html</span> .<span class="n">rst</span>
 
-<span class="nf">all</span><span class="o">:</span> <span class="m">$(HTMLS)</span>
+<span class="nf">all</span><span class="o">:</span> <span class="k">$(</span><span class="nv">HTMLS</span><span class="k">)</span>
 
-<span class="nf">%.html</span><span class="o">:</span> <span class="m">src/%.rst $(TEMPLATE)</span>
-        rst2html.py <span class="k">$(</span>ARGS<span class="k">)</span> <span class="nv">$&lt;</span> <span class="nv">$&#64;</span>
+<span class="nf">%.html</span><span class="o">:</span> <span class="n">src</span>/%.<span class="n">rst</span> <span class="k">$(</span><span class="nv">TEMPLATE</span><span class="k">)</span>
+        rst2html.py <span class="k">$(</span>ARGS<span class="k">)</span> $&lt; <span class="nv">$&#64;</span>
 </pre>
 </div>
 <div class="section" id="public-key">

@@ -1,6 +1,6 @@
 body { font-family: Verdana, '思源黑体', 'Noto Sans CJK SC', '微软雅黑', sans-serif; font-size: 18px; line-height: 1.5em; color: #1f0909; text-align: left; background-color: #ffffff; max-width: 42em; margin: 2em auto; padding: 0 1rem; }
-.document > h1 { text-align:center; border-bottom: 2px solid #c5c5c5; }
-.document > h1:before { content:none }
+h1.title { text-align:center; border-bottom: 2px solid #c5c5c5; color: black; }
+h1.title:before { content:none }
 a { color: #065588; }
 a:visited { color: #1f0909; text-decoration: none }
 @media print { body.footnote_links__on_print a, body.footnote_links__on_print a:hover { color: #1f0909 !important; text-decoration: none !important; } }
@@ -20,10 +20,10 @@ thead { background-color: #dadada; }
 tr:nth-child(even) { background: #e8e7e7; }
 hr { border-color: #c5c5c5; border-style:solid; border-bottom:none }
 h1,  h2,  h3,  h4,  h5,  h6 { font-family: 'Helvetica', 'Arial', '微软雅黑', sans-serif; font-weight: bold; margin: 2em 0 1em 0; line-height: 1.5em; }
-h1:before,  h2:before,  h3:before,  h4:before,  h5:before,  h6:before { content:"§ "; }
+h1:before,  h2:before { content:"§ "; }
 p,  div,  li { font-family: 'Segoe UI', 'Calibri', 'Dejavu Sans', 'Verdana', '微软雅黑', sans-serif; }
-code,  tt { border: 1px dashed silver; padding: 0 2px; }
-pre { background-color: #ffffff; border: 1px dashed gray; padding:8px; margin-bottom: 1.5em; font-size: small; line-height: 1.2em; }
+code,  tt { border: 1px dashed #bbb; padding: 0 2px; }
+pre { background-color: #ffffff; border: 1px dashed #bbb; padding:8px; margin-bottom: 1.5em; font-size: small; line-height: 1.2em; }
 pre code,  pre tt { border: none; padding: 0; }
 pre, pre span, code, tt, #bottomnav { font-family: "Droid Sans Mono", 'Consolas', 'Courier New', '微软雅黑', monospace; }
 table {border-collapse:collapse;border-spacing:0; font-size:small}

@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
 <title>Lua 源码阅读笔记</title>
@@ -177,8 +178,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
   <span class="n">TValuefields</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="cp">#define TValuefields        Value value_; int tt_
-</span>
+<span class="cp">#define TValuefields        Value value_; int tt_</span>
 </pre>
 <div class="note">
 <p class="first admonition-title">Note</p>
@@ -198,8 +198,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 #define LUA_TTABLE         5
 #define LUA_TFUNCTION      6
 #define LUA_TUSERDATA      7
-#define LUA_TTHREAD        8
-</span>
+#define LUA_TTHREAD        8</span>
 </pre>
 <p>BTW 其中 function 类型又有三种区分：</p>
 <ul class="simple">
@@ -225,8 +224,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 <span class="cm">/*
 ** LUA_TSTRING variants */</span>
 <span class="cp">#define LUA_TSHRSTR (LUA_TSTRING | (0 &lt;&lt; 4))  </span><span class="cm">/* short strings */</span><span class="cp">
-#define LUA_TLNGSTR (LUA_TSTRING | (1 &lt;&lt; 4))  </span><span class="cm">/* long strings */</span><span class="cp">
-</span>
+#define LUA_TLNGSTR (LUA_TSTRING | (1 &lt;&lt; 4))  </span><span class="cm">/* long strings */</span>
 </pre>
 </div>
 <div class="section" id="value">
@@ -252,8 +250,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 <span class="cp">#define LUAI_FIRSTPSEUDOIDX (-LUAI_MAXSTACK - 1000)
 </span>
 <span class="cp">#define LUA_REGISTRYINDEX   LUAI_FIRSTPSEUDOIDX
-#define lua_upvalueindex(i) (LUA_REGISTRYINDEX - (i))
-</span>
+#define lua_upvalueindex(i) (LUA_REGISTRYINDEX - (i))</span>
 </pre>
 </div>
 <div class="section" id="commonheader">
@@ -263,8 +260,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 ** Common Header for all collectable objects (in macro form, to be
 ** included in other objects)
 */</span>
-<span class="cp">#define CommonHeader        GCObject *next; lu_byte tt; lu_byte marked
-</span>
+<span class="cp">#define CommonHeader        GCObject *next; lu_byte tt; lu_byte marked</span>
 </pre>
 <p>CommonHeader 是 Lua 用于垃圾回收的结构，其中 <a class="reference internal" href="#gcobject">GCObject</a> * next 指向下一个可回收对象，
 构成了一个单向链表，tt <a class="reference internal" href="#tvalue">依旧是</a> 用于保存数据类型，而 marked 则是用于标记垃圾回收的状态</p>
@@ -326,8 +322,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 #define CIST_YPCALL (1&lt;&lt;4)  </span><span class="cm">/* call is a yieldable protected call */</span><span class="cp">
 #define CIST_STAT   (1&lt;&lt;5)  </span><span class="cm">/* call has an error status (pcall) */</span><span class="cp">
 #define CIST_TAIL   (1&lt;&lt;6)  </span><span class="cm">/* call was tail called */</span><span class="cp">
-#define CIST_HOOKYIELD      (1&lt;&lt;7)  </span><span class="cm">/* last hook called yielded */</span><span class="cp">
-</span>
+#define CIST_HOOKYIELD      (1&lt;&lt;7)  </span><span class="cm">/* last hook called yielded */</span>
 </pre>
 </div>
 <div class="section" id="lua-state">
