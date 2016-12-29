@@ -6,7 +6,7 @@ Me
 
 A human, male
 
-Currently working at Netease on an online game named ÌìÚÍ_
+Currently working at Netease on an online game named å¤©è°•_
 
 
 This Blog
@@ -54,5 +54,5 @@ Public Key
     -----END PGP PUBLIC KEY BLOCK-----
 
 
-.. _ÌìÚÍ: http://tianyu.163.com/
+.. _å¤©è°•: http://tianyu.163.com/
 .. _`github.io`: http://github.io/

@@ -1,5 +1,5 @@
 =================
-Lua Ô´ÂëÔÄ¶Á±Ê¼Ç
+Lua æºç é˜…è¯»ç¬”è®°
 =================
 
 .. raw:: html
@@ -10,11 +10,11 @@ Lua Ô´ÂëÔÄ¶Á±Ê¼Ç
         .document h2 { font-weight: bold; }
     </style>
 
-.. contents:: Ä¿Â¼
+.. contents:: ç›®å½•
 
 ---------------
 
-Ä³ÌìÔÚ reddit ÉÏÃæ¿´µ½ LuaJIT ×÷ÕßÍÆ¼öµÄ LuaÔ´ÂëÔÄ¶ÁË³Ðò £º
+æŸå¤©åœ¨ reddit ä¸Šé¢çœ‹åˆ° LuaJIT ä½œè€…æŽ¨èçš„ Luaæºç é˜…è¯»é¡ºåº ï¼š
 
 	1. lmathlib.c, lstrlib.c: get familiar with the external C API. Don't bother with the pattern matcher though. Just the easy functions.
 	2. lapi.c: Check how the API is implemented internally. Only skim this to get a feeling for the code. Cross-reference to lua.h and luaconf.h as needed.
@@ -32,22 +32,22 @@ Lua Ô´ÂëÔÄ¶Á±Ê¼Ç
 	14. lgc.c: incremental garbage collector. take your time.
 	15. Read all the other files as you see references to them. Don't let your stack get too deep though.
 
-¸Ð¾õºÜÓÐµÀÀí£¬ËùÒÔ¡­¡­¾Í°´ËûËµµÄÀ´°É~
+æ„Ÿè§‰å¾ˆæœ‰é“ç†ï¼Œæ‰€ä»¥â€¦â€¦å°±æŒ‰ä»–è¯´çš„æ¥å§~
 
 .. note::
 
-    ßí£¬²åÒ»¾ä¡­¡­ GNU Global ÕæÊÇÉñÆ÷£¡
+    å””ï¼Œæ’ä¸€å¥â€¦â€¦ GNU Global çœŸæ˜¯ç¥žå™¨ï¼
 
-    ÔÙ²åÒ»¾ä£¬ÆäÊµËûÂ©µôÁËµÚÁã²½£ºLua ÎÄµµ
+    å†æ’ä¸€å¥ï¼Œå…¶å®žä»–æ¼æŽ‰äº†ç¬¬é›¶æ­¥ï¼šLua æ–‡æ¡£
 
 Be Prepared
 ===========
 
-* È¥¿´¿´ `Lua Manual`_
-* È¥ `Lua Wiki`_ ¿´¿´ Lua ´úÂëµÄ×éÖ¯·½Ê½ºÍ´úÂë·ç¸ñ
-* ´ò¿ª `Lua Source`_ ¶Ô×Å¿´
+* åŽ»çœ‹çœ‹ `Lua Manual`_
+* åŽ» `Lua Wiki`_ çœ‹çœ‹ Lua ä»£ç çš„ç»„ç»‡æ–¹å¼å’Œä»£ç é£Žæ ¼
+* æ‰“å¼€ `Lua Source`_ å¯¹ç€çœ‹
 
-Lua ´úÂë·ç¸ñ£º
+Lua ä»£ç é£Žæ ¼ï¼š
 
 ::
 
@@ -80,7 +80,7 @@ Lua ´úÂë·ç¸ñ£º
 lapi.c
 =======
 
-ÔÚ `lapi.c` ÖÐ£¬×îÖØÒªµÄº¯Êý¿ÉÒÔËµÊÇ ``index2addr`` ÁË°É£º
+åœ¨ `lapi.c` ä¸­ï¼Œæœ€é‡è¦çš„å‡½æ•°å¯ä»¥è¯´æ˜¯ ``index2addr`` äº†å§ï¼š
 
 index2addr
 ------------
@@ -113,23 +113,23 @@ index2addr
       }
     }
 
-¼¸ºõËùÓÐÆäËûµÄº¯Êý¶¼ÊÇ½¨Á¢ÔÚËüµÄ¹¦ÄÜÖ®ÉÏµÄ ¡ª¡ª »ØÒä Lua ÎÄµµ£¬
-ºÜ¶àµÄ Lua API º¯Êý¶¼»á½ÓÊÜÒ»¸ö index ²ÎÊý£¬ÓÃÀ´Ö¸¶¨²ÎÊýÔÚÕ»ÉÏ\
-µÄÎ»ÖÃ£¬±ÈÈç ``lua_settop``, ``lua_remove``, ``lua_insert``, 
-``lua_replace`` µÈµÈ£¬¶øÕâ¸ö `index2addr`_ º¯ÊýµÄ×÷ÓÃ¾ÍÊÇÍ¨¹ý\
-¸ø¶¨µÄ index ²ÎÊýÈ¡³ö¶ÔÓ¦µÄ TValue_ ÀàÐÍµÄ¶ÔÏóÖ¸Õë
+å‡ ä¹Žæ‰€æœ‰å…¶ä»–çš„å‡½æ•°éƒ½æ˜¯å»ºç«‹åœ¨å®ƒçš„åŠŸèƒ½ä¹‹ä¸Šçš„ â€”â€” å›žå¿† Lua æ–‡æ¡£ï¼Œ
+å¾ˆå¤šçš„ Lua API å‡½æ•°éƒ½ä¼šæŽ¥å—ä¸€ä¸ª index å‚æ•°ï¼Œç”¨æ¥æŒ‡å®šå‚æ•°åœ¨æ ˆä¸Š\
+çš„ä½ç½®ï¼Œæ¯”å¦‚ ``lua_settop``, ``lua_remove``, ``lua_insert``, 
+``lua_replace`` ç­‰ç­‰ï¼Œè€Œè¿™ä¸ª `index2addr`_ å‡½æ•°çš„ä½œç”¨å°±æ˜¯é€šè¿‡\
+ç»™å®šçš„ index å‚æ•°å–å‡ºå¯¹åº”çš„ TValue_ ç±»åž‹çš„å¯¹è±¡æŒ‡é’ˆ
 
-¹ØÓÚ Registry µÄÓ¦ÓÃ¿ÉÒÔ»ØÒä `Lua ÎÄµµÉÏ¶ÔÓÚ Registry µÄ½éÉÜ`__ ¡£
+å…³äºŽ Registry çš„åº”ç”¨å¯ä»¥å›žå¿† `Lua æ–‡æ¡£ä¸Šå¯¹äºŽ Registry çš„ä»‹ç»`__ ã€‚
   
 .. __: http://www.lua.org/manual/5.2/manual.html#4.5
 
-¶ø½áºÏ `Pseudo Index`_ ¿ÉÒÔ¿´³ö¸Ãº¯ÊýµÄÂß¼­ÈçÏÂ£º
+è€Œç»“åˆ `Pseudo Index`_ å¯ä»¥çœ‹å‡ºè¯¥å‡½æ•°çš„é€»è¾‘å¦‚ä¸‹ï¼š
 
 ===================================== ============================================
-µ± index > 0 Ê±                       ÔÚµ±Ç° function µÄÕ»¿Õ¼äÕÒ¶ÔÓ¦µÄ TValue
-µ± LUA_REGISTRYINDEX < index <= 0 Ê±  ÔÚµ±Ç° function µÄÕ»¿Õ¼äÄæÏòÕÒ¶ÔÓ¦µÄ TValue
-µ± index == LUA_REGISTRYINDEX Ê±      ·µ»Ø registry
-·ñÔò( index < LUA_REGISTRYINDEX Ê± )  ²éÕÒ upvalue
+å½“ index > 0 æ—¶                       åœ¨å½“å‰ function çš„æ ˆç©ºé—´æ‰¾å¯¹åº”çš„ TValue
+å½“ LUA_REGISTRYINDEX < index <= 0 æ—¶  åœ¨å½“å‰ function çš„æ ˆç©ºé—´é€†å‘æ‰¾å¯¹åº”çš„ TValue
+å½“ index == LUA_REGISTRYINDEX æ—¶      è¿”å›ž registry
+å¦åˆ™( index < LUA_REGISTRYINDEX æ—¶ )  æŸ¥æ‰¾ upvalue
 ===================================== ============================================
 
 lobject.h
@@ -150,13 +150,13 @@ TValue
 
 .. note::
 
-   #define LUA_NANTRICK Ö®ºó£¬ TValuefields »áÓÐ²»Í¬µÄ¶¨Òå£¬²»¹ý»ù±¾Ô­Àí²»±ã£¬´Ë´¦ÔÝÇÒ¼Ù¶¨
-   **Ã»ÓÐÊ¹ÓÃ LUA_NANTRICK**
+   #define LUA_NANTRICK ä¹‹åŽï¼Œ TValuefields ä¼šæœ‰ä¸åŒçš„å®šä¹‰ï¼Œä¸è¿‡åŸºæœ¬åŽŸç†ä¸ä¾¿ï¼Œæ­¤å¤„æš‚ä¸”å‡å®š
+   **æ²¡æœ‰ä½¿ç”¨ LUA_NANTRICK**
 
-`value_` ÏîÓÃÓÚ±£´æÊý¾Ý£¬ `tt_` ÏîÓÃÓÚ±£´æÊý¾ÝÀàÐÍ£»
-¿ÉÑ¡µÄÊý¾ÝÀàÐÍÓÐ£º
+`value_` é¡¹ç”¨äºŽä¿å­˜æ•°æ®ï¼Œ `tt_` é¡¹ç”¨äºŽä¿å­˜æ•°æ®ç±»åž‹ï¼›
+å¯é€‰çš„æ•°æ®ç±»åž‹æœ‰ï¼š
 
-.. _`Êý¾ÝÀàÐÍ`:
+.. _`æ•°æ®ç±»åž‹`:
 
 .. code:: c
 
@@ -172,22 +172,22 @@ TValue
     #define LUA_TUSERDATA      7 
     #define LUA_TTHREAD        8 
 
-BTW ÆäÖÐ function ÀàÐÍÓÖÓÐÈýÖÖÇø·Ö£º
+BTW å…¶ä¸­ function ç±»åž‹åˆæœ‰ä¸‰ç§åŒºåˆ†ï¼š
 
 * lua function
 * light C function
 * C function
 
-ÆäÖÐ light C function Óë C function µÄÇø±ðÔÚÓÚÇ°ÕßÖ»ÊÇÒ»¸ö C º¯ÊýÖ¸Õë£¬
-¶øºóÕß¿ÉÒÔÓÐ×Ô¼ºµÄ upvalue£¬¼´¿ÉÒÔ¹¹³ÉÒ»¸ö closure¡£
+å…¶ä¸­ light C function ä¸Ž C function çš„åŒºåˆ«åœ¨äºŽå‰è€…åªæ˜¯ä¸€ä¸ª C å‡½æ•°æŒ‡é’ˆï¼Œ
+è€ŒåŽè€…å¯ä»¥æœ‰è‡ªå·±çš„ upvalueï¼Œå³å¯ä»¥æž„æˆä¸€ä¸ª closureã€‚
 
-string ÀàÐÍÓÐÁ½ÖÖÇø·Ö£º
+string ç±»åž‹æœ‰ä¸¤ç§åŒºåˆ†ï¼š
 
 * short string
 * long string
 
-ÕâÁ½ÕßµÄÇø±ðÔòÔÚÓÚÇ°Õß»á¼ÆËã hash Öµ£¬±£Ö¤ÏàÍ¬µÄ¶Ì×Ö·û´®È«¾ÖÎ¨Ò»£»
-¶øÎªÁË±ÜÃâ `hash dos`_ £¬³¤×Ö·û´®²¢²»¼ÆËã hash Öµ
+è¿™ä¸¤è€…çš„åŒºåˆ«åˆ™åœ¨äºŽå‰è€…ä¼šè®¡ç®— hash å€¼ï¼Œä¿è¯ç›¸åŒçš„çŸ­å­—ç¬¦ä¸²å…¨å±€å”¯ä¸€ï¼›
+è€Œä¸ºäº†é¿å… `hash dos`_ ï¼Œé•¿å­—ç¬¦ä¸²å¹¶ä¸è®¡ç®— hash å€¼
 
 .. _`hash dos`: http://lua-users.org/wiki/HashDos
 
@@ -219,9 +219,9 @@ Value
 
     typedef union GCObject GCObject;
 
-¿ÉÒÔ¿´³ö³ýÁË°´ÖµÒýÓÃµÄÊý¾Ý£¨ light userdata, boolean, light C function, number £©£¬
-ÆäËû£¨ string, table, function, userdata, thread £©¶¼ÊÇÒÔ GCObject_ Ö¸ÕëÐÎÊ½±£´æ£¬
-ÒÔ±ãÓÃÓÚÀ¬»ø»ØÊÕ
+å¯ä»¥çœ‹å‡ºé™¤äº†æŒ‰å€¼å¼•ç”¨çš„æ•°æ®ï¼ˆ light userdata, boolean, light C function, number ï¼‰ï¼Œ
+å…¶ä»–ï¼ˆ string, table, function, userdata, thread ï¼‰éƒ½æ˜¯ä»¥ GCObject_ æŒ‡é’ˆå½¢å¼ä¿å­˜ï¼Œ
+ä»¥ä¾¿ç”¨äºŽåžƒåœ¾å›žæ”¶
 
 
 Pseudo Index
@@ -247,8 +247,8 @@ CommonHeader
     #define CommonHeader	GCObject *next; lu_byte tt; lu_byte marked
 
 
-CommonHeader ÊÇ Lua ÓÃÓÚÀ¬»ø»ØÊÕµÄ½á¹¹£¬ÆäÖÐ GCObject_ * next Ö¸ÏòÏÂÒ»¸ö¿É»ØÊÕ¶ÔÏó£¬
-¹¹³ÉÁËÒ»¸öµ¥ÏòÁ´±í£¬tt `ÒÀ¾ÉÊÇ`__ ÓÃÓÚ±£´æÊý¾ÝÀàÐÍ£¬¶ø marked ÔòÊÇÓÃÓÚ±ê¼ÇÀ¬»ø»ØÊÕµÄ×´Ì¬
+CommonHeader æ˜¯ Lua ç”¨äºŽåžƒåœ¾å›žæ”¶çš„ç»“æž„ï¼Œå…¶ä¸­ GCObject_ * next æŒ‡å‘ä¸‹ä¸€ä¸ªå¯å›žæ”¶å¯¹è±¡ï¼Œ
+æž„æˆäº†ä¸€ä¸ªå•å‘é“¾è¡¨ï¼Œtt `ä¾æ—§æ˜¯`__ ç”¨äºŽä¿å­˜æ•°æ®ç±»åž‹ï¼Œè€Œ marked åˆ™æ˜¯ç”¨äºŽæ ‡è®°åžƒåœ¾å›žæ”¶çš„çŠ¶æ€
 
 .. __: TValue_
 
@@ -318,8 +318,8 @@ CallInfo
 lua_State
 -----------
 
-ÕâÊÇÃ¿¸ö Lua º¯Êý¶¼»á½ÓÊÜµÄ±íÊ¾µ±Ç°×´Ì¬µÄ½á¹¹£¬×îÖ÷ÒªµÄ³ÉÔ±°üÀ¨ÔËÐÐÕ» stack, 
-Õ»ÓÃÓÚ±íÊ¾º¯Êýµ÷ÓÃ¡¢´«µÝ²ÎÊý¼°·µ»ØÖµ
+è¿™æ˜¯æ¯ä¸ª Lua å‡½æ•°éƒ½ä¼šæŽ¥å—çš„è¡¨ç¤ºå½“å‰çŠ¶æ€çš„ç»“æž„ï¼Œæœ€ä¸»è¦çš„æˆå‘˜åŒ…æ‹¬è¿è¡Œæ ˆ stack, 
+æ ˆç”¨äºŽè¡¨ç¤ºå‡½æ•°è°ƒç”¨ã€ä¼ é€’å‚æ•°åŠè¿”å›žå€¼
 
 .. code:: c
 
@@ -354,9 +354,9 @@ lua_State
 lvm.c
 ======
 
-Ê×ÏÈ ``Instruction`` µÄ¶¨ÒåÊÇ ``uint32``
+é¦–å…ˆ ``Instruction`` çš„å®šä¹‰æ˜¯ ``uint32``
 
-ÁôÒâÒ»ÏÂ lvm.h ÕâÒ»¶ÎºÜÖØÒªµÄ×¢ÊÍ
+ç•™æ„ä¸€ä¸‹ lvm.h è¿™ä¸€æ®µå¾ˆé‡è¦çš„æ³¨é‡Š
 
 .. code:: c
 
@@ -378,15 +378,15 @@ lvm.c
       unsigned argument.
     ===========================================================================*/
 
-ÎÒÃÇ¿ÉÒÔ·¢ÏÖÌå»ý×î´óµÄ²Ù×÷Êý ``Ax`` ¼ÓÉÏ 6bit Ö¸ÁîÕýºÃÓÐ 32 Î» ¡ª¡ª ²»ÄÑ²Â³öÐéÄâ»úµÄÖ¸Áî×éÖ¯·½Ê½
+æˆ‘ä»¬å¯ä»¥å‘çŽ°ä½“ç§¯æœ€å¤§çš„æ“ä½œæ•° ``Ax`` åŠ ä¸Š 6bit æŒ‡ä»¤æ­£å¥½æœ‰ 32 ä½ â€”â€” ä¸éš¾çŒœå‡ºè™šæ‹Ÿæœºçš„æŒ‡ä»¤ç»„ç»‡æ–¹å¼
 
 
 luaV_execute
 -------------
 
-ÐéÄâ»ú±¾Ìå
+è™šæ‹Ÿæœºæœ¬ä½“
 
-Ëæ±ãÈ¡Ò»¸öÖ¸ÁîµÄ½âÎöÀ´¿´¿´£º
+éšä¾¿å–ä¸€ä¸ªæŒ‡ä»¤çš„è§£æžæ¥çœ‹çœ‹ï¼š
 
 .. code:: c
 
@@ -394,16 +394,16 @@ luaV_execute
         setobjs2s(L, ra, RB(i));
     )
 
-``ra`` ÊÇÓÃ ``RA(`` CallInfo_.u.l.savedpc ``)`` È¡³öµÄ£¬¶ø ``RA`` Ëù×öµÄÊÂÇéÊÇ\
-È¡³öÖ¸Áî£¨´Ë´¦¼´ ``savedpc`` £©ÖÐµÄµÚ 7-14 Î»µÄÊýÖµ£¬È»ºó¼ÓÉÏ base µØÖ·£¬»ñµÃ\
-Ò»¸ö TValue µÄÖ¸Õë
+``ra`` æ˜¯ç”¨ ``RA(`` CallInfo_.u.l.savedpc ``)`` å–å‡ºçš„ï¼Œè€Œ ``RA`` æ‰€åšçš„äº‹æƒ…æ˜¯\
+å–å‡ºæŒ‡ä»¤ï¼ˆæ­¤å¤„å³ ``savedpc`` ï¼‰ä¸­çš„ç¬¬ 7-14 ä½çš„æ•°å€¼ï¼Œç„¶åŽåŠ ä¸Š base åœ°å€ï¼ŒèŽ·å¾—\
+ä¸€ä¸ª TValue çš„æŒ‡é’ˆ
 
-``RB`` ×öµÄÒ²ÊÇÀàËÆµÄÊÂÇé£¬ËùÒÔÕâ¾ä»°¾ÍÊÇËµÓöµ½ ``OP_MOVE`` Ö¸ÁîµÄÊ±ºò¶Ô½ô½ÓÔÚ\
-ºóÃæµÄ ``A``, ``B`` Á½¸ö²Ù×÷ÊýÖ´ÐÐ ``setobjs2s`` ²Ù×÷
+``RB`` åšçš„ä¹Ÿæ˜¯ç±»ä¼¼çš„äº‹æƒ…ï¼Œæ‰€ä»¥è¿™å¥è¯å°±æ˜¯è¯´é‡åˆ° ``OP_MOVE`` æŒ‡ä»¤çš„æ—¶å€™å¯¹ç´§æŽ¥åœ¨\
+åŽé¢çš„ ``A``, ``B`` ä¸¤ä¸ªæ“ä½œæ•°æ‰§è¡Œ ``setobjs2s`` æ“ä½œ
 
 
 
-    PS. ``newframe`` ±êÇ©¿´ÉÏÈ¥ÕæÊÇ¸öÍò°ãÎÞÄÎµÄ½â°¡
+    PS. ``newframe`` æ ‡ç­¾çœ‹ä¸ŠåŽ»çœŸæ˜¯ä¸ªä¸‡èˆ¬æ— å¥ˆçš„è§£å•Š
 
 
 .. note::
