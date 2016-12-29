@@ -1,6 +1,6 @@
-===================
-Finding My Answers
-===================
+==============================================
+std::find(life.begin(), life.end(), my_place)
+==============================================
 
 Coding
 ============
@@ -29,7 +29,7 @@ Photos
 
 * `Random Shots`__
 
-.. __: http://foto.if-yu.info/
+.. __: http://unsigned.lofter.com/
 
 
 Me
