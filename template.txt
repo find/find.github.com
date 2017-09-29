@@ -14,6 +14,6 @@ Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue 
 or
 mail to address in <a href="/about.html#public-key">my pub key</a>
 <br/>
-Copyright &copy; <a href="http://www.if-yu.info/">If</a>.
+Copyright &copy; <a href="http://www.yuguo.me/">If</a>.
 </footer>
 %(body_suffix)s

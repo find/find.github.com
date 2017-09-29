@@ -4,7 +4,7 @@
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
 <title>Project Euler 题解第一页</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
 <link rel="stylesheet" href="math.css" type="text/css" />
@@ -21,7 +21,7 @@
 <p>找出 1000 以下 3 或 5 的倍数的和</p>
 <p>不用讲解 - -</p>
 <pre class="code julia literal-block">
-<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">i</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">999</span><span class="p">])))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">i</span><span class="o">%</span><span class="mi">3</span><span class="o">==</span><span class="mi">0</span> <span class="o">||</span> <span class="n">i</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="o">:</span><span class="mi">999</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id2">
@@ -32,7 +32,7 @@
 <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">sum</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="k">while</span> <span class="n">true</span>
+<span class="k">while</span> <span class="kc">true</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
     <span class="k">if</span> <span class="n">c</span><span class="o">&gt;</span><span class="mi">4000000</span> <span class="n">then</span>
         <span class="k">break</span>
@@ -53,7 +53,7 @@
 <p>对于 julia 这么一种 IMBA 的语言 …… 还是不用讲解</p>
 <pre class="code julia literal-block">
 <span class="n">v</span> <span class="o">=</span> <span class="mi">600851475143</span>
-<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">([</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="k">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">v</span><span class="p">)]))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">([</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="kp">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">v</span><span class="p">)]))</span>
 </pre>
 </div>
 <div class="section" id="id4">
@@ -61,28 +61,28 @@
 <p>找出三位数相乘组成的最大回文数</p>
 <p>依然不用讲解</p>
 <pre class="code julia literal-block">
-<span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span>
+<span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="o">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span>
     <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span>
-        <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="o">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">else</span>
         <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span>
     <span class="k">end</span>
-<span class="n">isPalindrome</span><span class="p">(</span><span class="n">i</span><span class="p">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">isPalindrome</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="mi">100</span><span class="p">:</span><span class="mi">999</span><span class="p">,</span> <span class="n">b</span> <span class="k">in</span> <span class="mi">100</span><span class="p">:</span><span class="mi">999</span><span class="p">])))</span>
+<span class="n">isPalindrome</span><span class="p">(</span><span class="n">i</span><span class="o">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">maximum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">isPalindrome</span><span class="p">,</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="k">for</span> <span class="n">a</span> <span class="kp">in</span> <span class="mi">100</span><span class="o">:</span><span class="mi">999</span><span class="p">,</span> <span class="n">b</span> <span class="kp">in</span> <span class="mi">100</span><span class="o">:</span><span class="mi">999</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id5">
 <h1>5</h1>
 <p>1 .. 20 的最小公倍数</p>
 <pre class="code julia literal-block">
-<span class="n">println</span><span class="p">(</span><span class="n">lcm</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">...</span><span class="p">))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">lcm</span><span class="p">([</span><span class="mi">1</span><span class="o">:</span><span class="mi">20</span><span class="p">]</span><span class="o">...</span><span class="p">))</span>
 </pre>
 </div>
 <div class="section" id="id6">
 <h1>6</h1>
 <p>1 .. 100 和的平方与平方和的差</p>
 <pre class="code julia literal-block">
-<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">([</span><span class="mi">1</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">100</span><span class="p">])))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">([</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span><span class="p">])</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">100</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id7">
@@ -119,11 +119,11 @@
 05886116467109405077541002256983155200055935729725
 71636269561882670428252483600823257530420752963450
 &quot;</span>
-<span class="p">,</span> <span class="n">r</span><span class="s">&quot;\s&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="p">,</span> <span class="sr">r&quot;\s&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
 
 <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">5</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="n">reduce</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">5</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span> <span class="n">v</span><span class="p">,</span> <span class="n">reduce</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">4</span><span class="o">:</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
 <span class="k">end</span>
 
 <span class="n">println</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -133,19 +133,19 @@
 <h1>9</h1>
 <p>找到满足 <span class="formula"><i>a</i><sup>2</sup> + <i>b</i><sup>2</sup> = <i>c</i><sup>2</sup></span> 且 <span class="formula"><i>a</i> + <i>b</i> + <i>c</i> = 1000</span> 的 <span class="formula"><i>a</i>, <i>b</i>, <i>c</i></span></p>
 <pre class="code julia literal-block">
-<span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">a</span> <span class="kp">in</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">999</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="kp">in</span> <span class="p">[</span><span class="n">a</span><span class="o">:</span><span class="mi">999</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="o">&gt;</span> <span class="mi">1000</span>
             <span class="k">continue</span>
         <span class="k">end</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="n">b</span><span class="p">:</span><span class="mi">999</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="kp">in</span> <span class="p">[</span><span class="n">b</span><span class="o">:</span><span class="mi">999</span><span class="p">]</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span>
             <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">1000</span>
                 <span class="k">break</span>
             <span class="k">end</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">b</span><span class="o">^</span><span class="mi">2</span> <span class="o">==</span> <span class="n">c</span><span class="o">^</span><span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1000</span>
-                <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$a</span><span class="s"> * </span><span class="si">$b</span><span class="s"> * </span><span class="si">$c</span><span class="s"> = </span><span class="si">$(a*b*c)</span><span class="s">&quot;</span><span class="p">)</span>
-                <span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$a</span><span class="s"> * </span><span class="si">$b</span><span class="s"> * </span><span class="si">$c</span><span class="s"> = </span><span class="si">$</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="s">&quot;</span><span class="p">)</span>
+                <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">end</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -188,11 +188,11 @@
 <span class="n">d</span> <span class="o">=</span> <span class="mi">20</span> <span class="c"># dimension</span>
 
 <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">r</span> <span class="k">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="n">d</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="n">d</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">r</span> <span class="kp">in</span> <span class="p">[</span><span class="mi">4</span><span class="o">:</span><span class="n">d</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="kp">in</span> <span class="p">[</span><span class="mi">4</span><span class="o">:</span><span class="n">d</span><span class="p">]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">v</span><span class="p">,</span>
-            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="n">c</span><span class="p">]),</span>
-            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span><span class="p">:</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="p">]),</span>
+            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="o">:</span><span class="n">c</span><span class="p">]),</span>
+            <span class="n">prod</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span><span class="o">:</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="p">]),</span>
             <span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">2</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span>
             <span class="n">m</span><span class="p">[</span><span class="n">r</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">2</span> <span class="p">,</span> <span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">r</span><span class="o">-</span><span class="mi">3</span> <span class="p">,</span> <span class="n">c</span><span class="p">]</span>
         <span class="p">)</span>
@@ -208,7 +208,7 @@
 <p><tt class="docutils literal">factor(x)</tt> 返回 <tt class="docutils literal">x</tt> 的质因数及其次数列表</p>
 <pre class="code julia literal-block">
 <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">100000</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">100000</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">+</span><span class="n">i</span>
     <span class="k">if</span> <span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">factor</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">500</span>
         <span class="n">println</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -221,13 +221,13 @@
 <h1>13</h1>
 <p>求一串大数的和</p>
 <pre class="code julia literal-block">
-<span class="n">nums</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">BigInt</span><span class="p">,[</span>
+<span class="n">nums</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="kt">BigInt</span><span class="p">,[</span>
 <span class="s">&quot;37107287533902102798797998220837590246510135740250&quot;</span>
 <span class="o">...</span>
 <span class="s">&quot;53503534226472524250874054075591789781264330331690&quot;</span>
 <span class="p">])</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">nums</span><span class="p">))</span>
-<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="p">])</span>
 </pre>
 </div>
 <div class="section" id="id14">
@@ -235,8 +235,8 @@
 <p>求使得 3n+1 数列最长的起点</p>
 <p>——本该用 DP 做的 …… 不过既然直接算时间也能接受 …… 那就不管了</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> chainlen</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">function</span><span class="nf"> f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">chainlen</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">function</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
             <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="mi">2</span>
         <span class="k">else</span>
@@ -245,7 +245,7 @@
     <span class="k">end</span>
 
     <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="n">true</span>
+    <span class="k">while</span> <span class="kc">true</span>
         <span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="o">+</span><span class="mi">1</span>
         <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">1</span>
             <span class="k">break</span>
@@ -256,7 +256,7 @@
 <span class="k">end</span>
 
 <span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">3</span><span class="p">:</span><span class="mi">1000000</span><span class="o">-</span><span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">3</span><span class="o">:</span><span class="mi">1000000</span><span class="o">-</span><span class="mi">1</span>
     <span class="n">cl</span> <span class="o">=</span> <span class="n">chainlen</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">cl</span><span class="o">&gt;</span><span class="n">l</span>
         <span class="n">n</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">cl</span>
@@ -272,11 +272,11 @@
 <p>从一行 n 列开始递推 n 行 n 列的情况就很明确了</p>
 <p>需要留意的是 20x20 的格子有 21x21 行列 - -|||</p>
 <pre class="code julia literal-block">
-<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span>
-<span class="n">nextrow</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">21</span><span class="p">]</span>
+<span class="n">nextrow</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">21</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">20</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">21</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">20</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="mi">21</span>
         <span class="n">nextrow</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">nextrow</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">row</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
     <span class="k">end</span>
     <span class="n">row</span><span class="p">,</span> <span class="n">nextrow</span> <span class="o">=</span> <span class="n">nextrow</span><span class="p">,</span> <span class="n">row</span>
@@ -290,7 +290,7 @@
 <h1>16</h1>
 <p>求 <span class="formula">2<sup>1000</sup></span> 的每位数字的和</p>
 <pre class="code julia literal-block">
-<span class="n">println</span><span class="p">(</span><span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span><span class="o">+</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">string</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">^</span><span class="mi">1000</span><span class="p">)))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">reduce</span><span class="p">((</span><span class="n">a</span><span class="p">,</span><span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">a</span><span class="o">+</span><span class="p">(</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">string</span><span class="p">(</span><span class="kt">BigInt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">^</span><span class="mi">1000</span><span class="p">)))</span>
 </pre>
 </div>
 <div class="section" id="id17">
@@ -329,10 +329,10 @@
 <span class="mi">1000</span><span class="o">=&gt;</span><span class="s">&quot;thousand&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
-<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="p">::</span><span class="n">String</span><span class="p">,</span> <span class="n">s2</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">$s</span><span class="s">1</span><span class="si">$s</span><span class="s">2&quot;</span>
+<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="o">::</span><span class="n">String</span><span class="p">,</span> <span class="n">s2</span><span class="o">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">$s1$s2</span><span class="s">&quot;</span>
 
-<span class="k">function</span><span class="nf"> toeng</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="nb">assert</span><span class="p">(</span><span class="n">n</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">toeng</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">assert</span><span class="p">(</span><span class="n">n</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">1000</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span><span class="o">&lt;=</span><span class="mi">20</span>
         <span class="k">return</span> <span class="n">dic</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
     <span class="k">end</span>
@@ -367,7 +367,7 @@
 
 <span class="c"># println(toeng(342))</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1000</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">1000</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span><span class="o">-&gt;</span><span class="k">if</span> <span class="n">c</span><span class="o">&gt;=</span><span class="sc">'a'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span><span class="o">&lt;=</span><span class="sc">'z'</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span> <span class="k">else</span> <span class="n">n</span> <span class="k">end</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">toeng</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">)</span>
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -396,8 +396,8 @@
 <span class="mi">04</span> <span class="mi">62</span> <span class="mi">98</span> <span class="mi">27</span> <span class="mi">23</span> <span class="mi">09</span> <span class="mi">70</span> <span class="mi">98</span> <span class="mi">73</span> <span class="mi">93</span> <span class="mi">38</span> <span class="mi">53</span> <span class="mi">60</span> <span class="mi">04</span> <span class="mi">23</span>
 <span class="p">]</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">14</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">i</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">14</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">i</span>
         <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">max</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -411,25 +411,25 @@
 <p>首先呢，Pkg.add(&quot;Datetime&quot;) // 这真的是作弊好吗！</p>
 <pre class="code julia literal-block">
 <span class="k">using</span> <span class="n">Datetime</span>
-<span class="n">println</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">dayofweek</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">date</span><span class="p">(</span><span class="mi">1901</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span><span class="n">months</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">31</span><span class="p">))))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">dayofweek</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> <span class="n">date</span><span class="p">(</span><span class="mi">1901</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">:</span><span class="n">months</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">:</span><span class="n">date</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">31</span><span class="p">))))</span>
 </pre>
 </div>
 <div class="section" id="id20">
 <h1>20</h1>
 <p>求 200! 的每位数字之和</p>
 <pre class="code julia literal-block">
-<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">,</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">factorial</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)))))))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="p">,</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">factorial</span><span class="p">(</span><span class="kt">BigInt</span><span class="p">(</span><span class="mi">100</span><span class="p">)))))))</span>
 </pre>
 </div>
 <div class="section" id="id21">
 <h1>21</h1>
 <p>求 1000 以下满足 <tt class="docutils literal">a</tt> 的所有因数加起来等于 <tt class="docutils literal">b</tt> 且 <tt class="docutils literal">b</tt> 的所有因数加起来等于 <tt class="docutils literal">a</tt> 的 <tt class="docutils literal">a</tt>、<tt class="docutils literal">b</tt> 之和</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> factors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">factors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="k">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="kp">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span> <span class="n">vcat</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>
-            <span class="p">[</span><span class="n">f</span> <span class="o">*</span> <span class="n">p</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="p">)</span>
+            <span class="p">[</span><span class="n">f</span> <span class="o">*</span> <span class="n">p</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="p">]</span> <span class="p">)</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">f</span>
 <span class="k">end</span>
@@ -437,7 +437,7 @@
 <span class="n">d</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">factors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="n">n</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">9999</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">9999</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">d</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">if</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">v</span><span class="o">&lt;=</span><span class="mi">9999</span> <span class="o">&amp;&amp;</span> <span class="n">i!</span><span class="o">=</span><span class="n">v</span> <span class="o">&amp;&amp;</span> <span class="n">i</span><span class="o">==</span><span class="n">d</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span> <span class="c"># v will be calculated later</span>
@@ -456,10 +456,10 @@
 
 <span class="n">av</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">c</span><span class="o">-</span><span class="sc">'A'</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">collect</span><span class="p">(</span><span class="n">str</span><span class="p">)))</span>
 
-<span class="nb">assert</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">938</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;COLIN&quot;</span><span class="p">)</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">938</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;COLIN&quot;</span><span class="p">)</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">av</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -469,30 +469,30 @@
 <h1>23</h1>
 <p>求所有(不能用两个(因子之和大于本身的数)之和表示的数字)的和</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> factors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">factors</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="k">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="kp">in</span> <span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span> <span class="n">vcat</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>
-            <span class="p">[</span><span class="n">f</span> <span class="o">*</span> <span class="n">p</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">]</span> <span class="p">)</span>
+            <span class="p">[</span><span class="n">f</span> <span class="o">*</span> <span class="n">p</span><span class="o">^</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span><span class="p">]</span> <span class="p">)</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">f</span>
 <span class="k">end</span>
 
 <span class="n">d</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">factors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="n">n</span>
 
-<span class="n">isabundant</span> <span class="o">=</span> <span class="p">[</span><span class="n">false</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">28123</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">28123</span>
+<span class="n">isabundant</span> <span class="o">=</span> <span class="p">[</span><span class="kc">false</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">28123</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">28123</span>
     <span class="k">if</span> <span class="n">d</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="n">i</span>
-        <span class="n">isabundant</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">true</span>
+        <span class="n">isabundant</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span>
     <span class="k">end</span>
 <span class="k">end</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="mi">28123</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">false</span>
-    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">:</span><span class="n">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="mi">28123</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">isabundant</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">isabundant</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">]</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">true</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="kc">true</span>
             <span class="k">break</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -507,7 +507,7 @@
 <h1>24</h1>
 <p>求 0 .. 9 的排列组合中字典序的第 1000000 位是什么</p>
 <pre class="code julia literal-block">
-<span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">permutations</span><span class="p">([</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">])]</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">permutations</span><span class="p">([</span><span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="p">])]</span>
 <span class="n">println</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="mi">1000000</span><span class="p">])</span>
 </pre>
 </div>
@@ -515,13 +515,13 @@
 <h1>25</h1>
 <p>求斐波拉切数列从哪一位开始大于 1000 位数字</p>
 <pre class="code julia literal-block">
-<span class="n">a</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">^</span><span class="mi">999</span>
-<span class="k">while</span> <span class="n">true</span>
+<span class="n">T</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">^</span><span class="mi">999</span>
+<span class="k">while</span> <span class="kc">true</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
     <span class="k">if</span> <span class="n">c</span><span class="o">&gt;=</span><span class="n">T</span>
         <span class="k">break</span>
@@ -538,12 +538,12 @@
 <h1>26</h1>
 <p>求在 [2..1000) 区间内使 1/d 的循环节最长的 d</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> recurringCycleLen</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c"># length of recurrying cycle of 1/n</span>
+<span class="k">function</span> <span class="n">recurringCycleLen</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c"># length of recurrying cycle of 1/n</span>
     <span class="n">R</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span> <span class="c"># all occured remainders</span>
     <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">while</span> <span class="n">r</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">in</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">R</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">r</span><span class="o">&gt;</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="kp">in</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">R</span><span class="p">)</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">n</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="n">r</span>
             <span class="n">push!</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
@@ -559,7 +559,7 @@
 
 <span class="n">maxn</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">maxl</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1000</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">1000</span>
     <span class="n">l</span> <span class="o">=</span> <span class="n">recurringCycleLen</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">l</span><span class="o">&gt;</span><span class="n">maxl</span>
         <span class="n">maxn</span> <span class="o">=</span> <span class="n">i</span>
@@ -578,8 +578,8 @@
 <span class="n">maxa</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">maxb</span> <span class="o">=</span> <span class="mi">0</span>
 
-<span class="k">for</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="p">:</span><span class="mi">1000</span>
-    <span class="k">for</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="p">:</span><span class="mi">1000</span>
+<span class="k">for</span> <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="o">:</span><span class="mi">1000</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span><span class="o">:</span><span class="mi">1000</span>
         <span class="n">len</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="n">isprime</span><span class="p">(</span><span class="n">n</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
@@ -594,7 +594,7 @@
     <span class="k">end</span>
 <span class="k">end</span>
 
-<span class="n">println</span><span class="p">(</span><span class="s">&quot;a = </span><span class="si">$maxa</span><span class="s">, b = </span><span class="si">$maxb</span><span class="s">, maxlen = </span><span class="si">$maxlen</span><span class="s">, a*b=</span><span class="si">$(maxa*maxb)</span><span class="s">&quot;</span><span class="p">)</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;a = </span><span class="si">$maxa</span><span class="s">, b = </span><span class="si">$maxb</span><span class="s">, maxlen = </span><span class="si">$maxlen</span><span class="s">, a*b=</span><span class="si">$</span><span class="p">(</span><span class="n">maxa</span><span class="o">*</span><span class="n">maxb</span><span class="p">)</span><span class="s">&quot;</span><span class="p">)</span>
 </pre>
 </div>
 <div class="section" id="id28">
@@ -604,8 +604,8 @@
 <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># current</span>
 <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span> <span class="c"># sum</span>
 <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">500</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">500</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">4</span>
         <span class="n">c</span> <span class="o">+=</span> <span class="n">step</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">c</span>
     <span class="k">end</span>
@@ -622,9 +622,9 @@
 <p>任何一个理智的人都应该算出 <span class="formula">99 × 99</span> 然后减去重复的 …… 然而其实直接算也挺快的，不管了 ……</p>
 <pre class="code julia literal-block">
 <span class="n">li</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;4&quot;</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span><span class="mi">100</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="p">:</span><span class="mi">100</span>
-        <span class="n">li</span><span class="p">[</span><span class="n">string</span><span class="p">(</span><span class="n">BigInt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">^</span><span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">:</span><span class="mi">100</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span><span class="o">:</span><span class="mi">100</span>
+        <span class="n">li</span><span class="p">[</span><span class="n">string</span><span class="p">(</span><span class="kt">BigInt</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">^</span><span class="n">j</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">end</span>
 <span class="k">end</span>
 <span class="n">println</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">))</span>
@@ -634,18 +634,18 @@
 <h1>30</h1>
 <p>求所有可以用自身每位数字的五次方相加表示的整数</p>
 <p>需要思考的问题只有 —— 上限是多少？</p>
-<p>若我们把一个大于 0 的 n 位数字表示为 <span class="formula"><span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup></span>,
+<p>若我们把一个大于 0 的 n 位数字表示为 <span class="formula"><span class="limits"><span class="limit">∑</span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup></span>,
 其中 <span class="formula"><i>d</i><sub><i>i</i></sub></span> 表示其第 i 位的数字，那么不难看出，
-每位数字的五次方相加的值域是 <span class="formula">1 ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub><sup>5</sup> ≤ 9<sup>5</sup> × <i>n</i></span>,
-而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit"><span class="symbol">∑</span></span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span></p>
+每位数字的五次方相加的值域是 <span class="formula">1 ≤ <span class="limits"><span class="limit">∑</span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub><sup>5</sup> ≤ 9<sup>5</sup> × <i>n</i></span>,
+而其自身的值域则是 <span class="formula">10<sup><i>n</i> − 1</sup> ≤ <span class="limits"><span class="limit">∑</span></span><span class="scripts"><sup class="script"><i>n</i></sup><sub class="script"><i>i</i> = 1</sub></span><i>d</i><sub><i>i</i></sub> × 10<sup><i>n</i> − <i>i</i></sup> ≤ 10<sup><i>n</i></sup> − 1</span></p>
 <p>于是，当 n&gt;6 的时候， <span class="formula">9<sup>5</sup> × <i>n</i> &lt; 10<sup><i>n</i> − 1</sup></span>, 从这里开始往后不可能有解了</p>
 <pre class="code julia literal-block">
 <span class="c"># when n&gt;6, 9^5*n &lt; 10^(n-1)</span>
 <span class="c">#  so set the upper limit to 9^5*6 is safe</span>
 
-<span class="n">ps</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">])</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">^</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="p">])</span>
 <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">9</span><span class="o">^</span><span class="mi">5</span><span class="o">*</span><span class="mi">6</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="mi">9</span><span class="o">^</span><span class="mi">5</span><span class="o">*</span><span class="mi">6</span>
     <span class="k">if</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">ps</span><span class="p">[</span><span class="n">c</span><span class="o">-</span><span class="sc">'0'</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))))</span> <span class="o">==</span> <span class="n">i</span>
         <span class="c"># println(i)</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
@@ -663,11 +663,11 @@
 于是可以这么递推出来 ——</p>
 <pre class="code julia literal-block">
 <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">]</span>
-<span class="n">ws</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">200</span><span class="p">]</span>
+<span class="n">ws</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">200</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">c</span> <span class="k">in</span> <span class="n">cs</span>
+<span class="k">for</span> <span class="n">c</span> <span class="kp">in</span> <span class="n">cs</span>
     <span class="n">ws</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="c"># just c</span>
-    <span class="k">for</span> <span class="n">v</span> <span class="k">in</span> <span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">200</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="kp">in</span> <span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="mi">200</span>
         <span class="n">ws</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ws</span><span class="p">[</span><span class="n">v</span><span class="o">-</span><span class="n">c</span><span class="p">]</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -682,21 +682,21 @@
 <span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
 <span class="n">one2nine</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
 
-<span class="k">function</span><span class="nf"> hasrep</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">hasrep</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="n">s</span><span class="o">=</span><span class="n">string</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">true</span>
+            <span class="k">return</span> <span class="kc">true</span>
         <span class="k">end</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="n">false</span>
+    <span class="k">return</span> <span class="kc">false</span>
 <span class="k">end</span>
 
-<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="mi">2000</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="mi">2000</span>
     <span class="k">if</span> <span class="n">hasrep</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">continue</span>
     <span class="k">end</span>
-    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="p">:</span><span class="mi">2000</span>
+    <span class="k">for</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">:</span><span class="mi">2000</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">j</span>
         <span class="c">#if hasrep(j)</span>
         <span class="c">#    continue</span>
@@ -711,7 +711,7 @@
 
 <span class="n">sort!</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
 <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">end</span>
@@ -727,10 +727,10 @@
 <p>找出分子分母各是两位数且能够从分子分母上各删除同一个数字其值不变的分数</p>
 <p><span class="formula">11 ⁄ 22 = 1 ⁄ 2</span> 或是 <span class="formula">10 ⁄ 20 = 1 ⁄ 2</span> 这种显然成立的除外</p>
 <pre class="code julia literal-block">
-<span class="n">fs</span> <span class="o">=</span> <span class="n">Rational</span><span class="p">{</span><span class="kt">Int64</span><span class="p">}[]</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="kt">Rational</span><span class="p">{</span><span class="kt">Int64</span><span class="p">}[]</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">12</span><span class="p">:</span><span class="mi">98</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="mi">99</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">12</span><span class="o">:</span><span class="mi">98</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="mi">99</span>
         <span class="c"># i = a*10 + b</span>
         <span class="c"># j = c*10 + d</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
@@ -760,9 +760,9 @@
 <span class="c"># for number has n digits, 1 &lt;= sum of its factorial digits &lt;= 362880n</span>
 <span class="c"># for number has n digits, 10^(n-1) &lt;= its value &lt; 10^n</span>
 
-<span class="n">fac</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">=&gt;</span><span class="n">factorial</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+<span class="n">fac</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">=&gt;</span><span class="n">factorial</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="p">]</span>
 
-<span class="k">function</span><span class="nf"> digifacsum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">digifacsum</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">n</span><span class="o">&gt;=</span><span class="mi">1</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">fac</span><span class="p">[</span><span class="n">n</span><span class="o">%</span><span class="mi">10</span><span class="p">]</span>
@@ -772,7 +772,7 @@
 <span class="k">end</span>
 
 <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">3</span><span class="p">:</span><span class="n">fac</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">3</span><span class="o">:</span><span class="n">fac</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
     <span class="k">if</span> <span class="n">digifacsum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">==</span><span class="n">i</span>
         <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
@@ -785,30 +785,30 @@
 <h1>35</h1>
 <p><span class="formula">10<sup>6</sup></span> 以下有几个质数随意循环移位还是质数</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> tonum</span><span class="p">(</span><span class="n">carr</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">tonum</span><span class="p">(</span><span class="n">carr</span><span class="p">)</span>
     <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">d</span> <span class="k">in</span> <span class="n">carr</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="kp">in</span> <span class="n">carr</span>
         <span class="n">v</span> <span class="o">*=</span> <span class="mi">10</span>
         <span class="n">v</span> <span class="o">+=</span> <span class="n">d</span><span class="o">-</span><span class="sc">'0'</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">v</span>
 <span class="k">end</span>
 
-<span class="k">function</span><span class="nf"> circular</span><span class="p">(</span><span class="n">prm</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">circular</span><span class="p">(</span><span class="n">prm</span><span class="p">)</span>
     <span class="n">res</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
     <span class="n">col</span> <span class="o">=</span> <span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">prm</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-        <span class="n">push!</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">tonum</span><span class="p">(</span><span class="n">vcat</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="k">end</span><span class="p">],</span> <span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">push!</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">tonum</span><span class="p">(</span><span class="n">vcat</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="n">i</span><span class="o">:</span><span class="k">end</span><span class="p">],</span> <span class="n">col</span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
     <span class="k">end</span>
     <span class="k">return</span> <span class="n">res</span>
 <span class="k">end</span>
 
 <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-    <span class="n">iscircular</span> <span class="o">=</span> <span class="n">true</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="k">in</span> <span class="n">circular</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">iscircular</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="kp">in</span> <span class="n">circular</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="n">iscircular</span> <span class="o">=</span> <span class="n">false</span>
+            <span class="n">iscircular</span> <span class="o">=</span> <span class="kc">false</span>
             <span class="k">break</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -824,15 +824,15 @@
 <h1>36</h1>
 <p>求 <span class="formula">10<sup>6</sup></span> 以下在十进制与二进制下都是回文数的数字之和</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="o">::</span><span class="n">String</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">2</span>
         <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">s</span><span class="p">[</span><span class="k">end</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="o">:</span><span class="k">end</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 <span class="k">end</span>
 
 <span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">ispalindrome</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="n">ispalindrome</span><span class="p">(</span><span class="n">base</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">i</span><span class="p">)),</span>
-    <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">])))</span>
+    <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000000</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id37">
@@ -841,25 +841,25 @@
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span> <span class="c"># just guess</span>
 
-<span class="k">function</span><span class="nf"> istruncatable</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">istruncatable</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n</span><span class="o">&lt;</span><span class="mi">10</span>
-        <span class="k">return</span> <span class="n">false</span>
+        <span class="k">return</span> <span class="kc">false</span>
     <span class="k">end</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">n</span>
     <span class="k">while</span> <span class="n">x</span><span class="o">&gt;=</span><span class="mi">1</span>
-        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">return</span> <span class="n">false</span> <span class="k">end</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span> <span class="k">end</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="mi">10</span><span class="p">))</span>
     <span class="k">end</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="k">end</span><span class="p">]))</span> <span class="k">return</span> <span class="n">false</span> <span class="k">end</span>
+    <span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="o">:</span><span class="k">end</span><span class="p">]))</span> <span class="k">return</span> <span class="kc">false</span> <span class="k">end</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="n">true</span>
+    <span class="k">return</span> <span class="kc">true</span>
 <span class="k">end</span>
 
 <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span>
+<span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">ps</span>
     <span class="k">if</span> <span class="n">istruncatable</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="n">println</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="n">p</span>
@@ -875,10 +875,10 @@
 <div class="section" id="id38">
 <h1>38</h1>
 <pre class="code julia literal-block">
-<span class="n">ispandigital</span><span class="p">(</span><span class="n">s</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">==</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
-<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="p">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
+<span class="n">ispandigital</span><span class="p">(</span><span class="n">s</span><span class="o">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="o">==</span> <span class="n">collect</span><span class="p">(</span><span class="s">&quot;123456789&quot;</span><span class="p">)</span>
+<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="o">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="o">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
 
-<span class="k">function</span><span class="nf"> guesspandigital</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">guesspandigital</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="k">while</span> <span class="n">length</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">9</span>
@@ -891,7 +891,7 @@
 <span class="n">ispandigitalmultiple</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">ispandigital</span><span class="p">(</span><span class="n">guesspandigital</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
 <span class="n">largest</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="mi">10000</span> <span class="c"># 10000 -&gt; 1000020000</span>
+<span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="mi">10000</span> <span class="c"># 10000 -&gt; 1000020000</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">guesspandigital</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ispandigital</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">largest</span><span class="o">&lt;</span><span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
         <span class="n">largest</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -943,10 +943,10 @@
 </div>
 <p>有最多的解</p>
 <pre class="code julia literal-block">
-<span class="k">function</span><span class="nf"> numsolution</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">numsolution</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">a</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">300</span>
-        <span class="k">for</span> <span class="n">b</span> <span class="k">in</span> <span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="p">:(</span><span class="n">p</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">300</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="kp">in</span> <span class="n">a</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
             <span class="n">c</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">b</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">isinteger</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span> <span class="o">==</span> <span class="n">p</span>
                 <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -958,7 +958,7 @@
 
 <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1000</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="mi">1000</span>
     <span class="n">ns</span> <span class="o">=</span> <span class="n">numsolution</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ns</span><span class="o">&gt;</span><span class="n">n</span>
         <span class="n">n</span> <span class="o">=</span> <span class="n">ns</span>
@@ -973,10 +973,10 @@
 <p>由于数据量太小（对于我的计算机），我就直接算出来了</p>
 <p>出题者意图肯定不是希望这么作弊的 - -</p>
 <pre class="code julia literal-block">
-<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="p">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="p">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
+<span class="o">+</span><span class="p">(</span><span class="n">s1</span><span class="o">::</span><span class="n">String</span><span class="p">,</span><span class="n">s2</span><span class="o">::</span><span class="n">String</span><span class="p">)</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">string</span><span class="p">,[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">]))</span>
-<span class="n">println</span><span class="p">(</span><span class="n">prod</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="o">^</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="sc">'0'</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">])))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">string</span><span class="p">,[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000000</span><span class="p">]))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">prod</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">s</span><span class="p">[</span><span class="mi">10</span><span class="o">^</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="sc">'0'</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="o">:</span><span class="mi">6</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id41">
@@ -985,14 +985,14 @@
 <p>显然 n 不会超过 9，直接从后往前找包含 <span class="formula">[1, <i>n</i>]</span> 每个数字的数判断一下</p>
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="kt">Int</span><span class="p">[]</span>
-<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
+<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
 
-<span class="k">for</span> <span class="n">d</span> <span class="k">in</span> <span class="mi">9</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span>
-    <span class="n">found</span> <span class="o">=</span> <span class="n">false</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">permutations</span><span class="p">([</span><span class="n">d</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">d</span> <span class="kp">in</span> <span class="mi">9</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">permutations</span><span class="p">([</span><span class="n">d</span><span class="o">:-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">isprime</span><span class="p">(</span><span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
             <span class="n">push!</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span><span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-            <span class="n">found</span> <span class="o">=</span> <span class="n">true</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="kc">true</span>
             <span class="k">break</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -1022,19 +1022,19 @@
 <p>所以 ——</p>
 <pre class="code julia literal-block">
 <span class="n">d</span>   <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">17</span><span class="p">]</span>
-<span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">:</span><span class="mi">8</span><span class="p">]</span>
 
-<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
+<span class="n">tonum</span><span class="p">(</span><span class="n">li</span><span class="p">)</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">i</span><span class="o">-&gt;</span><span class="n">li</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="o">^</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">li</span><span class="p">)]))</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="n">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">permutations</span><span class="p">([</span><span class="mi">0</span><span class="p">:</span><span class="mi">9</span><span class="p">])</span>
+<span class="n">s</span> <span class="o">=</span> <span class="kt">BigInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">permutations</span><span class="p">([</span><span class="mi">0</span><span class="o">:</span><span class="mi">9</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="k">continue</span>
     <span class="k">end</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">true</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="n">idx</span>
-        <span class="k">if</span> <span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">%</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="n">false</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="n">idx</span>
+        <span class="k">if</span> <span class="n">tonum</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="o">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span><span class="o">%</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="kc">false</span>
             <span class="k">break</span>
         <span class="k">end</span>
     <span class="k">end</span>
@@ -1051,14 +1051,14 @@
 <p>同 <a class="reference internal" href="#id42">42</a>, 判断一个数字是不是 <cite>pentagonal</cite>, 把方程 <span class="formula"><i>P</i><sub><i>n</i></sub> = <i>n</i>(3<i>n</i> − 1) ⁄ 2</span> 解出来就好了</p>
 <pre class="code julia literal-block">
 <span class="n">ub</span> <span class="o">=</span> <span class="mi">5000</span> <span class="c">#upper bound, guess</span>
-<span class="n">pd</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="p">])</span>
+<span class="n">pd</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">ub</span><span class="p">])</span>
 <span class="n">ispentagon</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">isinteger</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">24</span><span class="n">n</span><span class="p">))</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span>
 
 <span class="c"># println(ispentagon(145))</span>
 
 <span class="n">D</span> <span class="o">=</span> <span class="mi">2</span><span class="o">^</span><span class="mi">62</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">ub</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="n">ub</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="n">ub</span><span class="p">]</span>
         <span class="k">if</span>  <span class="n">ispentagon</span><span class="p">(</span><span class="n">pd</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">pd</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&amp;&amp;</span>
             <span class="n">ispentagon</span><span class="p">(</span><span class="n">pd</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">-</span><span class="n">pd</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="c"># println(&quot;$i $j&quot;)</span>
@@ -1080,7 +1080,7 @@
 <span class="n">P</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="mi">3</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">165</span><span class="o">+</span><span class="mi">1</span>
 
-<span class="k">while</span> <span class="n">true</span>
+<span class="k">while</span> <span class="kc">true</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">P</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">istriangle</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">ishexagonal</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="n">println</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
@@ -1096,19 +1096,19 @@
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
 
-<span class="k">function</span><span class="nf"> candivide</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span>
+<span class="k">function</span> <span class="n">candivide</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">ps</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">&gt;=</span><span class="n">x</span>
-            <span class="k">return</span> <span class="n">false</span>
+            <span class="k">return</span> <span class="kc">false</span>
         <span class="k">end</span>
         <span class="k">if</span> <span class="n">isinteger</span><span class="p">(</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">true</span>
+            <span class="k">return</span> <span class="kc">true</span>
         <span class="k">end</span>
     <span class="k">end</span>
-    <span class="k">return</span> <span class="n">false</span>
+    <span class="k">return</span> <span class="kc">false</span>
 <span class="k">end</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">33</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="mi">1000000</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">33</span><span class="o">:</span><span class="mi">2</span><span class="o">:</span><span class="mi">1000000</span>
     <span class="k">if</span> <span class="o">!</span><span class="n">isprime</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">candivide</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">break</span>
@@ -1120,8 +1120,8 @@
 <h1>47</h1>
 <p>求最小的连续四个各自有四个不同的质因数的整数</p>
 <pre class="code julia literal-block">
-<span class="n">numfactors</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">(</span><span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000000</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">4</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">numfactors</span><span class="p">)</span>
+<span class="n">numfactors</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">(</span><span class="n">factor</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000000</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">4</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">numfactors</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="n">numfactors</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span>
         <span class="n">println</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
         <span class="k">break</span>
@@ -1138,14 +1138,14 @@
 <span class="n">LIMIT</span> <span class="o">=</span> <span class="mi">10</span><span class="o">^</span><span class="mi">10</span>
 <span class="n">HALF</span>  <span class="o">=</span> <span class="mi">10</span><span class="o">^</span><span class="mi">5</span>
 
-<span class="k">type</span><span class="nc"> Truncated</span>
-    <span class="n">val</span><span class="p">::</span><span class="kt">Int64</span>
+<span class="k">type</span> <span class="n">Truncated</span>
+    <span class="n">val</span><span class="o">::</span><span class="kt">Int64</span>
 <span class="k">end</span>
 
-<span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">::</span><span class="kt">Int64</span><span class="p">)</span> <span class="o">=</span> <span class="n">Truncated</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
-<span class="o">+</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">truncated</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="p">)</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
-<span class="o">==</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span>
-<span class="k">function</span><span class="nf"> </span><span class="o">*(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="n">Truncated</span><span class="p">)</span>
+<span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="o">::</span><span class="kt">Int64</span><span class="p">)</span> <span class="o">=</span> <span class="n">Truncated</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
+<span class="o">+</span><span class="p">(</span><span class="n">a</span><span class="o">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="o">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">truncated</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="p">)</span><span class="o">%</span><span class="n">LIMIT</span><span class="p">)</span>
+<span class="o">==</span><span class="p">(</span><span class="n">a</span><span class="o">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="o">::</span><span class="n">Truncated</span><span class="p">)</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">val</span>
+<span class="k">function</span> <span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="o">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="o">::</span><span class="n">Truncated</span><span class="p">)</span>
     <span class="n">a1</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">val</span><span class="o">/</span><span class="n">HALF</span><span class="p">))</span>
     <span class="n">a2</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">val</span><span class="o">%</span><span class="n">HALF</span>
     <span class="n">b1</span> <span class="o">=</span> <span class="n">int</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">val</span><span class="o">/</span><span class="n">HALF</span><span class="p">))</span>
@@ -1154,11 +1154,11 @@
 
     <span class="n">truncated</span><span class="p">(</span><span class="n">low</span> <span class="o">%</span> <span class="n">LIMIT</span><span class="p">)</span>
 <span class="k">end</span>
-<span class="o">^</span><span class="p">(</span><span class="n">a</span><span class="p">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="p">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">Truncated</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">b</span><span class="p">])</span>
+<span class="o">^</span><span class="p">(</span><span class="n">a</span><span class="o">::</span><span class="n">Truncated</span><span class="p">,</span><span class="n">b</span><span class="o">::</span><span class="kt">Int</span><span class="p">)</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">Truncated</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">b</span><span class="p">])</span>
 
-<span class="nb">assert</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">]))</span><span class="o">==</span><span class="n">truncated</span><span class="p">(</span><span class="mi">10405071317</span><span class="p">))</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="p">]))</span><span class="o">==</span><span class="n">truncated</span><span class="p">(</span><span class="mi">10405071317</span><span class="p">))</span>
 
-<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">1000</span><span class="p">])))</span>
+<span class="n">println</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">map</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">truncated</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">^</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">1000</span><span class="p">])))</span>
 </pre>
 </div>
 <div class="section" id="id49">
@@ -1167,15 +1167,15 @@
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="n">filter</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">1000</span><span class="p">,</span> <span class="n">primes</span><span class="p">(</span><span class="mi">9999</span><span class="p">))</span>
 
-<span class="k">function</span><span class="nf"> ispermuation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+<span class="k">function</span> <span class="n">ispermuation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span> <span class="o">==</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span> <span class="o">==</span> <span class="n">sort</span><span class="p">(</span><span class="n">collect</span><span class="p">(</span><span class="n">string</span><span class="p">(</span><span class="n">z</span><span class="p">)))</span>
 <span class="k">end</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
-        <span class="k">if</span> <span class="k">in</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ps</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="kp">in</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="kp">in</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ps</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
             <span class="n">ispermuation</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$(ps[i])</span><span class="s">, </span><span class="si">$(ps[j])</span><span class="s">, </span><span class="si">$(ps[j]*2-ps[i])</span><span class="s">&quot;</span><span class="p">)</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="s">, </span><span class="si">$</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="s">, </span><span class="si">$</span><span class="p">(</span><span class="n">ps</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="o">-</span><span class="n">ps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="s">&quot;</span><span class="p">)</span>
         <span class="k">end</span>
     <span class="k">end</span>
 <span class="k">end</span>
@@ -1186,15 +1186,15 @@
 <p>求 1000000 以下能够用最多的连续递增质数列的和表示的质数</p>
 <pre class="code julia literal-block">
 <span class="n">ps</span> <span class="o">=</span> <span class="n">primes</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="c"># guess</span>
-<span class="n">sm</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="k">in</span> <span class="n">ps</span><span class="p">]]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">2</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="kp">in</span> <span class="n">ps</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="kp">in</span> <span class="mi">2</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
     <span class="n">sm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="k">end</span>
 
 <span class="n">maxlen</span>   <span class="o">=</span> <span class="mi">1</span>
 <span class="n">maxprime</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="k">for</span> <span class="n">front</span> <span class="k">in</span> <span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
-    <span class="k">for</span> <span class="n">back</span> <span class="k">in</span> <span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">front</span> <span class="kp">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">back</span> <span class="kp">in</span> <span class="n">front</span><span class="o">+</span><span class="mi">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">sm</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sm</span><span class="p">[</span><span class="n">back</span><span class="p">]</span><span class="o">-</span><span class="n">sm</span><span class="p">[</span><span class="n">front</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1000000</span> <span class="o">&amp;&amp;</span> <span class="n">isprime</span><span class="p">(</span><span class="n">sm</span><span class="p">[</span><span class="n">back</span><span class="p">]</span><span class="o">-</span><span class="n">sm</span><span class="p">[</span><span class="n">front</span><span class="p">])</span>
             <span class="n">len</span> <span class="o">=</span> <span class="n">back</span><span class="o">-</span><span class="n">front</span>
             <span class="k">if</span> <span class="n">len</span><span class="o">&gt;</span><span class="n">maxlen</span>
@@ -1214,7 +1214,7 @@ Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue 
 or
 mail to address in <a href="/about.html#public-key">my pub key</a>
 <br/>
-Copyright &copy; <a href="http://www.if-yu.info/">If</a>.
+Copyright &copy; <a href="http://www.yuguo.me/">If</a>.
 </footer>
 </div>
 <div class="footer">

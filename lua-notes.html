@@ -4,7 +4,7 @@
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
 <title>Lua 源码阅读笔记</title>
 <link rel="stylesheet" href="style.css" type="text/css" />
 <script type="text/javascript" src="script.js"></script>
@@ -67,7 +67,7 @@
 </ol>
 </blockquote>
 <p>感觉很有道理，所以……就按他说的来吧~</p>
-<div class="note">
+<div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>唔，插一句…… GNU Global 真是神器！</p>
 <p class="last">再插一句，其实他漏掉了第零步：Lua 文档</p>
@@ -180,7 +180,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 
 <span class="cp">#define TValuefields        Value value_; int tt_</span>
 </pre>
-<div class="note">
+<div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">#define LUA_NANTRICK 之后， TValuefields 会有不同的定义，不过基本原理不便，此处暂且假定
 <strong>没有使用 LUA_NANTRICK</strong></p>
@@ -396,7 +396,7 @@ luaopen_ - luaconf.h + libraries (lbaselib.c, ldblib.c, liolib.c, lmathlib.c,
 <p><tt class="docutils literal">RB</tt> 做的也是类似的事情，所以这句话就是说遇到 <tt class="docutils literal">OP_MOVE</tt> 指令的时候对紧接在后面的 <tt class="docutils literal">A</tt>, <tt class="docutils literal">B</tt> 两个操作数执行 <tt class="docutils literal">setobjs2s</tt> 操作</p>
 <blockquote>
 PS. <tt class="docutils literal">newframe</tt> 标签看上去真是个万般无奈的解啊</blockquote>
-<div class="note">
+<div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">to be continued ...</p>
 </div>
@@ -408,7 +408,7 @@ Contact/Comment: <a href="https://github.com/find/find.github.com/issues">issue 
 or
 mail to address in <a href="/about.html#public-key">my pub key</a>
 <br/>
-Copyright &copy; <a href="http://www.if-yu.info/">If</a>.
+Copyright &copy; <a href="http://www.yuguo.me/">If</a>.
 </footer>
 </div>
 <div class="footer">
