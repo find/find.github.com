@@ -16,19 +16,19 @@ Houdini 最大的特点在于其“程序化”（Procedural）理念，其创�
 
 例如我可以用一个底面拉出一个带房顶的简单房子：
 
-![rect-bottom-plane](_v_images/20181120234642928_698168790.png =500x)
+![rect-bottom-plane](_v_images/20181120234642928_698168790.png)
 
 →
 
-![rect-with-roof](_v_images/20181120234729614_272206322.png =500x)
+![rect-with-roof](_v_images/20181120234729614_272206322.png)
 
 那么我就可以将同样的流程用于其他的输入参数 ，例如将两个字母拉成带房顶的字母——
 
-![bottom-plane-if](_v_images/20181120225410179_368824807.png =500x)
+![bottom-plane-if](_v_images/20181120225410179_368824807.png)
 
 →
 
-![if-with-roof](_v_images/20181120225506814_1200726007.png =500x)
+![if-with-roof](_v_images/20181120225506814_1200726007.png)
 
 将“建模”看作“数据处理”，逻辑上合情合理，效果上则是大量重复劳动的节省，对于建 n 个相似模型的需求，可以将 O(n) 的时间复杂度直接降到 O(1)，请想象一下
 
@@ -36,7 +36,7 @@ Houdini 最大的特点在于其“程序化”（Procedural）理念，其创�
 
 有些效果用其他的工具根本难以做到，拿我有段时间的头像举个简单的栗子：
 
-![uvlayout-if](_v_images/20181121215026005_1232266428.png =500x)
+![uvlayout-if](_v_images/20181121215026005_1232266428.png)
 
 把几何物体尽可能紧密地排布在指定区域，将相机视角看到的线段输出成矢量图形，根据大小关系决定线条粗细
 
@@ -106,7 +106,7 @@ Houdini 作为一个图形编程环境，自由度之高只有想象力限制，
 
 打开 Houdini，你看到的界面应该大致如下，一共分了三大块：
 
-![houdini-main-interface](_v_images/20181120235852297_831485744.png =500x)
+![houdini-main-interface](_v_images/20181120235852297_831485744.png)
 
 * 左边的一大块是 3D 预览界面，和一般DCC软件不一样的是，在这个 3D 界面中你真的只需要“看”，不需要执行任何操作 —— 即使可以执行操作，我也不推荐，在这里执行的操作多半会破坏程序化处理流程
 * 右上方是属性界面
@@ -150,9 +150,9 @@ _下一步之前，你可以先操作一下练练手_
 
 首先在 Houdini 的节点界面敲 `Tab` 键，然后输入“geo”
 
-![](_v_images/20181122112506844_771081307.png =500x)
+![](_v_images/20181122112506844_771081307.png)
 
-![add geometry](_v_images/20181122114629324_1647200751.png =500x)
+![add geometry](_v_images/20181122114629324_1647200751.png)
 
 回车，即加入了新的 geometry；之所以有这一步，是因为 Houdini 能做的东西不止 geometry，geometry 也可以有不止一个。
 
@@ -166,7 +166,7 @@ _下一步之前，你可以先操作一下练练手_
 
 以同样的方式按 `Tab` 键，输入“grid”添加一个 grid 节点
 
-![added grid](_v_images/20181122115032925_384948685.png =500x)
+![added grid](_v_images/20181122115032925_384948685.png)
 
 现在右上角的属性面板里出现了这个网格的属性，包括位置、大小、行列数等，你可以试着改改看
 
@@ -186,7 +186,7 @@ _下一步之前，你可以先操作一下练练手_
 
 然后点亮 `attribwangle1` 的蓝色显示标记，你将得到如下图的结果
 
-![cosine wave](_v_images/20181122223444178_341467775.png =500x)
+![cosine wave](_v_images/20181122223444178_341467775.png)
 
 
 这里有几个知识点：
@@ -195,7 +195,7 @@ _下一步之前，你可以先操作一下练练手_
 2. 一个节点的输入连到另一个节点的输出，这便形成了一个流程图；在 Houdini 中，这个流程图便是一切
 3. 在 attribute wangle 节点中写的语言名叫 vex，Houdini 对 vex 的介绍如下：  
 
-      ![vex intro](_v_images/20181122225328769_972589641.png =460x)    
+      ![vex intro](_v_images/20181122225328769_972589641.png)    
       
       对 vex 抱有兴趣的小伙伴可以在这里看更多相关资料：[VEX language reference](http://www.sidefx.com/docs/houdini/vex/lang.html) 或是这个[非常棒的参考](https://github.com/jtomori/vex_tutorial)
 4. attribute wangle 节点的作用是，用指定代码段处理第一个输入参数并将结果输出
@@ -207,23 +207,23 @@ _下一步之前，你可以先操作一下练练手_
       
       注意 attribute wangle 节点上的这个选项：
       
-      ![attwangle runover](_v_images/20181122230424968_1816058970.png =460x)
+      ![attwangle runover](_v_images/20181122230424968_1816058970.png)
       
       其默认值是“points”，也就是 **对于每个点执行一次** `@P.y = cos(@P.x)+cos(@P.z);` 操作，这正是我们想要的；attribute wangle 还可以用来处理其他数据，以后我们也会用到
 
 现在有个小问题：这个函数图像似乎太不光滑了：
 
-![10x10](_v_images/20181122231947645_318033979.png =500x)
+![10x10](_v_images/20181122231947645_318033979.png)
 
 怎么办呢，我们选中 `grid1` 节点，此时属性界面会再次显示 `grid1` 节点的属性，我们将行列数都改到 100：
 
-![cosine wave resolution-up](_v_images/20181122153949508_1231625759.png =500x)
+![cosine wave resolution-up](_v_images/20181122153949508_1231625759.png)
 
 现在我们得到了 一个光滑的 `y = cos(x)+cos(z)` 函数的曲面 : )  由于每一步操作都有据可依，所以输入改变了输出完全可以适应着变化，不必从头来过
 
 当然，我们还可以完全把 grid 这个输入换掉，比如换成几个字母：
 
-![if-wave](_v_images/20181122234450351_110287670.png =500x)
+![if-wave](_v_images/20181122234450351_110287670.png)
 
 此时的 Houdini 有没有魅力四射？
 
@@ -232,17 +232,17 @@ _下一步之前，你可以先操作一下练练手_
 
 在 Houdini 里面，"Channel" 是个很重要的概念；在属性界面填的属性都是 "Channel"，鼠标移到属性名上可以看到其 channel 名称：
 
-![channel ie parameter](_v_images/20181123104605809_934644563.png =500x)
+![channel ie parameter](_v_images/20181123104605809_934644563.png)
 
 这个名字配上 `ch('path/to/channel')` 函数可以用于在节点内或者节点之间互相引用参数 —— 比如我可以在 sizey 的栏中填入 `ch('sizex')`:
 
-![sizey=sizex](_v_images/20181123105110867_1875776183.png =500x)
+![sizey=sizex](_v_images/20181123105110867_1875776183.png)
 
 嗯没错，每个参数栏都不仅可以填常数，也可以填表达式
 
 我们左键再点击一下目前浅灰色的 Size 标签，`sizey` 将会以数值显示：
 
-![sizex=sizey by value](_v_images/20181123105601074_1110369721.png =500x)
+![sizex=sizey by value](_v_images/20181123105601074_1110369721.png)
 
 试着改改 `sizex`，`sizey` 的值将永远保持与 `sizex` 相等，现在这个 grid 生成的也就总是正方形了
 
@@ -279,17 +279,17 @@ vop 节点和 wangle 节点其实是一样的功能，区别在于用的是节�
 
 我们也可以通过添加 attribute vop 节点如此实现：
 
-![att vop](_v_images/20181124002750000_30359474.png =500x)
+![att vop](_v_images/20181124002750000_30359474.png)
 
 然后双击进入 attribvop1 节点：
 
-![vop](_v_images/20181124003007728_1298055179.png =500x)
+![vop](_v_images/20181124003007728_1298055179.png)
 
 左边一栏是输入属性，右边一栏是输出属性 —— 这里没列出来的属性也可以用 `bind` 或 `bind export` 节点输入/输出
 
 要实现和 `@P.y = cos(@P.x)+cos(@P.z);` 等价的操作，我们可以这样连接：
 
-![vop expr](_v_images/20181124003530035_127023580.png =500x)
+![vop expr](_v_images/20181124003530035_127023580.png)
 
 作为程序猿，对于这种看上去非常冗长的表示可能有点抗拒？
 
@@ -344,9 +344,9 @@ _注意 box/circle/sphere 的类型都可以是 "Primitive" 也可以是 "Polygo
 
 知道了以上这些，至少可以做出些魔性的 pattern 玩了 ——
 
-![cosine 2](_v_images/wave_rendered.png =500x)  
+![cosine 2](_v_images/wave_rendered.png)  
 
-![if](_v_images/20181124013623331_1621836620.png =500x)
+![if](_v_images/20181124013623331_1621836620.png)
 
 
 ## 接下来讲什么
