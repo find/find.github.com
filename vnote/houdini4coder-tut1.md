@@ -1,4 +1,4 @@
-# 程序猿 Houdini 入门
+# 程序猿 Houdini 启蒙
 
 _写这文章是因为最近被项目所逼入了 Houdini 的坑, 然后越用越觉得这个太好玩了；虽然通常被认为是美术工具，但是 Houdini 从理念到操作到具体功能的设计都对程序猿非常友好，希望此文能吸引更多同好一起来玩，一起创造些有趣又酷炫的东西_
 
@@ -108,9 +108,9 @@ Houdini 作为一个图形编程环境，自由度之高只有想象力限制，
 
 ![houdini-main-interface](_v_images/20181120235852297_831485744.png)
 
-* 左边的一大块是 3D 预览界面，和一般DCC软件不一样的是，在这个 3D 界面中你真的只需要“看”，不需要执行任何操作 —— 即使可以执行操作，我也不推荐，在这里执行的操作多半会破坏程序化处理流程
-* 右上方是属性界面
-* 右下方是节点编辑界面，你的主要操作都会在这儿进行
+1. 左边的一大块是 3D 预览界面，和一般DCC软件不一样的是，在这个 3D 界面中你真的只需要“看”，不需要执行任何操作 —— 即使可以执行操作，我也不推荐，在这里执行的操作多半会破坏程序化处理流程
+2. 右上方是属性界面
+3. 右下方是节点编辑界面，你的主要操作都会在这儿进行
 
 ### 3D 预览界面的基础操作
 
@@ -156,7 +156,7 @@ _下一步之前，你可以先操作一下练练手_
 
 回车，即加入了新的 geometry；之所以有这一步，是因为 Houdini 能做的东西不止 geometry，geometry 也可以有不止一个。
 
-![geo node](_v_images/20181122114706542_1291328580.png)
+![geo node](_v_images/houdini-add-geometry.gif)
 
 接下来的操作都将在 geometry 节点下面进行：
 
@@ -177,16 +177,19 @@ _下一步之前，你可以先操作一下练练手_
 先来解答程序猿最关心的问题： **代码写在哪？**
 
 * 我们再通过 `Tab` 输入 att wangle 加入一个 Attribute Wangle 节点
-* 将 `grid1` 下面的小点和 `attribwangle1` 上面的第一个小点连起来
+* 将 `grid1` 下面的小点和 `attribwangle1` 上面的第一个小点连起来，并点亮显示标记：  
+  
+    ![add-attribute-wangle](_v_images/houdini-add-attwangle.gif)  
+    
 * 选中 `atttribwangle1`，在属性面板上找到如下图的代码框，输入：
 
     ```vex
     @P.y = cos(@P.x)+cos(@P.z);
     ```
 
-然后点亮 `attribwangle1` 的蓝色显示标记，你将得到如下图的结果
+    `Ctrl+Enter`, 你将得到如下图的结果
 
-![cosine wave](_v_images/20181122223444178_341467775.png)
+    ![cosine wave](_v_images/20181122223444178_341467775.png)
 
 
 这里有几个知识点：
@@ -199,7 +202,7 @@ _下一步之前，你可以先操作一下练练手_
       
       对 vex 抱有兴趣的小伙伴可以在这里看更多相关资料：[VEX language reference](http://www.sidefx.com/docs/houdini/vex/lang.html) 或是这个[非常棒的参考](https://github.com/jtomori/vex_tutorial)
 4. attribute wangle 节点的作用是，用指定代码段处理第一个输入参数并将结果输出
-5. 比较值得一提的是代码中的 `@P`
+5. 比较值得一提的是代码中的 `@P`:
 
       `@property` 是 vex 中访问属性的语法，`P` 是最重要的属性：坐标
       
@@ -211,7 +214,7 @@ _下一步之前，你可以先操作一下练练手_
       
       其默认值是“points”，也就是 **对于每个点执行一次** `@P.y = cos(@P.x)+cos(@P.z);` 操作，这正是我们想要的；attribute wangle 还可以用来处理其他数据，以后我们也会用到
 
-现在有个小问题：这个函数图像似乎太不光滑了：
+现在还有个小问题：这个函数图像似乎太不光滑了：
 
 ![10x10](_v_images/20181122231947645_318033979.png)
 
@@ -268,6 +271,31 @@ _下一步之前，你可以先操作一下练练手_
 
 ![boxes stacked dynamic](_v_images/houdini-channel-ref-scale.gif)
 
+#### 加个参数
+
+在 Houdini 中，不光内置的参数可以用 `ch()` 函数引用，你还可以轻易的自己加些参数；在 attribute wangle 节点中添加 channel 尤其简单：
+
+直接引用 channel 数据，比如：
+
+```vex
+float height_scale = ch('height_scale');
+```
+
+然后点一下代码框旁边的这个小按钮：
+
+![create parameter button](_v_images/20181128152128046_7661.png)
+
+滑动条便会出现：
+
+![add new channel](_v_images/houdini-add-channel.gif)
+
+然后拖动滑块便可以见证奇迹了 ——
+
+![added channel result](_v_images/houdini-added-channel-640.gif)
+
+#### What About int/string/vector/matrix?
+
+看文档啦 [ch VEX function](http://www.sidefx.com/docs/houdini/vex/functions/ch.html)
 
 ### VOP
 
@@ -295,14 +323,16 @@ vop 节点和 wangle 节点其实是一样的功能，区别在于用的是节�
 
 但 vop 的好处很明显：在函数记不清的情况下，这里能提供的自动补全要方便些 : )
 
-
 ### 总结一下下
 
 * Houdini 提供了一套流程化的 Geometry 处理方法
 * 目前为止提到过的操作都属于 Geometry 处理的范畴，记得先建一个 geometry 节点
 * 我们可以用 attribute wangle 或者 attribute vop 方式操作 geometry 属性
 * 坐标属性是 `@P`, 其他常用属性请看文档：[Geometry attributes](http://www.sidefx.com/docs/houdini/model/attributes.html) // 顺便请仔细读 vertex / point / primitive / detail 属性的意义和关系
-* 我们可以用 `ch('path/to/channel')` 的方式读取节点参数
+* Geometry Spreadsheet 是个非常重要的界面，这里没讲，因为一看就懂，但一定要看一眼！  
+
+    ![geometry spreadsheet](_v_images/20181128155203529_26480.png)
+* 我们可以用 `ch('path/to/channel')` 的方式读取节点参数，还可以自己多建几个参数
 * 如果你对 attribute 和 channel 犯迷糊的话 —— attribute 数据是一直跟随着 geometry 传递的，而 channel 数据只在对应的节点上
 
 
@@ -313,34 +343,10 @@ vop 节点和 wangle 节点其实是一样的功能，区别在于用的是节�
 
 ## 接下来玩什么
 
-知道基础操作之后，剩下的基本就是玩了，我先列几个特别常用的操作供你玩：
+知道基础操作和基本概念之后，剩下的基本就是玩了，边玩可以边看文档：
 
-### 几何操作节点
-
-// 完整文档请看这里：[Geometry nodes](http://www.sidefx.com/docs/houdini/nodes/sop/)
-
-* box：盒子
-* circle：圈，或者圆面，或者正多边形
-* sphere: 球
-* line：线段
-* transform：顾名思义
-* polyextrude: 沿法线方向拉高
-* mountain：对顶点在法线方向添加噪音
-* merge：将多个输入合在一起输出
-* font：生成文字形状的多边形
-* scatter：撒点
-* copy to points：将第一个输入参数拷贝到第二个参数的每个点上
-* remesh：将面拆分成尽可能均匀的三角形
-
-_注意 box/circle/sphere 的类型都可以是 "Primitive" 也可以是 "Polygon", 当它是 polygon 的时候才有点线面的概念，primitive 则只有位置、大小这些元信息_
-
-### vex 函数
-
-// 完整函数列表请看这里：[VEX Functions](http://www.sidefx.com/docs/houdini/vex/functions/index.html)
-
-* [addpoint](http://www.sidefx.com/docs/houdini/vex/functions/addpoint.html)
-* [addprim](http://www.sidefx.com/docs/houdini/vex/functions/addprim.html)
-* [neighbours](http://www.sidefx.com/docs/houdini/vex/functions/neighbours.html)
+* 几何操作节点 [Geometry nodes](http://www.sidefx.com/docs/houdini/nodes/sop/)
+* vex 函数 [VEX Functions](http://www.sidefx.com/docs/houdini/vex/functions/index.html)
 
 知道了以上这些，至少可以做出些魔性的 pattern 玩了 ——
 
