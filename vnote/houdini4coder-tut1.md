@@ -30,7 +30,7 @@ Houdini 最大的特点在于其“程序化”（Procedural）理念，其创�
 
 ![if-with-roof](_v_images/20181120225506814_1200726007.png)
 
-将“建模”看作“数据处理”，逻辑上合情合理，效果上则是大量重复劳动的节省，对于建 n 个相似模型的需求，可以将 O(n) 的时间复杂度直接降到 O(1)，请想象一下
+将“建模”看作“数据处理”，不知道会不会像是把“雕刻”说成“石料处理”一样得罪人；但实际上“建模”的确就是在处理数据 —— 处理空间属性、拓扑关系的数据 —— 以数据处理的方式做建模这件事，逻辑上合情合理，留下来一份数据处理的流水线之后效果上则是大量重复劳动的节省，对于建 n 个相似模型的需求，可以将 O(n) 的时间复杂度直接降到 O(1)，请想象一下
 
 ### 其次因为 Houdini 强得吓人
 
@@ -348,7 +348,7 @@ vop 节点和 wangle 节点其实是一样的功能，区别在于用的是节�
 * 几何操作节点 [Geometry nodes](http://www.sidefx.com/docs/houdini/nodes/sop/)
 * vex 函数 [VEX Functions](http://www.sidefx.com/docs/houdini/vex/functions/index.html)
 
-知道了以上这些，至少可以做出些魔性的 pattern 玩了 ——
+知道了以上这些，其实你就什么都能做了，或者至少可以先做些魔性的 pattern 玩 ——
 
 ![cosine 2](_v_images/wave_rendered.png)  
 
