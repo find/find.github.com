@@ -1,7 +1,9 @@
 # 假日 Project：用 Houdini 渲染 …… 矢量图？
 
 
-*本文包含大量 svg 图案，为获得完整阅读体验请前往 TODO*
+## 有啥用
+
+装修网站/生成图标之类的嘛 // Houdini 又遭滥用 (手动笑哭), and it's so much fun!
 
 ## 初心
 
@@ -206,7 +208,7 @@ better，但还是有深度错误
 
 SVG 还有一点好，&lt;polygon&gt; 可以用 &lt;a&gt; 包起来，元素外观也可以用 css 自定义
 
-所以，实际上 SVG 基本可以当作静态网页用了 —— 于是我就用 Houdini 渲染了我自己这 http://www.yuguo.me/ 整个主页
+所以，实际上 SVG 基本可以当作静态网页用了 —— 于是我就用 Houdini 渲染了我自己这 [yuguo.me](http://www.yuguo.me/) 整个主页
 
 emmmm 路子虽野，但用起来感受很不错
 
