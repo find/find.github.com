@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>{{title}}</title>
+<style>
+body{
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: gray;
+}
+object {
+    width: 100%;
+    object-fit: cover;
+}
+.svg-container {
+    margin: 0;
+    padding: 0;
+}
+.document {
+    width: 80%;
+    max-width: 1000px;
+    margin: 24px auto;
+    font-family: "更纱黑体 SC", "Sarasa Gothic SC", "微软雅黑", "Source Han Sans CN", "Noto Sans SC", sans-serif;
+    font-size: 18px;
+}
+.document a {
+    color: #29476e;
+}
+.document a:visited {
+    color: #2b394d;
+}
+.document h1,h2,h3,h4,h5 {
+    color: silver;
+    padding-top: 2em;
+}
+.document pre,code {
+    font-family: "Source Code Pro", "Sarasa Mono SC", "droid sans mono", "dejavu sans mono", "consolas", "Courier New", Courier, "微软雅黑", monospace;
+}
+.document img {
+    display:block;
+    max-width: 800px;
+    margin: 8px auto;
+}
+</style>
+</head>
+<body>
+  <!--
+        <div class="svg-container">
+            <object data="../../header.svg" type="image/svg+xml">
+            </object>
+        </div>
+  -->
+        <div class="document">
+        {{markdown}}
+        </div>
+        <div class="svg-container">
+            <object data="../../footer.svg" type="image/svg+xml">
+            </object>
+        </div>
+</body>
+</html>
