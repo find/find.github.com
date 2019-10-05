@@ -60,45 +60,45 @@ object {
 <pre><code class="language-svg">&lt;polygon points=&quot;x1,y1 x2,y2 x3,y3 ...&quot; /&gt;
 </code></pre>
 <p>于是简单了，做一下 view 和 projection 变换，再转到 screen space，这过程(可以)和光栅化渲染一毛一样——</p>
-<p><img src="_v_images/20191003104252237_23802.png" alt="" /></p>
+<p><img src="20191003104252237_23802.png" alt="" /></p>
 <p>然后把 x,y 坐标给输出出来就完事了</p>
 <p>基本思路确定了，那就开干吧</p>
 <h2>Basic Setup</h2>
 <p>先说最后想做成什么样 ——</p>
 <p>大概就是想弄出一种新的相机，可以直接输出 svg</p>
-<p><img src="_v_images/20191003160243392_19021.png" alt="" /></p>
+<p><img src="20191003160243392_19021.png" alt="" /></p>
 <p>至于光照，就在 geometry 层级用<a href="https://zhuanlan.zhihu.com/p/79744374">这个 ramp 操作</a>算一算 dot(@N, lightdir) 就得了（或者也可以随便演绎）</p>
 <p>对了所以记得要关闭光照预览</p>
-<p><img src="_v_images/20191003163129659_30947.png" alt="" /></p>
+<p><img src="20191003163129659_30947.png" alt="" /></p>
 <p>回到相机，先在 camera node 里面新建个 grid 作为感光器，后面会用到</p>
-<p><img src="_v_images/20191003161045993_10186.png" alt="" /></p>
+<p><img src="20191003161045993_10186.png" alt="" /></p>
 <p>BTW <a href="https://zhuanlan.zhihu.com/p/69301910">上次</a> 还没弄明白 Houdini 的光圈为什么会影响到 FOV，这次参考了一下 qLib 发现这货的光圈居然是感光器尺寸的意思</p>
-<p><img src="_v_images/20191003161350733_31914.png" alt="" /></p>
-<p><img src="_v_images/20191003161524529_2386.png" alt="" /></p>
+<p><img src="20191003161350733_31914.png" alt="" /></p>
+<p><img src="20191003161524529_2386.png" alt="" /></p>
 <p>well well well..</p>
 <p>然后新建个 objnet</p>
-<p><img src="_v_images/20191003160613696_24224.png" alt="" /></p>
+<p><img src="20191003160613696_24224.png" alt="" /></p>
 <p>在 objnet 里面新建 geometry，一顿乱连 ——</p>
 <p>算好 view / projection 矩阵，把颜色记到 primitive 上面</p>
 <p>BTW 由于没有必要把 z 值给弄到 0~1 区间或是 -1~1 区间，而且反过来 z 值变成非线性之后有些操作反而麻烦，所以 projection 这一步还可以自己发挥偷点懒</p>
-<p><img src="_v_images/20191003160846553_23141.png" alt="" /></p>
+<p><img src="20191003160846553_23141.png" alt="" /></p>
 <p>最后做一下深度排序，转换到 screen space, sRGB，输出：</p>
-<p><img src="_v_images/20191003161844090_14902.png" alt="" /></p>
+<p><img src="20191003161844090_14902.png" alt="" /></p>
 <p>中间再加点菜 ——</p>
 <h2>Backface Culling</h2>
 <p>在 Projection space，判断一下面法线的 z 方向就可以除掉 back face 了 ✓</p>
-<p><img src="_v_images/20191003110335287_10977.png" alt="" /></p>
+<p><img src="20191003110335287_10977.png" alt="" /></p>
 <p>→</p>
-<p><img src="_v_images/20191003110438317_30168.png" alt="" /></p>
+<p><img src="20191003110438317_30168.png" alt="" /></p>
 <h2>Occlusion Culling</h2>
 <p>参考这篇 <a href="https://zhuanlan.zhihu.com/p/69301910">ray tracing</a> 的做法，可以先光栅化一个 grid ，感光器每个点(像素)记录其投射到的 primnum，然后把不在记录中的 prim 给删掉 ——</p>
-<p><img src="_v_images/20191003110535971_23505.png" alt="" /></p>
+<p><img src="20191003110535971_23505.png" alt="" /></p>
 <p>此时沿 Z 轴观看：</p>
-<p><img src="_v_images/20191003110644856_14456.png" alt="" /></p>
+<p><img src="20191003110644856_14456.png" alt="" /></p>
 <p>完全没毛病</p>
 <p>BTW 如果有面积很小(亚像素)的多边形，可能需要超分辨率采样</p>
 <h2>Depth Sorting</h2>
-<p><img src="_v_images/20191003111133623_3388.png" alt="" /></p>
+<p><img src="20191003111133623_3388.png" alt="" /></p>
 <h2>Write SVG</h2>
 <p>随手写点 python 嘛</p>
 <pre><code class="language-python">pwd = hou.pwd()
@@ -141,29 +141,29 @@ if svg_fn!='':
     writesvg(svg)
 </code></pre>
 <p>好了，看看如何：</p>
-<p><img src="_v_images/output1.svg" alt="" /></p>
+<p><img src="output1.svg" alt="" /></p>
 <p>很明显，输出成 svg 之后丢了深度，所以这些相交的面没法自动得出遮挡关系了</p>
 <p>怎么办捏</p>
 <h2>Occlusion++</h2>
 <p>一个简单的思路是，在 geometry 输入的地方便先做一次 boolean 运算：</p>
-<p><img src="_v_images/20191003112331953_9489.png" alt="" /></p>
+<p><img src="20191003112331953_9489.png" alt="" /></p>
 <p>→</p>
-<p><img src="_v_images/20191003112414581_15747.png" alt="" /></p>
+<p><img src="20191003112414581_15747.png" alt="" /></p>
 <p>这样在 world space 便没了面相交的情况</p>
 <p>输出看看：</p>
-<p><img src="_v_images/output2.svg" alt="" /></p>
+<p><img src="output2.svg" alt="" /></p>
 <p>better，但还是有深度错误</p>
 <p>还有办法吗</p>
 <p>如果能做到在 screen space 也没有相交的面就好了</p>
 <h2>Occlusion++++</h2>
 <p>在 projection space 直接拉一个老长老长的投影出来 ——</p>
-<p><img src="_v_images/20191003113027506_29423.png" alt="" /></p>
+<p><img src="20191003113027506_29423.png" alt="" /></p>
 <p>然后做一下布尔运算，就得到了一堆在 z 轴向没有相交面的多边形了 ——</p>
-<p><img src="_v_images/20191003113217242_30202.png" alt="" /></p>
-<p><img src="_v_images/20191003113248481_30770.png" alt="" /></p>
+<p><img src="20191003113217242_30202.png" alt="" /></p>
+<p><img src="20191003113248481_30770.png" alt="" /></p>
 <p>输出，便是完美的互不交叉的多边形了：</p>
-<p><img src="_v_images/20191003153225357_22776.png" alt="" /></p>
-<p><img src="_v_images/output3.svg" alt="" /></p>
+<p><img src="20191003153225357_22776.png" alt="" /></p>
+<p><img src="output3.svg" alt="" /></p>
 <p>:D</p>
 <h2>One More Thing</h2>
 <p>SVG 还有一点好，&lt;polygon&gt; 可以用 &lt;a&gt; 包起来，元素外观也可以用 css 自定义</p>
