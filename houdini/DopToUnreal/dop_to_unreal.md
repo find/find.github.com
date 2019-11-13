@@ -1,12 +1,12 @@
 # DOP: From Houdini to Unreal | Unity, The Easy Way[s]
 
-![title image](_v_images/20190106004723578_3149.png)
+![title image](20190106004723578_3149.png)
 
 上周[玩了下 DOP network](https://zhuanlan.zhihu.com/p/53188002)
 
 得到了这么一个动画 // 1800帧，310个骨牌
 
-![star](_v_images/v2-56eab7fd1d579d17ddcc918dace55b79_b.gif)
+![star](v2-56eab7fd1d579d17ddcc918dace55b79_b.gif)
 
 那么想在游戏引擎里面实时渲染之前的模拟结果的话 —— 怎么办？
 
@@ -30,11 +30,11 @@ alembic 是个不错的格式，就是实时渲染中每帧更新那么多顶点
 
 那么试试看吧，首先 Houdini 自己有输出 fbx 的功能，进入 /out 网络，添加 filmboxfbx 节点，试试：
 
-![fbx direct output](_v_images/20190103232202778_10164.png)
+![fbx direct output](20190103232202778_10164.png)
 
 =>
 
-![fbx+fpc](_v_images/20190103232303026_26376.png)
+![fbx+fpc](20190103232303026_26376.png)
 
 得到一份 173KB 的 FBX 以及一份 223MB 的 FPC(Geometry Cache)，果然被当做顶点动画对待了
 
@@ -47,32 +47,32 @@ alembic 是个不错的格式，就是实时渲染中每帧更新那么多顶点
 
 emmmmm .... 看样子要等一等
 
-![exporting ....](_v_images/20190103222448976_5089.png)
+![exporting ....](20190103222448976_5089.png)
 
-![can't wait](_v_images/20190103223136577_13971.png)
+![can't wait](20190103223136577_13971.png)
 
 emmmmmmmmmmmmmm ....
 
-![15:11](_v_images/20190103223327376_792.png)
+![15:11](20190103223327376_792.png)
 
-![raged](_v_images/20190103222601187_7153.png)
+![raged](20190103222601187_7153.png)
 
 
 emmmmmmmmmmmmmmmmmm ....
 
-![20:48](_v_images/20190103223914773_27771.png)
+![20:48](20190103223914773_27771.png)
 
 
-![扶额](_v_images/1047086913380984808.gif)
+![扶额](1047086913380984808.gif)
 
 emmmmmmmmmmmmmmmmmmmmmmmmmmmmmm .....
 
-![30:46](_v_images/20190103224907344_3195.png)
+![30:46](20190103224907344_3195.png)
 
-![flip table](_v_images/20190103222842394_6500.png)
+![flip table](20190103222842394_6500.png)
 
 
-![32:10](_v_images/20190103225031223_1299.png)
+![32:10](20190103225031223_1299.png)
 
 ┬─┬ノ( º _ ºノ)
 
@@ -91,13 +91,13 @@ emmmmmmmmmmmmmmmmmmmmmmmmmmmmmm .....
 
 给它个机会：
 
-![skinning converter net](_v_images/20190101231944826_30976.png)
+![skinning converter net](20190101231944826_30976.png)
 
-![skinned converter view](_v_images/20190101232034937_21602.png)
+![skinned converter view](20190101232034937_21602.png)
 
 看上去离成功只有一步之遥了，但是哪有这等好事：
 
-![skinning converter error](_v_images/20190101232228513_29511.png)
+![skinning converter error](20190101232228513_29511.png)
 
 
 ### 求人不如求己
@@ -110,23 +110,23 @@ emmmmmmmmmmmmmmmmmmmmmmmmmmmmmm .....
 
 为了清楚点看到它的工作原理，首先把它输出之后的 cleanup 操作禁用掉，然后改一下输出时间范围再导出一次(少导出几帧，避免再等 40 分钟 ...)
 
-![disable cleanup](_v_images/20190103233438645_3605.png)
+![disable cleanup](20190103233438645_3605.png)
 
 接下来在 /out/rop_rbd_to_fbx/Export/FBX_EXPORT/TRANSFORM_NODE 路径下面可以看到这样的景象：
 
-![many nodes](_v_images/20190105211655715_6590.png)
+![many nodes](20190105211655715_6590.png)
 
 很明显，rbd to fbx 是把想要导出的那个物件拆成了 N 份 Geometry，每个骨牌的运动被重新表示成了各自 Geometry 的动画
 
 若是在祖传 In-house engine 或是 Unity 那儿，美术这么干可能会被程序打的 */\*好在我是程序，没人能打我\*/* —— 这样的结构每个 Geometry 需要用一个 draw call 绘制
 
-![Unity Dry Run](_v_images/20190105224546786_22608.png)
+![Unity Dry Run](20190105224546786_22608.png)
 
 // Unity 空场景空跑
 
 ->
 
-![Unity RBD2FBX](_v_images/20190105224622993_15176.png)
+![Unity RBD2FBX](20190105224622993_15176.png)
 
 // Unity 添加一份 `rbd to fbx` 导出模型
 
@@ -156,7 +156,7 @@ emmmmmmmmmmmmmmmmmmmmmmmmmmmmmm .....
 
 先新建 subnetwork，随便连一下：
 
-![converter network](_v_images/20190105234610494_6175.png)
+![converter network](20190105234610494_6175.png)
 
 其中 convert_to_skinned_mesh 是个 null 节点，上面手动添加了一个 python 输入框(code)和一个按钮(`exec hou.pwd().parm('code').eval()`)，手动触发的感受比较舒适
 
@@ -209,11 +209,11 @@ def GenerateSkeletonAndBake(a_Container, a_Subnet, a_RootBone, a_StartFrame, a_E
 
 骨骼生成好了:
 
-![bones ready](_v_images/20190105233214580_5029.png)
+![bones ready](20190105233214580_5029.png)
 
 那么蒙皮怎么办 —— 我们看看使用 skinning converter 生成的 geo1 是个怎么回事：
 
-![skinning converter gen geo](_v_images/20190105233522171_6341.png)
+![skinning converter gen geo](20190105233522171_6341.png)
 
 唔 ... 连了一堆神奇的自动蒙皮装置
 
@@ -223,13 +223,13 @@ def GenerateSkeletonAndBake(a_Container, a_Subnet, a_RootBone, a_StartFrame, a_E
 
 先到 geometry spreadsheet 里面找找看蒙皮信息是如何记录的吧 ——
 
-![bonecapture packed](_v_images/20190105233916466_14559.png)
+![bonecapture packed](20190105233916466_14559.png)
 
 大概是这么个东西，懵了，这是啥，怎么改，orz
 
 好在有 capture attribute unpack 这么个好东西，unpack 了之后我们再看看：
 
-![bonecapture unpacked](_v_images/20190105234126928_14162.png)
+![bonecapture unpacked](20190105234126928_14162.png)
 
 这下骨骼编号以及对应的权重就一目了然了
 
@@ -242,9 +242,9 @@ f[]@boneCapture_data = array(1.0);
 
 然后再用 capture attribute pack 还原回去：
 
-![capture network](_v_images/20190105235631962_14327.png)
+![capture network](20190105235631962_14327.png)
 
-![skinned](_v_images/skinnedmesh.gif)
+![skinned](skinnedmesh.gif)
 
 LOOKS GOOD.
 
@@ -296,15 +296,15 @@ LOOKS GOOD.
 
 这下哪怕 Unity 也能开心的渲染了：
 
-![unity anim](_v_images/unity-anim.gif)
+![unity anim](unity-anim.gif)
 
 而且 Draw Call 数量感人 ——
 
-![skinned mesh draw call](_v_images/20190106000837996_19876.png)
+![skinned mesh draw call](20190106000837996_19876.png)
 
 fracture 自然也不是问题：
 
-![pig head](_v_images/pighead.gif)
+![pig head](pighead.gif)
 
 存一个 hda，完结！散花！
 
@@ -313,4 +313,4 @@ Update:
 
 忘了总结：比官方所有的版本导出速度快(2.2min)、导出体积小(36MB)、运行代价小，这个轮子没白造。
 
-![satisfied](_v_images/20190106122705492_5387.png)
+![satisfied](20190106122705492_5387.png)

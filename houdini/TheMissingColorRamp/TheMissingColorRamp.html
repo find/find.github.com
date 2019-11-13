@@ -46,7 +46,7 @@ object {
 </head>
 <body>
         <div class="svg-container">
-            <img src="_v_images/20190825224419520_5588.png" style="width:100%" alt="title image"/>
+            <img src="20190825224419520_5588.png" style="width:100%" alt="title image"/>
         </div>
         <div class="document">
         <h1>The Missing Color Ramp Operator For Houdini</h1>
@@ -63,42 +63,42 @@ object {
 <p>嗯……于是就折腾出了一个</p>
 <h2>能干啥</h2>
 <p>比如看看法线和某个向量的夹角</p>
-<p><img src="_v_images/20190825173300586_542.png" alt="eg-1" /></p>
+<p><img src="20190825173300586_542.png" alt="eg-1" /></p>
 <p>比如看看高度</p>
-<p><img src="_v_images/20190825174121618_27742.png" alt="" /></p>
+<p><img src="20190825174121618_27742.png" alt="" /></p>
 <p>比如看看面积</p>
-<p><img src="_v_images/20190825222311818_23335.png" alt="" /></p>
+<p><img src="20190825222311818_23335.png" alt="" /></p>
 <p>比如看看某个看似 float 其实是 string 的属性</p>
-<p><img src="_v_images/20190825180357862_14756.png" alt="" /></p>
+<p><img src="20190825180357862_14756.png" alt="" /></p>
 <p>比如看看哪块地方 Airbnb 的选择比较多</p>
-<p><img src="_v_images/20190825174729628_8736.png" alt="" /></p>
+<p><img src="20190825174729628_8736.png" alt="" /></p>
 <p>或者看看哪块地方酒吧比较密集</p>
-<p><img src="_v_images/20190825220342069_422.png" alt="" /></p>
+<p><img src="20190825220342069_422.png" alt="" /></p>
 <p>……</p>
 <p>实际用下来感受不错，早点折腾出这个东西就好了</p>
 <h2>HOW</h2>
 <h3>Like This</h3>
-<p><img src="_v_images/20190825231303548_12319.png" alt="" /></p>
+<p><img src="20190825231303548_12319.png" alt="" /></p>
 <h3>如何做预设</h3>
 <p>首先，我注意到 <a href="https://www.motionoperators.com">MOPs</a> 的 fallout preview 功能可以选择 preset，那太好了，学(抄)啊！</p>
 <ul>
 <li>新建 hda</li>
 <li>在 Scripts 中添加 PythonModule</li>
 <li>Python Module 中添加 preset callback:
-<img src="_v_images/20190825181240078_31358.png" alt="" /></li>
+<img src="20190825181240078_31358.png" alt="" /></li>
 <li>新建 presets 列表参数，设置 callback:<br />
-<img src="_v_images/20190825181436629_10795.png" alt="" /></li>
+<img src="20190825181436629_10795.png" alt="" /></li>
 <li>That's it</li>
 <li>需要注意的是，无论前面提到的 turbo 还是<a href="https://github.com/matplotlib/matplotlib/blob/master/lib/matplotlib/_cm_listed.py">从 matplotlib 抄来的</a>有名有姓的渐变色，它们都是 sRGB 空间的，得转换一下再用</li>
 <li>还有个小窍门是可以用 <a href="https://www.sidefx.com/docs/houdini/hom/hou/HDAModule.html">toolutils.createModuleFromSection</a> 引用 hda 内部嵌入的 python 文件作为 module:<br />
-<img src="_v_images/20190825223221698_5657.png" alt="cmap" /></li>
+<img src="20190825223221698_5657.png" alt="cmap" /></li>
 </ul>
 <h3>如何自动值域</h3>
 <p>easy:</p>
-<p><img src="_v_images/20190825184316778_27430.png" alt="auto range" /></p>
+<p><img src="20190825184316778_27430.png" alt="auto range" /></p>
 <h3>如何执行表达式</h3>
 <p>also easy:</p>
-<p><img src="_v_images/20190825184657092_1056.png" alt="" /></p>
+<p><img src="20190825184657092_1056.png" alt="" /></p>
 <p>什么？这样写怕代码注入？能注入代码那不挺好嘛，反正搞挂 Houdini 又不差这一种办法...</p>
 <p>需要注意的是 Evaluation Node Path 要设置成 <code>..</code>，否则若是在上一层添加了 sparse input 或是通过相对路径引用了什么其他的 geometry, 表达式到这儿上下文就不对了</p>
 <h2>所以哪里这么好的 Ramp 哪里有呢</h2>

@@ -59,17 +59,17 @@ object {
 <p>—— 尤其是 <em>/*在我看来*/</em> 特别适合程序猿，甚至 Houdini 这软件的定义就应该是一个“图形编程环境”。</p>
 <p>Houdini 最大的特点在于其“程序化”（Procedural）理念，其创作流程不同于一般的建模或动效工具，相对于“通过一堆神奇的操作做出了一个漂亮对模型/实现了一个神奇的效果”，在 Houdini 里面创作的是 “一堆神奇的操作”本身，对于程序猿来说，这就是个典型的 function，而 function 的意义在于，它可以用同样的流程处理不同的数据。</p>
 <p>例如我可以用一个底面拉出一个带房顶的简单房子：</p>
-<p><img src="_v_images/20181120234642928_698168790.png" alt="rect-bottom-plane" /></p>
+<p><img src="20181120234642928_698168790.png" alt="rect-bottom-plane" /></p>
 <p>→</p>
-<p><img src="_v_images/20181120234729614_272206322.png" alt="rect-with-roof" /></p>
+<p><img src="20181120234729614_272206322.png" alt="rect-with-roof" /></p>
 <p>那么我就可以将同样的流程用于其他的输入参数 ，例如将两个字母拉成带房顶的字母——</p>
-<p><img src="_v_images/20181120225410179_368824807.png" alt="bottom-plane-if" /></p>
+<p><img src="20181120225410179_368824807.png" alt="bottom-plane-if" /></p>
 <p>→</p>
-<p><img src="_v_images/20181120225506814_1200726007.png" alt="if-with-roof" /></p>
+<p><img src="20181120225506814_1200726007.png" alt="if-with-roof" /></p>
 <p>将“建模”看作“数据处理”，不知道会不会像是把“雕刻”说成“石料处理”一样得罪人；但实际上“建模”的确就是在处理数据 —— 处理空间属性、拓扑关系的数据 —— 以数据处理的方式做建模这件事，逻辑上合情合理，留下来一份数据处理的流水线之后效果上则是大量重复劳动的节省，对于建 n 个相似模型的需求，可以将 O(n) 的时间复杂度直接降到 O(1)，请想象一下</p>
 <h3>其次因为 Houdini 强得吓人</h3>
 <p>有些效果用其他的工具根本难以做到，拿我有段时间的头像举个简单的栗子：</p>
-<p><img src="_v_images/20181121215026005_1232266428.png" alt="uvlayout-if" /></p>
+<p><img src="20181121215026005_1232266428.png" alt="uvlayout-if" /></p>
 <p>把几何物体尽可能紧密地排布在指定区域，将相机视角看到的线段输出成矢量图形，根据大小关系决定线条粗细</p>
 <p>—— 开发这样的功能在别的工具那儿不深入底层搅个底朝天我想不到有什么直接的办法</p>
 <p>在 Houdini 这一边呢，日常操作完全可以满足：</p>
@@ -114,7 +114,7 @@ object {
 <p>接下来我将试着将 1、2 两步总结一下带你快速入门，剩下的就看造化啦</p>
 <h2>Houdini 基本界面操作</h2>
 <p>打开 Houdini，你看到的界面应该大致如下，一共分了三大块：</p>
-<p><img src="_v_images/20181120235852297_831485744.png" alt="houdini-main-interface" /></p>
+<p><img src="20181120235852297_831485744.png" alt="houdini-main-interface" /></p>
 <ol>
 <li>左边的一大块是 3D 预览界面，和一般DCC软件不一样的是，在这个 3D 界面中你真的只需要“看”，不需要执行任何操作 —— 即使可以执行操作，我也不推荐，在这里执行的操作多半会破坏程序化处理流程</li>
 <li>右上方是属性界面</li>
@@ -122,7 +122,7 @@ object {
 </ol>
 <h3>3D 预览界面的基础操作</h3>
 <p>先确定选中左边工具条的查看模式 // <code>ESC</code> 键</p>
-<p><img src="_v_images/20181121233411643_369563728.png" alt="view-mode" /></p>
+<p><img src="20181121233411643_369563728.png" alt="view-mode" /></p>
 <ul>
 <li>按住左键拖动鼠标 → 旋转视图</li>
 <li>按住中键拖动鼠标 → 拖动视图</li>
@@ -147,15 +147,15 @@ object {
 <h3>Hello Cosine</h3>
 <p>进入正题，我来手把手教你如何用 Houdini 画出 <code>y = cos(x) + cos(z)</code> 的函数图像 : )</p>
 <p>首先在 Houdini 的节点界面敲 <code>Tab</code> 键，然后输入“geo”</p>
-<p><img src="_v_images/20181122112506844_771081307.png" alt="" /></p>
-<p><img src="_v_images/20181122114629324_1647200751.png" alt="add geometry" /></p>
+<p><img src="20181122112506844_771081307.png" alt="" /></p>
+<p><img src="20181122114629324_1647200751.png" alt="add geometry" /></p>
 <p>回车，即加入了新的 geometry；之所以有这一步，是因为 Houdini 能做的东西不止 geometry，geometry 也可以有不止一个。</p>
-<p><img src="_v_images/houdini-add-geometry.gif" alt="geo node" /></p>
+<p><img src="houdini-add-geometry.gif" alt="geo node" /></p>
 <p>接下来的操作都将在 geometry 节点下面进行：</p>
 <p>双击 <code>geo1</code> 节点进入其内部</p>
 <p>如果你用的 Houdini 是 17.0 以前的版本，这里应该有个 <code>file</code> 节点，而左侧 3D 界面应该有个方块，没事，我们把这个 <code>file</code> 节点删掉；17.0 之后则没有这个默认的磨人的小方块了</p>
 <p>以同样的方式按 <code>Tab</code> 键，输入“grid”添加一个 grid 节点</p>
-<p><img src="_v_images/20181122115032925_384948685.png" alt="added grid" /></p>
+<p><img src="20181122115032925_384948685.png" alt="added grid" /></p>
 <p>现在右上角的属性面板里出现了这个网格的属性，包括位置、大小、行列数等，你可以试着改改看</p>
 <p>右下角 <code>grid1</code> 节点右侧点亮了一个蓝色小标记；这个标记代表当前显示节点，不妨试试将它点灭掉，3D界面中的网格也将消失（记得点亮回来）</p>
 <p>另外还有几个标记，分别是略过此步操作、冻结该节点以及将当前节点用作模版的意思，暂且忽略 —— 实在好奇请看这里 <a href="http://www.sidefx.com/docs/houdini/nodes/sop/">Geometry nodes</a></p>
@@ -166,14 +166,14 @@ object {
 </li>
 <li>
 <p>将 <code>grid1</code> 下面的小点和 <code>attribwangle1</code> 上面的第一个小点连起来，并点亮显示标记：</p>
-<p><img src="_v_images/houdini-add-attwangle.gif" alt="add-attribute-wangle" /></p>
+<p><img src="houdini-add-attwangle.gif" alt="add-attribute-wangle" /></p>
 </li>
 <li>
 <p>选中 <code>atttribwangle1</code>，在属性面板上找到如下图的代码框，输入：</p>
 <pre><code class="language-vex">@P.y = cos(@P.x)+cos(@P.z);
 </code></pre>
 <p><code>Ctrl+Enter</code>, 你将得到如下图的结果</p>
-<p><img src="_v_images/20181122223444178_341467775.png" alt="cosine wave" /></p>
+<p><img src="20181122223444178_341467775.png" alt="cosine wave" /></p>
 </li>
 </ul>
 <p>这里有几个知识点：</p>
@@ -186,7 +186,7 @@ object {
 </li>
 <li>
 <p>在 attribute wangle 节点中写的语言名叫 vex，Houdini 对 vex 的介绍如下：</p>
-<p><img src="_v_images/20181122225328769_972589641.png" alt="vex intro" /></p>
+<p><img src="20181122225328769_972589641.png" alt="vex intro" /></p>
 <p>对 vex 抱有兴趣的小伙伴可以在这里看更多相关资料：<a href="http://www.sidefx.com/docs/houdini/vex/lang.html">VEX language reference</a> 或是这个<a href="https://github.com/jtomori/vex_tutorial">非常棒的参考</a></p>
 </li>
 <li>
@@ -197,49 +197,49 @@ object {
 <p><code>@property</code> 是 vex 中访问属性的语法，<code>P</code> 是最重要的属性：坐标</p>
 <p>所以上面那句话的意义就是 <code>position.y = cos(position.x)+cos(position.z)</code></p>
 <p>注意 attribute wangle 节点上的这个选项：</p>
-<p><img src="_v_images/20181122230424968_1816058970.png" alt="attwangle runover" /></p>
+<p><img src="20181122230424968_1816058970.png" alt="attwangle runover" /></p>
 <p>其默认值是“points”，也就是 <strong>对于每个点执行一次</strong> <code>@P.y = cos(@P.x)+cos(@P.z);</code> 操作，这正是我们想要的；attribute wangle 还可以用来处理其他数据，以后我们也会用到</p>
 </li>
 </ol>
 <p>现在还有个小问题：这个函数图像似乎太不光滑了：</p>
-<p><img src="_v_images/20181122231947645_318033979.png" alt="10x10" /></p>
+<p><img src="20181122231947645_318033979.png" alt="10x10" /></p>
 <p>怎么办呢，我们选中 <code>grid1</code> 节点，此时属性界面会再次显示 <code>grid1</code> 节点的属性，我们将行列数都改到 100：</p>
-<p><img src="_v_images/20181122153949508_1231625759.png" alt="cosine wave resolution-up" /></p>
+<p><img src="20181122153949508_1231625759.png" alt="cosine wave resolution-up" /></p>
 <p>现在我们得到了 一个光滑的 <code>y = cos(x)+cos(z)</code> 函数的曲面 : )  由于每一步操作都有据可依，所以输入改变了输出完全可以适应着变化，不必从头来过</p>
 <p>当然，我们还可以完全把 grid 这个输入换掉，比如换成几个字母：</p>
-<p><img src="_v_images/20181122234450351_110287670.png" alt="if-wave" /></p>
+<p><img src="20181122234450351_110287670.png" alt="if-wave" /></p>
 <p>此时的 Houdini 有没有魅力四射？</p>
 <h3>Channel</h3>
 <p>在 Houdini 里面，&quot;Channel&quot; 是个很重要的概念；在属性界面填的属性都是 &quot;Channel&quot;，鼠标移到属性名上可以看到其 channel 名称：</p>
-<p><img src="_v_images/20181123104605809_934644563.png" alt="channel ie parameter" /></p>
+<p><img src="20181123104605809_934644563.png" alt="channel ie parameter" /></p>
 <p>这个名字配上 <code>ch('path/to/channel')</code> 函数可以用于在节点内或者节点之间互相引用参数 —— 比如我可以在 sizey 的栏中填入 <code>ch('sizex')</code>:</p>
-<p><img src="_v_images/20181123105110867_1875776183.png" alt="sizey=sizex" /></p>
+<p><img src="20181123105110867_1875776183.png" alt="sizey=sizex" /></p>
 <p>嗯没错，每个参数栏都不仅可以填常数，也可以填表达式</p>
 <p>我们左键再点击一下目前浅灰色的 Size 标签，<code>sizey</code> 将会以数值显示：</p>
-<p><img src="_v_images/20181123105601074_1110369721.png" alt="sizex=sizey by value" /></p>
+<p><img src="20181123105601074_1110369721.png" alt="sizex=sizey by value" /></p>
 <p>试着改改 <code>sizex</code>，<code>sizey</code> 的值将永远保持与 <code>sizex</code> 相等，现在这个 grid 生成的也就总是正方形了</p>
 <p>更重要的是 channel 还可以在节点之间互相引用，比如这样可以在场景内放入两个立方体：</p>
-<p><img src="_v_images/20181123110320407_351008417.png" alt="2boxes" /></p>
+<p><img src="20181123110320407_351008417.png" alt="2boxes" /></p>
 <p>目前两个立方体显然是叠在一起的：</p>
-<p><img src="_v_images/20181123110447511_260886210.png" alt="boxes same pos" /></p>
+<p><img src="20181123110447511_260886210.png" alt="boxes same pos" /></p>
 <p>但如果在 box2 的 center y 坐标 <code>ty</code> 栏中填入 <code>ch('sizey')*ch('scale')/2+ch('../box1/ty')+ch('../box1/sizey')*ch('../box1/scale')/2</code></p>
 <p>我们就可以把 box2 放在 box1 上方了：</p>
-<p><img src="_v_images/20181123110808685_1700407943.png" alt="boxes-stacked" /></p>
+<p><img src="20181123110808685_1700407943.png" alt="boxes-stacked" /></p>
 <p>这里 box2 通过  <code>ch('../box1/sizey')</code> 访问到了 box1 的高度属性，通过 <code>ch('../box1/ty')</code> 访问到了 box1 的 y 坐标，通过 <code>ch('../box1/scale')</code> 访问到了 box1 的缩放</p>
 <p>可是本来输入 1 就可以了，为什么要这么麻烦？？</p>
 <p>—— 因为这样写的话，box2 可以保持永远严格贴在 box1 上面：</p>
-<p><img src="_v_images/houdini-channel-ref-scale.gif" alt="boxes stacked dynamic" /></p>
+<p><img src="houdini-channel-ref-scale.gif" alt="boxes stacked dynamic" /></p>
 <h4>加个参数</h4>
 <p>在 Houdini 中，不光内置的参数可以用 <code>ch()</code> 函数引用，你还可以轻易的自己加些参数；在 attribute wangle 节点中添加 channel 尤其简单：</p>
 <p>直接引用 channel 数据，比如：</p>
 <pre><code class="language-vex">float height_scale = ch('height_scale');
 </code></pre>
 <p>然后点一下代码框旁边的这个小按钮：</p>
-<p><img src="_v_images/20181128152128046_7661.png" alt="create parameter button" /></p>
+<p><img src="20181128152128046_7661.png" alt="create parameter button" /></p>
 <p>滑动条便会出现：</p>
-<p><img src="_v_images/houdini-add-channel.gif" alt="add new channel" /></p>
+<p><img src="houdini-add-channel.gif" alt="add new channel" /></p>
 <p>然后拖动滑块便可以见证奇迹了 ——</p>
-<p><img src="_v_images/houdini-added-channel-640.gif" alt="added channel result" /></p>
+<p><img src="houdini-added-channel-640.gif" alt="added channel result" /></p>
 <h4>What About int/string/vector/matrix?</h4>
 <p>看文档啦 <a href="http://www.sidefx.com/docs/houdini/vex/functions/ch.html">ch VEX function</a></p>
 <h3>VOP</h3>
@@ -247,12 +247,12 @@ object {
 <pre><code class="language-vex">@P.y = cos(@P.x)+cos(@P.z);
 </code></pre>
 <p>我们也可以通过添加 attribute vop 节点如此实现：</p>
-<p><img src="_v_images/20181124002750000_30359474.png" alt="att vop" /></p>
+<p><img src="20181124002750000_30359474.png" alt="att vop" /></p>
 <p>然后双击进入 attribvop1 节点：</p>
-<p><img src="_v_images/20181124003007728_1298055179.png" alt="vop" /></p>
+<p><img src="20181124003007728_1298055179.png" alt="vop" /></p>
 <p>左边一栏是输入属性，右边一栏是输出属性 —— 这里没列出来的属性也可以用 <code>bind</code> 或 <code>bind export</code> 节点输入/输出</p>
 <p>要实现和 <code>@P.y = cos(@P.x)+cos(@P.z);</code> 等价的操作，我们可以这样连接：</p>
-<p><img src="_v_images/20181124003530035_127023580.png" alt="vop expr" /></p>
+<p><img src="20181124003530035_127023580.png" alt="vop expr" /></p>
 <p>作为程序猿，对于这种看上去非常冗长的表示可能有点抗拒？</p>
 <p>但 vop 的好处很明显：在函数记不清的情况下，这里能提供的自动补全要方便些 : )</p>
 <h3>总结一下下</h3>
@@ -271,7 +271,7 @@ object {
 </li>
 <li>
 <p>Geometry Spreadsheet 是个非常重要的界面，这里没讲，因为一看就懂，但一定要看一眼！</p>
-<p><img src="_v_images/20181128155203529_26480.png" alt="geometry spreadsheet" /></p>
+<p><img src="20181128155203529_26480.png" alt="geometry spreadsheet" /></p>
 </li>
 <li>
 <p>我们可以用 <code>ch('path/to/channel')</code> 的方式读取节点参数，还可以自己多建几个参数</p>
@@ -289,8 +289,8 @@ object {
 <li>vex 函数 <a href="http://www.sidefx.com/docs/houdini/vex/functions/index.html">VEX Functions</a></li>
 </ul>
 <p>知道了以上这些，其实你就什么都能做了，或者至少可以先做些魔性的 pattern 玩 ——</p>
-<p><img src="_v_images/wave_rendered.png" alt="cosine 2" /></p>
-<p><img src="_v_images/20181124013623331_1621836620.png" alt="if" /></p>
+<p><img src="wave_rendered.png" alt="cosine 2" /></p>
+<p><img src="20181124013623331_1621836620.png" alt="if" /></p>
 <h2>接下来讲什么</h2>
 <p>可能讲讲流程控制、分组、可能整理些小技巧，随缘咯</p>
 <h2>接下来看什么</h2>

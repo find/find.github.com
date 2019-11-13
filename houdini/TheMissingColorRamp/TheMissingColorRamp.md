@@ -21,27 +21,27 @@
 
 比如看看法线和某个向量的夹角
 
-![eg-1](_v_images/20190825173300586_542.png)
+![eg-1](20190825173300586_542.png)
 
 比如看看高度
 
-![](_v_images/20190825174121618_27742.png)
+![](20190825174121618_27742.png)
 
 比如看看面积
 
-![](_v_images/20190825222311818_23335.png)
+![](20190825222311818_23335.png)
 
 比如看看某个看似 float 其实是 string 的属性
 
-![](_v_images/20190825180357862_14756.png)
+![](20190825180357862_14756.png)
 
 比如看看哪块地方 Airbnb 的选择比较多
 
-![](_v_images/20190825174729628_8736.png)
+![](20190825174729628_8736.png)
 
 或者看看哪块地方酒吧比较密集
 
-![](_v_images/20190825220342069_422.png)
+![](20190825220342069_422.png)
 
 ……
 
@@ -51,7 +51,7 @@
 
 ### Like This
 
-![](_v_images/20190825231303548_12319.png)
+![](20190825231303548_12319.png)
 
 ### 如何做预设
 
@@ -60,26 +60,26 @@
 * 新建 hda
 * 在 Scripts 中添加 PythonModule
 * Python Module 中添加 preset callback:
-  ![](_v_images/20190825181240078_31358.png)
+  ![](20190825181240078_31358.png)
 * 新建 presets 列表参数，设置 callback:  
-  ![](_v_images/20190825181436629_10795.png)
+  ![](20190825181436629_10795.png)
 * That's it
 * 需要注意的是，无论前面提到的 turbo 还是[从 matplotlib 抄来的](https://github.com/matplotlib/matplotlib/blob/master/lib/matplotlib/_cm_listed.py)有名有姓的渐变色，它们都是 sRGB 空间的，得转换一下再用
 * 还有个小窍门是可以用 [toolutils.createModuleFromSection](https://www.sidefx.com/docs/houdini/hom/hou/HDAModule.html) 引用 hda 内部嵌入的 python 文件作为 module:  
-  ![cmap](_v_images/20190825223221698_5657.png)
+  ![cmap](20190825223221698_5657.png)
 
 
 ### 如何自动值域
 
 easy:
 
-![auto range](_v_images/20190825184316778_27430.png)
+![auto range](20190825184316778_27430.png)
 
 ### 如何执行表达式
 
 also easy:
 
-![](_v_images/20190825184657092_1056.png)
+![](20190825184657092_1056.png)
 
 什么？这样写怕代码注入？能注入代码那不挺好嘛，反正搞挂 Houdini 又不差这一种办法...
 

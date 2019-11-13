@@ -46,13 +46,13 @@ object {
 </head>
 <body>
         <div class="svg-container">
-            <img src="_v_images/20190106004723578_3149.png" alt="title image" style="width:100%"/>
+            <img src="20190106004723578_3149.png" alt="title image" style="width:100%"/>
         </div>
         <div class="document">
         <h1>DOP: From Houdini to Unreal | Unity, The Easy Way[s]</h1>
 <p>上周<a href="https://zhuanlan.zhihu.com/p/53188002">玩了下 DOP network</a></p>
 <p>得到了这么一个动画 // 1800帧，310个骨牌</p>
-<p><img src="_v_images/v2-56eab7fd1d579d17ddcc918dace55b79_b.gif" alt="star" /></p>
+<p><img src="v2-56eab7fd1d579d17ddcc918dace55b79_b.gif" alt="star" /></p>
 <p>那么想在游戏引擎里面实时渲染之前的模拟结果的话 —— 怎么办？</p>
 <h2>The Naive Way</h2>
 <p>最最简单的办法：直接导出顶点动画</p>
@@ -63,26 +63,26 @@ object {
 <h3>Direct FBX Output</h3>
 <p>骨骼动画是用骨骼驱动顶点的一种设计，通过适当的抽象，信息密度可以比顶点动画高很多，相信这里不用对这么基础的概念做过多解释，简而言之：至少目前而言，蒙皮+骨骼动画乃是实时渲染领域的正道</p>
 <p>那么试试看吧，首先 Houdini 自己有输出 fbx 的功能，进入 /out 网络，添加 filmboxfbx 节点，试试：</p>
-<p><img src="_v_images/20190103232202778_10164.png" alt="fbx direct output" /></p>
+<p><img src="20190103232202778_10164.png" alt="fbx direct output" /></p>
 <p>=&gt;</p>
-<p><img src="_v_images/20190103232303026_26376.png" alt="fbx+fpc" /></p>
+<p><img src="20190103232303026_26376.png" alt="fbx+fpc" /></p>
 <p>得到一份 173KB 的 FBX 以及一份 223MB 的 FPC(Geometry Cache)，果然被当做顶点动画对待了</p>
 <h3>RBD To FBX</h3>
 <p>换一条路，Houdini Game Tools 里面非常贴心的准备了 rbd to fbx 功能：</p>
 <p><a href="https://www.sidefx.com/tutorials/game-tools-rbd-to-fbx/">GAME TOOLS | RBD TO FBX</a></p>
 <p>emmmmm .... 看样子要等一等</p>
-<p><img src="_v_images/20190103222448976_5089.png" alt="exporting ...." /></p>
-<p><img src="_v_images/20190103223136577_13971.png" alt="can't wait" /></p>
+<p><img src="20190103222448976_5089.png" alt="exporting ...." /></p>
+<p><img src="20190103223136577_13971.png" alt="can't wait" /></p>
 <p>emmmmmmmmmmmmmm ....</p>
-<p><img src="_v_images/20190103223327376_792.png" alt="15:11" /></p>
-<p><img src="_v_images/20190103222601187_7153.png" alt="raged" /></p>
+<p><img src="20190103223327376_792.png" alt="15:11" /></p>
+<p><img src="20190103222601187_7153.png" alt="raged" /></p>
 <p>emmmmmmmmmmmmmmmmmm ....</p>
-<p><img src="_v_images/20190103223914773_27771.png" alt="20:48" /></p>
-<p><img src="_v_images/1047086913380984808.gif" alt="扶额" /></p>
+<p><img src="20190103223914773_27771.png" alt="20:48" /></p>
+<p><img src="1047086913380984808.gif" alt="扶额" /></p>
 <p>emmmmmmmmmmmmmmmmmmmmmmmmmmmmmm .....</p>
-<p><img src="_v_images/20190103224907344_3195.png" alt="30:46" /></p>
-<p><img src="_v_images/20190103222842394_6500.png" alt="flip table" /></p>
-<p><img src="_v_images/20190103225031223_1299.png" alt="32:10" /></p>
+<p><img src="20190103224907344_3195.png" alt="30:46" /></p>
+<p><img src="20190103222842394_6500.png" alt="flip table" /></p>
+<p><img src="20190103225031223_1299.png" alt="32:10" /></p>
 <p>┬─┬ノ( º _ ºノ)</p>
 <p>终于在大约36分钟之后，导出完成了 ……</p>
 <p>导出的 fbx 大约 106MB，能用</p>
@@ -91,24 +91,24 @@ object {
 <p>我们试试再换一条路，Houdini 非常贴心地准备了 skinning converter 功能，自动将顶点动画转换为蒙皮动画：</p>
 <p><a href="https://www.sidefx.com/tutorials/game-tools-skinning-converter/">GAME TOOLS | SKINNING CONVERTER</a></p>
 <p>给它个机会：</p>
-<p><img src="_v_images/20190101231944826_30976.png" alt="skinning converter net" /></p>
-<p><img src="_v_images/20190101232034937_21602.png" alt="skinned converter view" /></p>
+<p><img src="20190101231944826_30976.png" alt="skinning converter net" /></p>
+<p><img src="20190101232034937_21602.png" alt="skinned converter view" /></p>
 <p>看上去离成功只有一步之遥了，但是哪有这等好事：</p>
-<p><img src="_v_images/20190101232228513_29511.png" alt="skinning converter error" /></p>
+<p><img src="20190101232228513_29511.png" alt="skinning converter error" /></p>
 <h3>求人不如求己</h3>
 <p>总之(在我看来)官方提供的途径都有点遗憾，直接导出是顶点动画，rbd to fbx 太慢，skinning converter 不是这么用的；所以干脆自己重新造个轮子吧，编程的乐趣不就在这儿吗</p>
 <h4>rbd to fbx?</h4>
 <p>看看 rbd to fbx 是如何实现的： <a href="https://github.com/sideeffects/GameDevelopmentToolset/blob/Development/otls/rop_rbd_to_fbx.hda/gamedev_8_8Driver_1rop__rbd__to__fbx/PythonModule">rop_rbd_to_fbx/PythonModule</a></p>
 <p>为了清楚点看到它的工作原理，首先把它输出之后的 cleanup 操作禁用掉，然后改一下输出时间范围再导出一次(少导出几帧，避免再等 40 分钟 ...)</p>
-<p><img src="_v_images/20190103233438645_3605.png" alt="disable cleanup" /></p>
+<p><img src="20190103233438645_3605.png" alt="disable cleanup" /></p>
 <p>接下来在 /out/rop_rbd_to_fbx/Export/FBX_EXPORT/TRANSFORM_NODE 路径下面可以看到这样的景象：</p>
-<p><img src="_v_images/20190105211655715_6590.png" alt="many nodes" /></p>
+<p><img src="20190105211655715_6590.png" alt="many nodes" /></p>
 <p>很明显，rbd to fbx 是把想要导出的那个物件拆成了 N 份 Geometry，每个骨牌的运动被重新表示成了各自 Geometry 的动画</p>
 <p>若是在祖传 In-house engine 或是 Unity 那儿，美术这么干可能会被程序打的 <em>/*好在我是程序，没人能打我*/</em> —— 这样的结构每个 Geometry 需要用一个 draw call 绘制</p>
-<p><img src="_v_images/20190105224546786_22608.png" alt="Unity Dry Run" /></p>
+<p><img src="20190105224546786_22608.png" alt="Unity Dry Run" /></p>
 <p>// Unity 空场景空跑</p>
 <p>-&gt;</p>
-<p><img src="_v_images/20190105224622993_15176.png" alt="Unity RBD2FBX" /></p>
+<p><img src="20190105224622993_15176.png" alt="Unity RBD2FBX" /></p>
 <p>// Unity 添加一份 <code>rbd to fbx</code> 导出模型</p>
 <p>好在 Unreal 足够聪明，fbx 导入之后自动转换成了 skinned mesh，在 Unreal 的世界这样做实际上是可以接受的</p>
 <h4>skinning converter</h4>
@@ -123,7 +123,7 @@ object {
 <p>简直完美！</p>
 <p>所以，自己干吧：</p>
 <p>先新建 subnetwork，随便连一下：</p>
-<p><img src="_v_images/20190105234610494_6175.png" alt="converter network" /></p>
+<p><img src="20190105234610494_6175.png" alt="converter network" /></p>
 <p>其中 convert_to_skinned_mesh 是个 null 节点，上面手动添加了一个 python 输入框(code)和一个按钮(<code>exec hou.pwd().parm('code').eval()</code>)，手动触发的感受比较舒适</p>
 <p>enumerate 用于在每个骨骼点上记一个 index，在 unpack 的地方把 index attribute 转移到对应的顶点上，这样每个点就知道自己应该蒙在哪根骨骼上了</p>
 <p>然后撸代码：</p>
@@ -164,25 +164,25 @@ object {
           SetKeyFrame(Bone.parm(parm), F, Rotation[i])
 </code></pre>
 <p>骨骼生成好了:</p>
-<p><img src="_v_images/20190105233214580_5029.png" alt="bones ready" /></p>
+<p><img src="20190105233214580_5029.png" alt="bones ready" /></p>
 <p>那么蒙皮怎么办 —— 我们看看使用 skinning converter 生成的 geo1 是个怎么回事：</p>
-<p><img src="_v_images/20190105233522171_6341.png" alt="skinning converter gen geo" /></p>
+<p><img src="20190105233522171_6341.png" alt="skinning converter gen geo" /></p>
 <p>唔 ... 连了一堆神奇的自动蒙皮装置</p>
 <p>然而我们不需要，我们已经知道哪个顶点对应的是哪根骨骼了</p>
 <p>那要如何去写入这个信息呢</p>
 <p>先到 geometry spreadsheet 里面找找看蒙皮信息是如何记录的吧 ——</p>
-<p><img src="_v_images/20190105233916466_14559.png" alt="bonecapture packed" /></p>
+<p><img src="20190105233916466_14559.png" alt="bonecapture packed" /></p>
 <p>大概是这么个东西，懵了，这是啥，怎么改，orz</p>
 <p>好在有 capture attribute unpack 这么个好东西，unpack 了之后我们再看看：</p>
-<p><img src="_v_images/20190105234126928_14162.png" alt="bonecapture unpacked" /></p>
+<p><img src="20190105234126928_14162.png" alt="bonecapture unpacked" /></p>
 <p>这下骨骼编号以及对应的权重就一目了然了</p>
 <p>所以我们可以在 capture attribute unpack 下面加上一个 attribute wrangle，自己设一下 index 和 data:</p>
 <pre><code>i[]@boneCapture_index = array(i@index);
 f[]@boneCapture_data = array(1.0);
 </code></pre>
 <p>然后再用 capture attribute pack 还原回去：</p>
-<p><img src="_v_images/20190105235631962_14327.png" alt="capture network" /></p>
-<p><img src="_v_images/skinnedmesh.gif" alt="skinned" /></p>
+<p><img src="20190105235631962_14327.png" alt="capture network" /></p>
+<p><img src="skinnedmesh.gif" alt="skinned" /></p>
 <p>LOOKS GOOD.</p>
 <p>剩下的事情就是把这段连接关系用 python 自动生成出来:</p>
 <pre><code class="language-python">  ObjMerge = Geometry.createNode(&quot;object_merge&quot;)
@@ -227,15 +227,15 @@ f[]@boneCapture_data = array(1.0);
 </code></pre>
 <p>导出，完成！</p>
 <p>这下哪怕 Unity 也能开心的渲染了：</p>
-<p><img src="_v_images/unity-anim.gif" alt="unity anim" /></p>
+<p><img src="unity-anim.gif" alt="unity anim" /></p>
 <p>而且 Draw Call 数量感人 ——</p>
-<p><img src="_v_images/20190106000837996_19876.png" alt="skinned mesh draw call" /></p>
+<p><img src="20190106000837996_19876.png" alt="skinned mesh draw call" /></p>
 <p>fracture 自然也不是问题：</p>
-<p><img src="_v_images/pighead.gif" alt="pig head" /></p>
+<p><img src="pighead.gif" alt="pig head" /></p>
 <p>存一个 hda，完结！散花！</p>
 <p>Update:</p>
 <p>忘了总结：比官方所有的版本导出速度快(2.2min)、导出体积小(36MB)、运行代价小，这个轮子没白造。</p>
-<p><img src="_v_images/20190106122705492_5387.png" alt="satisfied" /></p>
+<p><img src="20190106122705492_5387.png" alt="satisfied" /></p>
 
         </div>
         <div class="svg-container">
