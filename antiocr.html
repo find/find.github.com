@@ -1,0 +1,280 @@
+<!doctype HTML>
+<html>
+<head>
+<meta name="viewport" content="width=1100, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<title>Anti OCR</title>
+<style>
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  min-width: 300px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+}
+#execute {
+  height: 3em;
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 2em;
+  margin: 20px;
+}
+#download {
+  margin: 0;
+  padding: 0.5em;
+  font-size: 1.5em;
+  width: 100%;
+}
+#view {
+  margin: 0;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 100%;
+}
+#input {
+  font-family: serif;
+  font-size: 1.5em;
+  resize: vertical;
+}
+canvas {
+  border: none;
+  padding: 0 auto;
+  margin: 0;
+}
+#output-container {
+  border: 1px solid black;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  aspect-ratio: 3/2;
+  resize: vertical;
+  overflow: auto;
+}
+#config {
+  background: #f7f7f7;
+  border: 2px solid #aaa;
+}
+.parm > span {
+  margin: 0 0.5em;
+}
+.label {
+  font-size: 2em;
+}
+</style>
+<script>
+const SERIF_FONT = 'Source Han Serif, STSong, FangSong, serif';
+const SANS_SERIF_FONT = 'Source Han Sans, Microsoft YaHei, sans-serif';
+let PADDING = 20;
+let YSPACE = 19; // y-direction spacing between characters
+let XSPACE = 24; // x-direction spacing between characters
+let ENSPACE = YSPACE/2; // ' ' spacing
+let NORMAL_FONT = `16px ${SERIF_FONT}`;
+let BOLD_FONT = `16px bold ${SANS_SERIF_FONT}`;
+let TITLE_FONT = `22px bolder ${SANS_SERIF_FONT}`;
+
+var $ = id=>document.getElementById(id);
+function doTheJob() {
+  const canvas = $('output');
+  const W = canvas.width;
+  const H = canvas.height;
+  
+  let ctx = canvas.getContext('2d');
+
+  let msg = $('input').value
+    .replaceAll('“', '﹃')
+    .replaceAll('”', '﹄')
+    .replaceAll('‘', '﹁')
+    .replaceAll('’', '﹂')
+    .replaceAll('《', '︽')
+    .replaceAll('》', '︾')
+    .replaceAll('{', '︷')
+    .replaceAll('}', '︸')
+    .replaceAll('[', '︻')
+    .replaceAll(']', '︼')
+    .replaceAll('【', '︻')
+    .replaceAll('】', '︼')
+    .replaceAll('(', '︵')
+    .replaceAll(')', '︶')
+    .replaceAll('…', '⋮')
+    .replaceAll('—', '︱');
+  ctx.font = NORMAL_FONT;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  //ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = 'black';
+
+  let charsize = ctx.measureText('啊');
+  let x=W-PADDING-charsize.width/2, y=PADDING;
+  let firstline = true;
+  let bold = false;
+  for (let line of msg.split('\n')) {
+    let title = line.match(/^#\s*(.+)$/);
+    let yspace = YSPACE;
+    if (title) {
+      ctx.font = TITLE_FONT;
+      line = title[1]
+      if (!firstline) {
+        x-=XSPACE;
+      }
+      yspace = YSPACE*1.4; // larger spacing
+    } else {
+      ctx.font = NORMAL_FONT;
+      bold = false; // new line clears style
+    }
+    for (let i=0; i<line.length; ++i) {
+      //ctx.fillStyle='#a33';
+      //ctx.fillRect(x-2,y-2,4,4); // debug
+      ctx.fillStyle='black';
+      let c = line[i];
+      if (!title && c=='\\') {
+        if (i<line.length && line[i+1]=='*') {
+          ++i;
+          c = '*';
+        }
+      } else if (c=='*') {
+        bold = !bold;
+        if (bold)
+          ctx.font = BOLD_FONT;
+        else
+          ctx.font = NORMAL_FONT;
+        continue;
+      }
+      if (c.match(/[a-z0-9_@\-$%]/i)) {
+        let s = c;
+        for (++i; i<line.length; ++i) {
+          if (line[i].match(/[a-z0-9.,:;_\-\\/!@#$%^&* ]/i)) {
+            s += line[i];
+          }
+          else
+            break;
+        }
+        --i;
+
+        if (s.length>1) {
+          let met = ctx.measureText(s);
+          let tw = met.width;
+          if (y+tw > H-PADDING) {
+            y = PADDING;
+            x -= XSPACE;
+          }
+          ctx.save();
+          ctx.textAlign='left';
+          ctx.textBaseline='middle';
+          ctx.translate(x,y);
+          ctx.rotate(Math.PI/2);
+          ctx.fillText(s,0,0);
+          ctx.restore();
+          y += tw-yspace+ENSPACE/2;
+        } else {
+          ctx.fillText(c, x, y);
+        }
+      } else if (c==' ') {
+        y -= yspace-ENSPACE;
+      } else {
+        let kerning=[0,0];
+        if (c.match(/[，。、]/)) {
+          kerning = [charsize.width/3, -yspace/2];
+        }
+        ctx.fillText(c, x+kerning[0], y+kerning[1]);
+      }
+      y += yspace;
+      if (y+yspace>=H-PADDING) {
+        y = PADDING;
+        x -= XSPACE;
+      }
+    }
+    y = PADDING;
+    x -= XSPACE;
+    if (title) // extra space
+      x -= XSPACE/2;
+    firstline = false;
+  }
+}
+
+function updateFonts() {
+  let v=$('font-size').value
+  $('font-size-disp').innerHTML=v
+  let dpr = window.devicePixelRatio || 1.0;
+  v = Number(v)*dpr;
+  YSPACE = Math.ceil(v*1.15);
+  XSPACE = Math.ceil(v*1.5);
+  ENSPACE = Math.ceil(v*1.15*0.5);
+  PADDING = v*1.4;
+  NORMAL_FONT = `${Math.ceil(v)}px ${SERIF_FONT}`;
+  BOLD_FONT = `${Math.ceil(v)}px bold ${SANS_SERIF_FONT}`;
+  TITLE_FONT = `${Math.ceil(v*1.375)}px bolder ${SANS_SERIF_FONT}`;
+}
+function onResize() {
+  let canvas = $('output');
+  let scale = window.devicePixelRatio || 1;
+  let container = $('output-container');
+  if (canvas.width != container.clientWidth || canvas.height != container.clientHeight) {
+    canvas.width = (container.clientWidth-2)*scale;
+    canvas.height = (container.clientHeight-4)*scale;
+    canvas.style.width = `${container.clientWidth-2}px`;
+    canvas.style.height = `${container.clientHeight-4}px`;
+    console.log(`container.width = ${container.clientWidth}, style.width = ${canvas.style.width}, width = ${canvas.width}`);
+    updateFonts();
+    doTheJob();
+  }
+}
+
+//window.addEventListener('resize', onResize);
+window.addEventListener('load', function() {
+  onResize();
+  $('execute').onclick=doTheJob;
+  $('input').oninput=doTheJob;
+  new ResizeObserver(onResize).observe($('output-container'));
+  $('font-size').oninput=()=>{
+    updateFonts();
+    doTheJob();
+  }
+  $('download').onclick=()=>{
+    let img=$('output').toDataURL('image/png').replace('image/png', 'image/octet-stream');
+    let now=new Date();
+    $('download-anchor').setAttribute('download', `${now.getFullYear()}-${now.getMonth()}-${now.getDay()}-${now.getHours()}-${now.getMinutes()}.png`)
+    $('download-anchor').setAttribute('href', img);
+  }
+  $('view').onclick=()=>{
+    let dataurl=$('output').toDataURL('image/png');
+    let tab = window.open(dataurl);
+    setTimeout(() => {
+      let image = new Image();
+      image.src = dataurl;
+      tab.document.write(image.outerHTML);
+    }, 0);
+  }
+});
+</script>
+</head>
+
+<body>
+<div id="container">
+<p class="label">Output:</p>
+<div id="config">
+  <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="label" id="font-size-disp">16</span></div>
+</div>
+<div id="output-container">
+  <canvas id="output"></canvas>
+</div>
+<a id="download-anchor" download="image.png">
+  <button id="download">Download Image</button>
+</a>
+<button id="view">View In New Tab</button>
+
+<p class="label">Input:</p>
+<textarea id="input" rows="12">
+</textarea>
+<button id="execute">Convert</button>
+
+</div>
+</body>
+
+</html>
