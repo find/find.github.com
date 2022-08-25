@@ -167,10 +167,10 @@ function doTheJob() {
           ctx.font = NORMAL_FONT;
         continue;
       }
-      if (c.match(/[a-z0-9_@\-$%]/i)) {
+      if (c.match(/[\p{Script=Latin}0-9_@\-$%]/iu)) {
         let s = c;
         for (++i; i<line.length; ++i) {
-          if (line[i].match(/[a-z0-9.,:;_\-\\/!@#$%^&* ]/i)) {
+          if (line[i].match(/[\p{Script=Latin}0-9.,:;_\-\\/!@#$%^&* ]/iu)) {
             s += line[i];
           }
           else
