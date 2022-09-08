@@ -62,9 +62,14 @@ canvas {
 .parm > span {
   margin: 0 0.5em;
 }
+.parm > input[type=checkbox] {
+  scale:2;
+  margin:2em;
+}
 .parm > .label {
   display: inline-block;
   width: 5em;
+  vertical-align: middle;
 }
 .label {
   font-size: 2em;
@@ -84,14 +89,18 @@ let TITLE_FONT = `bolder 22px ${SANS_SERIF_FONT}`;
 let JITTER = 0;
 
 var $ = id=>document.getElementById(id);
+const randint = (min, max)=>Math.floor(Math.random()*(max-min+1)+min);
+const randfloat = (min, max)=>Math.random()*(max-min)+min;
+const lerp = (x,y,t)=>(y-x)*t+x;
+const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
 function doTheJob() {
   const canvas = $('output');
   const W = canvas.width;
   const H = canvas.height;
   let ctx = canvas.getContext('2d');
   const invert = $('invert').checked;
-  const clearcolor = invert?'black':'white';
-  const fillcolor  = invert?'white':'black';
+  const clearcolor = invert?'#222':'white';
+  const fillcolor  = invert?'white':'#222';
   ctx.fillStyle = clearcolor;
   ctx.fillRect(0,0,W,H);
 
@@ -101,42 +110,109 @@ function doTheJob() {
   const glitch = $('glitch').checked;
   if (glitch) {
     if (invert)
-      ctx.strokeStyle='#333333';
+      ctx.strokeStyle='#444';
     else
-      ctx.strokeStyle='#cccccc';
+      ctx.strokeStyle='#ccc';
 
     for (let i=0; i<10; ++i) {
-      let x = Math.random()*W, y = Math.random()*H;
-      let c = Math.random()*Math.min(W,H)*0.5+20;
-      ctx.lineWidth=18+Math.round(Math.random()*18);
-      ctx.beginPath();
-      ctx.arc(x,y,c,0,2*Math.PI);
-      ctx.stroke();
-      ctx.closePath();
+      let x = randint(-W/4, W*1.25), y = randint(-H/4, H*1.25);
+      let c = randint(20, Math.min(W,H));
+      let lw = randint(18, 36);
+      for (let cc=c/3, i=1; cc<c; cc*=1.5, ++i) {
+        ctx.lineWidth=lw/i;
+        ctx.beginPath();
+        ctx.arc(x,y,cc,0,2*Math.PI);
+        ctx.stroke();
+        ctx.closePath();
+      }
     }
-    doRender(ctx, [-fontsize/10,-fontsize/12], 'cyan');
-    doRender(ctx, [fontsize/10,fontsize/12], 'fuchsia');
+    //doRender(ctx, [-fontsize/10,-fontsize/12], 'cyan');
+    //doRender(ctx, [fontsize/10,fontsize/12], 'fuchsia');
   }
   doRender(ctx, [0,0], fillcolor);
   NORMAL_FONT = nf;
 
-  if (JITTER>0) {
+  if ($("distort").checked) {
+    let img = ctx.getImageData(0,0,W,H);
+    let out = ctx.createImageData(W,H);
+    let pts = [];
+    for (let i=0; i<8; ++i) {
+      pts.push({x:randint(0,W), y:randint(0,H), w:randfloat(5,14)});
+    }
+    const dist=(a,b)=>{let dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); };
+    for (let y=0; y<H; ++y) {
+      for (let x=0; x<W; ++x) {
+        let dx = 0, dy = 0;
+        let npt = 0;
+        for (let idx=0; idx<pts.length; ++idx) {
+          const pt = pts[idx];
+          let d=dist(pt,{x:x, y:y});
+          const w=pt.w;
+          if (d<w*30) {
+            const m = lerp(0,fontsize*4,Math.pow(Math.sin(clamp(d,0,30*w)/30/w*Math.PI)*0.6,3));
+            dy += (pt.y-y)/d * m;
+            dx += (pt.x-x)/d * m;
+            ++npt;
+          }
+        }
+        const j=y*W*4+x*4;
+        let i=j;
+        if (npt>0) {
+          const ix = x + dx;
+          const iy = y + dy;
+          i=Math.round(iy)%H*W*4+Math.round(ix)%W*4;
+        }
+        out.data[j  ]=img.data[i  ];
+        out.data[j+1]=img.data[i+1];
+        out.data[j+2]=img.data[i+2];
+        out.data[j+3]=255;
+      }
+    }
+    ctx.putImageData(out,0,0);
+  }
+  if (glitch) {
     let img = ctx.getImageData(0,0,W,H);
     let out = ctx.createImageData(W,H);
     for (let y1=0; y1<H;) {
-      let y2 = y1+20+Math.floor(Math.random()*120);
+      let y2 = y1+randint(20, 120);
       if (y2>H) y2=H;
       let shift = [1,1,1];
       if (glitch)
-        shift = [Math.random()*0.2+0.9, Math.random()*0.2+0.9, Math.random()*0.2+0.9];
-      let xoffset = Math.floor((Math.random()*fontsize/2-fontsize/4)*JITTER*30);
+        shift = [randfloat(0.8, 1.2), randfloat(0.8,1.2), randfloat(0.8,1.2)];
+      const xoffset = Math.floor((Math.random()*fontsize/2-fontsize/4)*JITTER*6);
+      const J = JITTER*2;
+      let cyanoffset = [randint(-fontsize/10*J, fontsize/10*J), randint(-fontsize/12*J, fontsize/12*J)];
+      let fuchsiaoffset = [randint(-fontsize/10*J, fontsize/10*J), randint(-fontsize/12*J, fontsize/12*J)];
       for (let y=y1; y<y2; ++y) {
+        let lineoffset = randint(-J/2,J/2);
         for (let x=0; x<W; ++x) {
-          let i=y*W*4+(x+xoffset)%W*4;
-          let j=y*W*4+x*4;
-          out.data[j  ] = img.data[i  ]*shift[0];
-          out.data[j+1] = img.data[i+1]*shift[1];
-          out.data[j+2] = img.data[i+2]*shift[2];
+          const i=y*W*4+(x+xoffset)%W*4;
+          const j=y*W*4+x*4;
+          let [r, g, b] = [img.data[i], img.data[i+1], img.data[i+2]]
+          if (glitch) {
+            const c=(y+cyanoffset[1])%H*W*4+(x+xoffset+lineoffset+cyanoffset[0])%W*4;
+            const f=(y+fuchsiaoffset[1])%H*W*4+(x+xoffset+lineoffset+fuchsiaoffset[0])%W*4;
+            let cr = img.data[c]
+            let fr = img.data[f]
+            if (invert) {
+              if (cr>130) {
+                g += 200;
+                b += 200;
+              }
+              if (fr>130) {
+                r += 200;
+                b += 200;
+              }
+            } else {
+              if (cr<200)
+                r *= 0.25;
+              if (fr<200)
+                g *= 0.25;
+            }
+          }
+          out.data[j  ] = r*shift[0];
+          out.data[j+1] = g*shift[1];
+          out.data[j+2] = b*shift[2];
           out.data[j+3] = 255;
         }
       }
@@ -166,6 +242,8 @@ function doRender(ctx, offset, color) {
     .replaceAll('】', '︼')
     .replaceAll('(', '︵')
     .replaceAll(')', '︶')
+    .replaceAll('（', '︵')
+    .replaceAll('）', '︶')
     .replaceAll('…', '⋮')
     .replaceAll('—', '︱');
   ctx.font = NORMAL_FONT;
@@ -314,22 +392,23 @@ function onResize() {
 
 //window.addEventListener('resize', onResize);
 window.addEventListener('load', function() {
-  onResize();
   $('execute').onclick=doTheJob;
   $('input').oninput=doTheJob;
   new ResizeObserver(onResize).observe($('output-container'));
   $('font-size').oninput=()=>{
     updateFonts();
     doTheJob();
-  }
+  };
   $('jitter').oninput=()=>{
     let v=$('jitter').value;
     $('jitter-disp').innerHTML = `${v}%`;
     JITTER = Number(v)/100.0;
     doTheJob();
-  }
+  };
+  $('jitter').oninput();
   $('glitch').onchange=doTheJob;
   $('invert').onchange=doTheJob;
+  $('distort').onchange=doTheJob;
   $('download').onclick=()=>{
     let img=$('output').toDataURL('image/png').replace('image/png', 'image/octet-stream');
     let now=new Date();
@@ -345,19 +424,29 @@ window.addEventListener('load', function() {
       tab.document.write(image.outerHTML);
     }, 0);
   }
+  onResize();
 });
 </script>
 </head>
 
 <body>
 <div class="container">
-<p class="label">Output:</p>
+<p class="label">Input:</p>
+<textarea id="input" rows="12">
+</textarea>
+
+<p class="label">Config:</p>
 <div id="config">
   <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="label" id="font-size-disp">16</span></div>
   <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="label" id="jitter-disp">0%</span></div>
-  <div class="parm"><span class="label">Glitch:</span><input id="glitch" type="checkbox"/></div>
-  <div class="parm"><span class="label">Invert:</span><input id="invert" type="checkbox"/></div>
+  <div class="parm">
+    <input id="glitch" type="checkbox"/><label class="label" for="glitch">Glitch</label>
+    <input id="invert" type="checkbox"/><label class="label" for="invert">Invert</label>
+    <input id="distort" type="checkbox"/><label class="label" for="distort">Distort</label>
+  </div>
 </div>
+
+<p class="label">Output:</p>
 </div>
 
 <div id="output-container">
@@ -365,15 +454,11 @@ window.addEventListener('load', function() {
 </div>
 
 <div class="container">
+<button id="execute">Update</button>
+<button id="view">View In New Tab</button>
 <a id="download-anchor" download="image.png">
   <button id="download">Download Image</button>
 </a>
-<button id="view">View In New Tab</button>
-
-<p class="label">Input:</p>
-<textarea id="input" rows="12">
-</textarea>
-<button id="execute">Convert</button>
 
 </div>
 </body>
