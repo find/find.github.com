@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <title>Anti OCR</title>
 <style>
-#container {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
   min-width: 300px;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 10px;
 }
@@ -47,11 +47,12 @@ canvas {
 }
 #output-container {
   border: 1px solid black;
-  justify-content: center;
+  display: block;
   padding: 0;
-  margin: 0;
-  aspect-ratio: 3/2;
-  resize: vertical;
+  margin: 0 auto;
+  width: 800px;
+  height: 600px;
+  resize: both;
   overflow: auto;
 }
 #config {
@@ -87,8 +88,68 @@ function doTheJob() {
   const canvas = $('output');
   const W = canvas.width;
   const H = canvas.height;
-  
   let ctx = canvas.getContext('2d');
+  const invert = $('invert').checked;
+  const clearcolor = invert?'black':'white';
+  const fillcolor  = invert?'white':'black';
+  ctx.fillStyle = clearcolor;
+  ctx.fillRect(0,0,W,H);
+
+  const nf = NORMAL_FONT;
+  NORMAL_FONT = `bold ${nf}`;
+  const fontsize=$('font-size').value;
+  const glitch = $('glitch').checked;
+  if (glitch) {
+    if (invert)
+      ctx.strokeStyle='#333333';
+    else
+      ctx.strokeStyle='#cccccc';
+
+    for (let i=0; i<10; ++i) {
+      let x = Math.random()*W, y = Math.random()*H;
+      let c = Math.random()*Math.min(W,H)*0.5+20;
+      ctx.lineWidth=18+Math.round(Math.random()*18);
+      ctx.beginPath();
+      ctx.arc(x,y,c,0,2*Math.PI);
+      ctx.stroke();
+      ctx.closePath();
+    }
+    doRender(ctx, [-fontsize/10,-fontsize/12], 'cyan');
+    doRender(ctx, [fontsize/10,fontsize/12], 'fuchsia');
+  }
+  doRender(ctx, [0,0], fillcolor);
+  NORMAL_FONT = nf;
+
+  if (JITTER>0) {
+    let img = ctx.getImageData(0,0,W,H);
+    let out = ctx.createImageData(W,H);
+    for (let y1=0; y1<H;) {
+      let y2 = y1+20+Math.floor(Math.random()*120);
+      if (y2>H) y2=H;
+      let shift = [1,1,1];
+      if (glitch)
+        shift = [Math.random()*0.2+0.9, Math.random()*0.2+0.9, Math.random()*0.2+0.9];
+      let xoffset = Math.floor((Math.random()*fontsize/2-fontsize/4)*JITTER*30);
+      for (let y=y1; y<y2; ++y) {
+        for (let x=0; x<W; ++x) {
+          let i=y*W*4+(x+xoffset)%W*4;
+          let j=y*W*4+x*4;
+          out.data[j  ] = img.data[i  ]*shift[0];
+          out.data[j+1] = img.data[i+1]*shift[1];
+          out.data[j+2] = img.data[i+2]*shift[2];
+          out.data[j+3] = 255;
+        }
+      }
+      y1 = y2;
+    }
+    ctx.putImageData(out, 0,0);
+  }
+}
+function doRender(ctx, offset, color) {
+  const canvas = $('output');
+  const W = canvas.width;
+  const H = canvas.height;
+  
 
   let msg = $('input').value
     .replaceAll('“', '﹃')
@@ -110,14 +171,10 @@ function doTheJob() {
   ctx.font = NORMAL_FONT;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-
-  //ctx.clearRect(0,0,W,H);
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0,0,W,H);
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = color;
 
   let charsize = ctx.measureText('啊');
-  let x=W-PADDING-charsize.width/2, y=PADDING;
+  let x=W-PADDING-charsize.width/2+offset[0], y=PADDING+offset[1];
   let firstline = true;
   let bold = false;
   let italic = false;
@@ -139,7 +196,7 @@ function doTheJob() {
     for (let i=0; i<line.length; ++i) {
       //ctx.fillStyle='#a33';
       //ctx.fillRect(x-2,y-2,4,4); // debug
-      ctx.fillStyle='black';
+      ctx.fillStyle=color;
       let c = line[i];
       let rand = ()=>Math.random();
       let jitter = [(rand()*XSPACE/4-XSPACE/8)*JITTER, (rand()*YSPACE/4-YSPACE/8)*JITTER];
@@ -200,7 +257,7 @@ function doTheJob() {
         y -= yspace-ENSPACE;
       } else {
         let kerning=[0,0];
-        if (c.match(/[，。、]/)) {
+        if (c.match(/[，。、]/u)) {
           kerning = [charsize.width/3, -yspace/2];
         }
         ctx.save();
@@ -245,14 +302,14 @@ function onResize() {
   let canvas = $('output');
   let scale = window.devicePixelRatio || 1;
   let container = $('output-container');
-  if (canvas.width != container.clientWidth || canvas.height != container.clientHeight) {
+  //if (canvas.width != container.clientWidth || canvas.height != container.clientHeight) {
     canvas.width = (container.clientWidth-2)*scale;
     canvas.height = (container.clientHeight-4)*scale;
     canvas.style.width = `${container.clientWidth-2}px`;
     canvas.style.height = `${container.clientHeight-4}px`;
     updateFonts();
     doTheJob();
-  }
+  //}
 }
 
 //window.addEventListener('resize', onResize);
@@ -271,6 +328,8 @@ window.addEventListener('load', function() {
     JITTER = Number(v)/100.0;
     doTheJob();
   }
+  $('glitch').onchange=doTheJob;
+  $('invert').onchange=doTheJob;
   $('download').onclick=()=>{
     let img=$('output').toDataURL('image/png').replace('image/png', 'image/octet-stream');
     let now=new Date();
@@ -291,15 +350,21 @@ window.addEventListener('load', function() {
 </head>
 
 <body>
-<div id="container">
+<div class="container">
 <p class="label">Output:</p>
 <div id="config">
   <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="label" id="font-size-disp">16</span></div>
   <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="label" id="jitter-disp">0%</span></div>
+  <div class="parm"><span class="label">Glitch:</span><input id="glitch" type="checkbox"/></div>
+  <div class="parm"><span class="label">Invert:</span><input id="invert" type="checkbox"/></div>
 </div>
+</div>
+
 <div id="output-container">
   <canvas id="output"></canvas>
 </div>
+
+<div class="container">
 <a id="download-anchor" download="image.png">
   <button id="download">Download Image</button>
 </a>
