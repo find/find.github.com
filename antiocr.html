@@ -12,7 +12,7 @@
   justify-content: center;
   align-items: stretch;
   min-width: 300px;
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 10px;
 }
@@ -68,11 +68,19 @@ canvas {
 }
 .parm > .label {
   display: inline-block;
+  width: 7em;
+}
+.parm > .parmvalue {
+  font-size: 1.5em;
+}
+.parm > label {
+  display: inline-block;
   width: 5em;
+  font-size: 1.4em;
   vertical-align: middle;
 }
 .label {
-  font-size: 2em;
+  font-size: 1.8em;
 }
 </style>
 <script>
@@ -94,6 +102,10 @@ const randfloat = (min, max)=>Math.random()*(max-min)+min;
 const lerp = (x,y,t)=>(y-x)*t+x;
 const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
 function doTheJob() {
+  if ($('autoredraw').checked)
+    render();
+}
+function render() {
   const canvas = $('output');
   const W = canvas.width;
   const H = canvas.height;
@@ -106,7 +118,7 @@ function doTheJob() {
 
   const nf = NORMAL_FONT;
   NORMAL_FONT = `bold ${nf}`;
-  const fontsize=$('font-size').value;
+  const fontsize=Number($('font-size').value);
   const glitch = $('glitch').checked;
   if (glitch) {
     if (invert)
@@ -126,19 +138,38 @@ function doTheJob() {
         ctx.closePath();
       }
     }
-    //doRender(ctx, [-fontsize/10,-fontsize/12], 'cyan');
-    //doRender(ctx, [fontsize/10,fontsize/12], 'fuchsia');
+    //drawText(ctx, [-fontsize/10,-fontsize/12], 'cyan');
+    //drawText(ctx, [fontsize/10,fontsize/12], 'fuchsia');
   }
-  doRender(ctx, [0,0], fillcolor);
+  const xoffset = (Number($('x-shift').value)/100.0-1) * W
+  const endpoint = drawText(ctx, [xoffset,0], fillcolor);
   NORMAL_FONT = nf;
+
+  if ($('fill').checked) {
+    if (invert)
+      ctx.fillStyle='white';
+    else
+      ctx.fillStyle='black';
+    ctx.font = BOLD_FONT;
+    for (let y=PADDING; y<H-PADDING; y+=YSPACE*1.4) {
+      for (let x=PADDING+randint(0,0)*XSPACE, e=endpoint[0]; x<e; x+=XSPACE/1.4) {
+        ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
+      }
+      for (let x=W+xoffset, e=W-PADDING-randint(0,8)*XSPACE; x<e; x+=XSPACE/1.4) {
+        ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
+      }
+    }
+  }
+
 
   if ($("distort").checked) {
     let img = ctx.getImageData(0,0,W,H);
     let out = ctx.createImageData(W,H);
     let pts = [];
-    for (let i=0; i<8; ++i) {
+    for (let i=0; i<Number($('distort-cnt').value); ++i) {
       pts.push({x:randint(0,W), y:randint(0,H), w:randfloat(5,14)});
     }
+    const strength = Number($('distort-strength').value);
     const dist=(a,b)=>{let dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); };
     for (let y=0; y<H; ++y) {
       for (let x=0; x<W; ++x) {
@@ -148,8 +179,8 @@ function doTheJob() {
           const pt = pts[idx];
           let d=dist(pt,{x:x, y:y});
           const w=pt.w;
-          if (d<w*30) {
-            const m = lerp(0,fontsize*4,Math.pow(Math.sin(clamp(d,0,30*w)/30/w*Math.PI)*0.6,3));
+          if (d<w*strength) {
+            const m = lerp(0,fontsize*4,Math.pow(Math.sin(clamp(d,0,strength*w)/strength/w*Math.PI)*0.6,3));
             dy += (pt.y-y)/d * m;
             dx += (pt.x-x)/d * m;
             ++npt;
@@ -195,18 +226,18 @@ function doTheJob() {
             let cr = img.data[c]
             let fr = img.data[f]
             if (invert) {
-              if (cr>130) {
+              if (cr>180) {
                 g += 200;
                 b += 200;
               }
-              if (fr>130) {
+              if (fr>180) {
                 r += 200;
                 b += 200;
               }
             } else {
-              if (cr<200)
+              if (cr<100)
                 r *= 0.25;
-              if (fr<200)
+              if (fr<100)
                 g *= 0.25;
             }
           }
@@ -221,11 +252,10 @@ function doTheJob() {
     ctx.putImageData(out, 0,0);
   }
 }
-function doRender(ctx, offset, color) {
+function drawText(ctx, offset, color) {
   const canvas = $('output');
   const W = canvas.width;
   const H = canvas.height;
-  
 
   let msg = $('input').value
     .replaceAll('“', '﹃')
@@ -304,13 +334,34 @@ function doRender(ctx, offset, color) {
       }
       if (c.match(/[\p{Script=Latin}0-9_@\-$%'"]/iu)) {
         let s = c;
+        //console.log(`Enter latin block '${c}'`);
+        let lastblock = s;
+        let lasti = i;
         for (++i; i<line.length; ++i) {
-          if (line[i].match(/[\p{Script=Latin}0-9.,:;_\-\\/!@#$%^&*'" ]/iu)) {
-            s += line[i];
-          }
-          else
+          let cc=line[i];
+          if (cc.match(/[\p{Script=Latin}0-9\\\/]/iu)) {
+            //console.log(`latin: '${cc}'`)
+            s += cc;
+          } else if (cc.match(/[.,:;_\-!@#$%^&*'" ]/)) {
+            //console.log(`check bound: '${cc}'`)
+            let met = ctx.measureText(s+cc);
+            let tw = met.width;
+            if (y+tw > H-PADDING) {
+              console.log(`out of bound: "${s}"", fallback to "${lastblock}"`);
+              if (lastblock!=c) {
+                s=lastblock;
+                i=lasti;
+              }
+              break;
+            } else {
+              lastblock = s
+              lasti = i;
+              s += cc;
+            }
+          } else
             break;
         }
+        //console.log(`end latin block: "${s}"`);
         --i;
 
         if (s.length>1) {
@@ -360,6 +411,7 @@ function doRender(ctx, offset, color) {
       x -= XSPACE/2;
     firstline = false;
   }
+  return [x, y];
 }
 
 function updateFonts() {
@@ -389,10 +441,20 @@ function onResize() {
     doTheJob();
   //}
 }
+function checkDistortParms() {
+  if ($('distort').checked) {
+    $('distort-parms').style='display:block; background-color: #ccc; border:1px solid #888; margin: 8px;';
+  } else {
+    $('distort-parms').style='display:none';
+  }
+  $('distort-cnt-disp').innerHTML = $('distort-cnt').value
+  $('distort-strength-disp').innerHTML = $('distort-strength').value
+  doTheJob();
+}
 
 //window.addEventListener('resize', onResize);
 window.addEventListener('load', function() {
-  $('execute').onclick=doTheJob;
+  $('execute').onclick=render;
   $('input').oninput=doTheJob;
   new ResizeObserver(onResize).observe($('output-container'));
   $('font-size').oninput=()=>{
@@ -405,10 +467,17 @@ window.addEventListener('load', function() {
     JITTER = Number(v)/100.0;
     doTheJob();
   };
+  $('x-shift').oninput=()=>{
+    $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
+    doTheJob();
+  }
   $('jitter').oninput();
   $('glitch').onchange=doTheJob;
   $('invert').onchange=doTheJob;
-  $('distort').onchange=doTheJob;
+  $('autoredraw').onchange=doTheJob;
+  $('distort').onchange=checkDistortParms;
+  $('distort-cnt').onchange=checkDistortParms;
+  $('distort-strength').onchange=checkDistortParms;
   $('download').onclick=()=>{
     let img=$('output').toDataURL('image/png').replace('image/png', 'image/octet-stream');
     let now=new Date();
@@ -424,6 +493,8 @@ window.addEventListener('load', function() {
       tab.document.write(image.outerHTML);
     }, 0);
   }
+  checkDistortParms();
+  $('x-shift').oninput();
   onResize();
 });
 </script>
@@ -437,12 +508,19 @@ window.addEventListener('load', function() {
 
 <p class="label">Config:</p>
 <div id="config">
-  <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="label" id="font-size-disp">16</span></div>
-  <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="label" id="jitter-disp">0%</span></div>
-  <div class="parm">
-    <input id="glitch" type="checkbox"/><label class="label" for="glitch">Glitch</label>
-    <input id="invert" type="checkbox"/><label class="label" for="invert">Invert</label>
-    <input id="distort" type="checkbox"/><label class="label" for="distort">Distort</label>
+  <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="parmvalue" id="font-size-disp">16</span></div>
+  <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="parmvalue" id="jitter-disp">0%</span></div>
+  <div class="parm"><span class="label">X-Shift:</span><input id="x-shift" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="x-shift-disp">100%</span></div>
+  <div>
+    <div class="parm" style="display:inline-block"><input id="autoredraw" type="checkbox" checked/><label for="autoredraw">Auto Draw</label></div>
+    <div class="parm" style="display:inline-block"><input id="glitch" type="checkbox"/><label for="glitch">Glitch</label></div>
+    <div class="parm" style="display:inline-block"><input id="invert" type="checkbox"/><label for="invert">Invert</label></div>
+    <div class="parm" style="display:inline-block"><input id="fill" type="checkbox"/><label for="fill">Fill Garbles</label></div>
+    <div class="parm" style="display:inline-block"><input id="distort" type="checkbox"/><label for="distort">Distort</label></div>
+  </div>
+  <div id="distort-parms">
+    <div class="parm"><span class="label">Distort Amount:</span><input id="distort-cnt" style="width:50%" type="range" min="1" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-cnt-disp">10</span></div>
+    <div class="parm"><span class="label">Distort Strength:</span><input id="distort-strength" style="width:50%" type="range" min="0" max="80" value="30" class="slider"/><span class="parmvalue" id="distort-strength-disp">30</span></div>
   </div>
 </div>
 
