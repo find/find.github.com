@@ -95,6 +95,7 @@ let UNIFORM = {};
 let PADDING = 20;
 let YSPACE = 19; // y-direction spacing between characters
 let XSPACE = 24; // x-direction spacing between characters
+let FONTSIZE = 16;
 let ENSPACE = YSPACE/2; // ' ' spacing
 let NORMAL_FONT = `16px ${SERIF_FONT}`;
 let BOLD_FONT = `bold 16px ${SANS_SERIF_FONT}`;
@@ -107,9 +108,9 @@ const randint = (min, max)=>Math.floor(Math.random()*(max-min+1)+min);
 const randfloat = (min, max)=>Math.random()*(max-min)+min;
 const lerp = (x,y,t)=>(y-x)*t+x;
 const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
-function doTheJob() {
+function doTheJob(glonly) {
   if ($('autoredraw').checked)
-    render();
+    render(glonly);
 }
 function initGL() {
   CANVAS2D = document.createElement('canvas');
@@ -135,7 +136,7 @@ function initGL() {
   uniform int  numDistortPoints;
   uniform float distortStrength;
   uniform float fontSize;
-  uniform int glitch;
+  uniform float glitch;
   uniform float jitter;
   uniform float seed;
   varying vec2 uv;
@@ -216,6 +217,45 @@ function initGL() {
   }
   // end https://www.shadertoy.com/view/ft3fz4
 
+  float hue2rgb(float f1, float f2, float hue) {
+    if (hue < 0.0)
+      hue += 1.0;
+    else if (hue > 1.0)
+      hue -= 1.0;
+    float res;
+    if ((6.0 * hue) < 1.0)
+      res = f1 + (f2 - f1) * 6.0 * hue;
+    else if ((2.0 * hue) < 1.0)
+      res = f2;
+    else if ((3.0 * hue) < 2.0)
+      res = f1 + (f2 - f1) * ((2.0 / 3.0) - hue) * 6.0;
+    else
+      res = f1;
+    return res;
+  }
+
+  vec3 hsl2rgb(vec3 hsl) {
+    vec3 rgb;
+    if (hsl.y == 0.0) {
+      rgb = vec3(hsl.z); // Luminance
+    } else {
+      float f2;
+      if (hsl.z < 0.5)
+        f2 = hsl.z * (1.0 + hsl.y);
+      else
+        f2 = hsl.z + hsl.y - hsl.y * hsl.z;
+      float f1 = 2.0 * hsl.z - f2;
+      rgb.r = hue2rgb(f1, f2, hsl.x + (1.0/3.0));
+      rgb.g = hue2rgb(f1, f2, hsl.x);
+      rgb.b = hue2rgb(f1, f2, hsl.x - (1.0/3.0));
+    }
+    return rgb;
+  }
+
+  vec3 hsl2rgb(float h, float s, float l) {
+    return hsl2rgb(vec3(h, s, l));
+  }
+
   float dist(vec2 a, vec2 b)
   {
     float dx=a.x-b.x, dy=a.y-b.y;
@@ -236,10 +276,32 @@ function initGL() {
       }
     }
     vec2 sampleuv = uv + vec2(dx,dy)/size;
-    if (glitch>0) {
-      sampleuv.x += perlin_fbm(vec3(0,floor(screenpos.y/20.),seed), vec3(1.0,1.0,1.0), vec3(200.0,200.0,200.0))*0.007;
+    vec3 c = vec3(0.,0.,0.);
+    float hueshift = 0.0;
+    if (glitch>1e-5) {
+      sampleuv.x += perlin_fbm(vec3(0,floor(screenpos.y/fontSize/2.),seed), vec3(1.0,1.0,1.0), vec3(200.0,200.0,200.0))*0.03*glitch;
     }
-    gl_FragColor = texture2D(texture, sampleuv);
+
+    c = texture2D(texture, sampleuv).xyz;
+    if (glitch>1e-5) {
+      float t = seed*102.3;
+      vec2 p0 = (uv - 0.5) * size/4.0;
+      vec2 hvp = size / 4.0 * 0.5;
+      vec2 p1d = vec2(cos( t / 98.0),  sin( t / 178.0)) * hvp - p0;
+      vec2 p2d = vec2(sin(-t / 124.0), cos(-t / 104.0)) * hvp - p0;
+      vec2 p3d = vec2(cos(-t / 165.0), cos( t / 45.0))  * hvp - p0;
+      float sum = 0.5 + 0.5 * (
+        cos(length(p1d) / 30.0) +
+        cos(length(p2d) / 20.0) +
+        sin(length(p3d) / 25.0) * sin(p3d.x / 20.0) * sin(p3d.y / 15.0));
+      hueshift = fract(sum);
+      c = hsl2rgb(c.x+hueshift, c.x, 0.4+(1.0-glitch)*0.6)*c;
+
+      if (mod(floor(screenpos.y/(seed*20.+30.)),2.0) > 0.1) {
+        c = 1.0-c;
+      }
+    }
+    gl_FragColor = vec4(c,1.0);
   }`;
 
   let vs = gl.createShader(gl.VERTEX_SHADER);
@@ -306,54 +368,56 @@ function initGL() {
     seed: gl.getUniformLocation(prog, "seed"),
   };
 }
-function render() {
+function render(glonly) {
   let ctx = CANVAS2D.getContext('2d');
 
+  const fontsize = FONTSIZE;
+  const glitch = Number($('glitch').value)/100.0;
   const invert = $('invert').checked;
   const clearcolor = invert?'#222':'white';
   const fillcolor  = invert?'white':'#222';
-  ctx.fillStyle = clearcolor;
-  ctx.fillRect(0,0,W,H);
+  if (!glonly) {
+    ctx.fillStyle = clearcolor;
+    ctx.fillRect(0,0,W,H);
 
-  const nf = NORMAL_FONT;
-  NORMAL_FONT = `bold ${nf}`;
-  const fontsize=Number($('font-size').value);
-  const glitch = $('glitch').checked;
-  if (glitch) {
-    if (invert)
-      ctx.strokeStyle='#444';
-    else
-      ctx.strokeStyle='#ccc';
+    const nf = NORMAL_FONT;
+    NORMAL_FONT = `bold ${nf}`;
+    if (glitch>0) {
+      if (invert)
+        ctx.strokeStyle='#444';
+      else
+        ctx.strokeStyle='#ccc';
 
-    for (let i=0; i<10; ++i) {
-      let x = randint(-W/4, W*1.25), y = randint(-H/4, H*1.25);
-      let c = randint(20, Math.min(W,H));
-      let lw = randint(18, 36);
-      for (let cc=c/3, i=1; cc<c; cc*=1.5, ++i) {
-        ctx.lineWidth=lw/i;
-        ctx.beginPath();
-        ctx.arc(x,y,cc,0,2*Math.PI);
-        ctx.stroke();
-        ctx.closePath();
+      for (let i=0; i<10; ++i) {
+        let x = randint(-W/4, W*1.25), y = randint(-H/4, H*1.25);
+        let c = randint(20, Math.min(W,H));
+        let lw = randint(18, 36);
+        for (let cc=c/3, i=1; cc<c; cc*=1.5, ++i) {
+          ctx.lineWidth=lw/i;
+          ctx.beginPath();
+          ctx.arc(x,y,cc,0,2*Math.PI);
+          ctx.stroke();
+          ctx.closePath();
+        }
       }
     }
-  }
-  const xoffset = (Number($('x-shift').value)/100.0-1) * W
-  const endpoint = drawText(ctx, [xoffset,0], fillcolor);
-  NORMAL_FONT = nf;
+    const xoffset = (Number($('x-shift').value)/100.0-1) * W
+    const endpoint = drawText(ctx, [xoffset,0], fillcolor);
+    NORMAL_FONT = nf;
 
-  if ($('fill').checked) {
-    if (invert)
-      ctx.fillStyle='white';
-    else
-      ctx.fillStyle='black';
-    ctx.font = BOLD_FONT;
-    for (let y=PADDING; y<H-PADDING; y+=YSPACE*1.4) {
-      for (let x=PADDING+randint(0,0)*XSPACE, e=endpoint[0]; x<e; x+=XSPACE/1.4) {
-        ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
-      }
-      for (let x=W+xoffset, e=W-PADDING-randint(0,8)*XSPACE; x<e; x+=XSPACE/1.4) {
-        ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
+    if ($('fill').checked) {
+      if (invert)
+        ctx.fillStyle='white';
+      else
+        ctx.fillStyle='black';
+      ctx.font = BOLD_FONT;
+      for (let y=PADDING; y<H-PADDING; y+=YSPACE*1.4) {
+        for (let x=PADDING+randint(0,0)*XSPACE, e=endpoint[0]; x<e; x+=XSPACE/1.4) {
+          ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
+        }
+        for (let x=W+xoffset, e=W-PADDING-randint(0,8)*XSPACE; x<e; x+=XSPACE/1.4) {
+          ctx.fillText('锟斤拷烫烫烫烫'[randint(0,6)], x, y);
+        }
       }
     }
   }
@@ -398,15 +462,13 @@ function render() {
     }
     ctx.putImageData(out,0,0);
   }
-  if (glitch) {
+  if (glitch>0) {
     let img = ctx.getImageData(0,0,W,H);
     let out = ctx.createImageData(W,H);
     for (let y1=0; y1<H;) {
       let y2 = y1+randint(20, 120);
       if (y2>H) y2=H;
-      let shift = [1,1,1];
-      if (glitch)
-        shift = [randfloat(0.8, 1.2), randfloat(0.8,1.2), randfloat(0.8,1.2)];
+      const shift = [randfloat(0.8, 1.2), randfloat(0.8,1.2), randfloat(0.8,1.2)];
       const xoffset = Math.floor((Math.random()*fontsize/2-fontsize/4)*JITTER*6);
       const J = JITTER*2;
       let cyanoffset = [randint(-fontsize/10*J, fontsize/10*J), randint(-fontsize/12*J, fontsize/12*J)];
@@ -417,26 +479,24 @@ function render() {
           const i=y*W*4+(x+xoffset)%W*4;
           const j=y*W*4+x*4;
           let [r, g, b] = [img.data[i], img.data[i+1], img.data[i+2]]
-          if (glitch) {
-            const c=(y+cyanoffset[1])%H*W*4+(x+xoffset+lineoffset+cyanoffset[0])%W*4;
-            const f=(y+fuchsiaoffset[1])%H*W*4+(x+xoffset+lineoffset+fuchsiaoffset[0])%W*4;
-            let cr = img.data[c]
-            let fr = img.data[f]
-            if (invert) {
-              if (cr>180) {
-                g += 200;
-                b += 200;
-              }
-              if (fr>180) {
-                r += 200;
-                b += 200;
-              }
-            } else {
-              if (cr<100)
-                r *= 0.25;
-              if (fr<100)
-                g *= 0.25;
+          const c=(y+cyanoffset[1])%H*W*4+(x+xoffset+lineoffset+cyanoffset[0])%W*4;
+          const f=(y+fuchsiaoffset[1])%H*W*4+(x+xoffset+lineoffset+fuchsiaoffset[0])%W*4;
+          let cr = img.data[c]
+          let fr = img.data[f]
+          if (invert) {
+            if (cr>180) {
+              g += 200;
+              b += 200;
             }
+            if (fr>180) {
+              r += 200;
+              b += 200;
+            }
+          } else {
+            if (cr<100)
+              r *= 0.25;
+            if (fr<100)
+              g *= 0.25;
           }
           out.data[j  ] = r*shift[0];
           out.data[j+1] = g*shift[1];
@@ -453,21 +513,21 @@ function render() {
   let gl = GL;
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, ctx.getImageData(0,0,W,H).data);
-  let npt = clamp(Number($('distort-cnt').value), 0, 20);
+  let npt = $('distort').checked? clamp(Number($('distort-cnt').value), 0, 20):0;
   let pts = []
   for (let i=0; i<npt; ++i) {
     pts.push(randint(0,W));
     pts.push(randint(0,H));
-    pts.push(randfloat(5,14));
+    pts.push(randfloat(YSPACE,3*YSPACE));
   }
   gl.useProgram(PROG);
   gl.uniform2f(UNIFORM.size, W, H);
   gl.uniform3fv(UNIFORM.distortPoints, pts);
   gl.uniform1i(UNIFORM.numDistortPoints, npt);
-  gl.uniform1f(UNIFORM.distortStrength, Number($('distort-strength').value));
-  gl.uniform1f(UNIFORM.fontSize, fontsize);
+  gl.uniform1f(UNIFORM.distortStrength, Number($('distort-strength').value)/2.0+1);
+  gl.uniform1f(UNIFORM.fontSize, FONTSIZE);
   gl.uniform1f(UNIFORM.seed, Math.random());
-  gl.uniform1i(UNIFORM.glitch, glitch);
+  gl.uniform1f(UNIFORM.glitch, glitch);
   gl.uniform1f(UNIFORM.jitter, JITTER);
  
   gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
@@ -635,10 +695,13 @@ function updateFonts() {
   $('font-size-disp').innerHTML=v
   let dpr = window.devicePixelRatio || 1.0;
   v = Number(v)*dpr;
+  FONTSIZE = v;
   YSPACE = Math.ceil(v*1.15);
   XSPACE = Math.ceil(v*1.5);
   ENSPACE = Math.ceil(v*1.15*0.5);
   PADDING = v*1.4;
+  if ($('distort').checked)
+    PADDING*=2;
   NORMAL_FONT = `${Math.ceil(v)}px ${SERIF_FONT}`;
   ITALIC_FONT = `italic ${Math.ceil(v)}px ${SERIF_FONT}`;
   BOLD_FONT = `bold ${Math.ceil(v)}px ${SANS_SERIF_FONT}`;
@@ -666,14 +729,14 @@ function checkDistortParms() {
   }
   $('distort-cnt-disp').innerHTML = $('distort-cnt').value
   $('distort-strength-disp').innerHTML = $('distort-strength').value
-  doTheJob();
+  doTheJob(true);
 }
 
 //window.addEventListener('resize', onResize);
 window.addEventListener('load', function() {
   initGL();
-  $('execute').onclick=render;
-  $('input').oninput=doTheJob;
+  $('execute').onclick=()=>render(false);
+  $('input').oninput=()=>doTheJob(false);
   new ResizeObserver(onResize).observe($('output-container'));
   $('font-size').oninput=()=>{
     updateFonts();
@@ -685,18 +748,22 @@ window.addEventListener('load', function() {
     JITTER = Number(v)/100.0;
     doTheJob();
   };
+  $('glitch').oninput=()=>{
+    let v=$('glitch').value;
+    $('glitch-disp').innerHTML = `${v}%`;
+    doTheJob(true);
+  };
   $('x-shift').oninput=()=>{
     $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
     doTheJob();
   }
   $('jitter').oninput();
-  $('glitch').onchange=doTheJob;
-  $('invert').onchange=doTheJob;
-  $('autoredraw').onchange=doTheJob;
-  $('fill').onchange=doTheJob;
-  $('distort').onchange=checkDistortParms;
-  $('distort-cnt').onchange=checkDistortParms;
-  $('distort-strength').onchange=checkDistortParms;
+  $('invert').onchange=()=>doTheJob(false);
+  $('autoredraw').onchange=()=>doTheJob(false);
+  $('fill').onchange=()=>doTheJob(false);
+  $('distort').oninput=checkDistortParms;
+  $('distort-cnt').oninput=checkDistortParms;
+  $('distort-strength').oninput=checkDistortParms;
   $('download').onclick=()=>{
     let img=$('output').toDataURL('image/png').replace('image/png', 'image/octet-stream');
     let now=new Date();
@@ -712,8 +779,11 @@ window.addEventListener('load', function() {
       tab.document.write(image.outerHTML);
     }, 0);
   }
+  updateFonts();
   checkDistortParms();
-  $('x-shift').oninput();
+  $('jitter-disp').innerHTML = `${$('jitter').value}%`;
+  $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
+  $('glitch-disp').innerHTML = `${$('glitch').value}%`;
   onResize();
 });
 </script>
@@ -729,17 +799,17 @@ window.addEventListener('load', function() {
 <div id="config">
   <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="parmvalue" id="font-size-disp">16</span></div>
   <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="parmvalue" id="jitter-disp">0%</span></div>
+  <div class="parm"><span class="label">Glitch:</span><input id="glitch" style="width:50%" type="range" min="0" max="100" value="0" class="slider"/><span class="parmvalue" id="glitch-disp">0%</span></div>
   <div class="parm"><span class="label">X-Shift:</span><input id="x-shift" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="x-shift-disp">100%</span></div>
   <div>
     <div class="parm" style="display:inline-block"><input id="autoredraw" type="checkbox" checked/><label for="autoredraw">Auto Draw</label></div>
-    <div class="parm" style="display:inline-block"><input id="glitch" type="checkbox"/><label for="glitch">Glitch</label></div>
     <div class="parm" style="display:inline-block"><input id="invert" type="checkbox"/><label for="invert">Invert</label></div>
     <div class="parm" style="display:inline-block"><input id="fill" type="checkbox"/><label for="fill">Fill Garbles</label></div>
     <div class="parm" style="display:inline-block"><input id="distort" type="checkbox"/><label for="distort">Distort</label></div>
   </div>
   <div id="distort-parms">
     <div class="parm"><span class="label">Distort Amount:</span><input id="distort-cnt" style="width:50%" type="range" min="1" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-cnt-disp">10</span></div>
-    <div class="parm"><span class="label">Distort Strength:</span><input id="distort-strength" style="width:50%" type="range" min="0" max="80" value="30" class="slider"/><span class="parmvalue" id="distort-strength-disp">30</span></div>
+    <div class="parm"><span class="label">Distort Strength:</span><input id="distort-strength" style="width:50%" type="range" min="0" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-strength-disp">10</span></div>
   </div>
 </div>
 
