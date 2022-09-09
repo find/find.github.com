@@ -86,6 +86,12 @@ canvas {
 <script>
 const SERIF_FONT = 'Source Han Serif, 思源宋体, STSong, FangSong, serif';
 const SANS_SERIF_FONT = 'Source Han Sans, 思源黑体, Microsoft YaHei, sans-serif';
+let W = 800;
+let H = 600;
+let CANVAS2D = null;
+let GL = null;
+let PROG = null;
+let UNIFORM = {};
 let PADDING = 20;
 let YSPACE = 19; // y-direction spacing between characters
 let XSPACE = 24; // x-direction spacing between characters
@@ -105,11 +111,204 @@ function doTheJob() {
   if ($('autoredraw').checked)
     render();
 }
+function initGL() {
+  CANVAS2D = document.createElement('canvas');
+  CANVAS2D.width = W;
+  CANVAS2D.height = H;
+
+  let gl = $('output').getContext('webgl', {preserveDrawingBuffer: true});
+  const VS_CODE = `precision mediump float;
+  attribute vec3 position;
+  uniform vec2 size;
+  varying vec2 uv;
+  varying vec2 screenpos;
+  void main()
+  {
+    uv = position.xy*vec2(0.5,-0.5)+0.5;
+    screenpos = uv*size;
+    gl_Position = vec4(position, 1.0);
+  }`;
+  const PS_CODE = `precision mediump float;
+  uniform sampler2D texture;
+  uniform vec2 size;
+  uniform vec3 distortPoints[20];
+  uniform int  numDistortPoints;
+  uniform float distortStrength;
+  uniform float fontSize;
+  uniform int glitch;
+  uniform float jitter;
+  uniform float seed;
+  varying vec2 uv;
+  varying vec2 screenpos;
+  #define PI 3.1415926535898
+  // from https://www.shadertoy.com/view/ft3fz4 
+  vec3 hash33(vec3 p){
+      p = vec3(
+          dot(p, vec3(13.13, 63.22, 75.46)),
+          dot(p, vec3(48.68, 75.13, 84.94)),
+          dot(p, vec3(94.78, 41.42, 86.35)));
+      return -1. + 2. * fract(sin(p) * 43241.1313187);
+  }
+
+  float perlin(vec3 p, vec3 period){
+      vec3 pi = floor(p);
+      vec3 pf = p - pi;
+      
+      vec3 w = pf * pf * (3.0 - 2.0 * pf);
+      return mix(mix(mix(dot(hash33(mod(pi + vec3(0.0, 0.0, 0.0), period)), pf - vec3(0.0, 0.0, 0.0)), 
+                        dot(hash33(mod(pi + vec3(1.0, 0.0, 0.0), period)), pf - vec3(1.0, 0.0, 0.0)), w.x), 
+                    mix(dot(hash33(mod(pi + vec3(0.0, 1.0, 0.0), period)), pf - vec3(0.0, 1.0, 0.0)), 
+                        dot(hash33(mod(pi + vec3(1.0, 1.0, 0.0), period)), pf - vec3(1.0, 1.0, 0.0)), w.x),
+                    w.y),
+                mix(mix(dot(hash33(mod(pi + vec3(0.0, 0.0, 1.0), period)), pf - vec3(0.0, 0.0, 1.0)), 
+                        dot(hash33(mod(pi + vec3(1.0, 0.0, 1.0), period)), pf - vec3(1.0, 0.0, 1.0)), w.x), 
+                    mix(dot(hash33(mod(pi + vec3(0.0, 1.0, 1.0), period)), pf - vec3(0.0, 1.0, 1.0)), 
+                        dot(hash33(mod(pi + vec3(1.0, 1.0, 1.0), period)), pf - vec3(1.0, 1.0, 1.0)), w.x),
+                    w.y),
+                w.z);
+  }
+
+  float perlin_fbm(vec3 p, vec3 scale, vec3 period){
+      float fbm = 0.;
+      float weight = 1.;
+      float weightsum = 0.;
+      for(int i = 0; i < 4; i++){ // octave==4
+          weightsum += weight;
+          fbm += weight * perlin(p * scale, period) * 2.;
+          weight *= 0.5;
+          scale *= 2.;
+          period *= 2.;
+      }
+      fbm /= weightsum;
+      //fbm = fbm * .5 + .5;
+      //fbm = clamp(fbm, 0., 1.);
+      return fbm;
+  }
+
+  float worley(vec3 p, vec3 period){
+      vec3 pi = floor(p);
+      float mndis = 1e9;
+      for(int i = -1; i <= 2; i++){
+          for(int j = -1; j <= 2; j++){
+              for(int k = -1; k <= 2; k++){
+                  vec3 keypoint = pi + vec3(i, j, k) + hash33(mod(pi + vec3(i, j, k), period));
+                  float dis = dot(p - keypoint, p - keypoint);
+                  mndis = min(dis, mndis);
+              }
+          }
+      }
+      return mndis;
+  }
+
+  float worley_fbm(vec3 p, vec3 scale, vec3 period){
+      float fbm = 1.;
+      float weight = 1.;
+      float weightsum = 0.;
+      for(int i = 0; i < 4; i++){ // octave==4
+          weightsum += weight;
+          fbm *= 1. - weight * worley(p * scale, period);
+          weight *= .5;
+          scale *= 2.;
+          period *= 2.;
+      }
+      fbm /= weightsum;
+      return fbm;
+  }
+  // end https://www.shadertoy.com/view/ft3fz4
+
+  float dist(vec2 a, vec2 b)
+  {
+    float dx=a.x-b.x, dy=a.y-b.y;
+    return sqrt(dx*dx+dy*dy);
+  }
+  void main()
+  {
+    float strength = distortStrength;
+    float dx=0.0, dy=0.0;
+    for (int i=0; i<20; ++i) {
+      vec3 pt = distortPoints[i];
+      float d=dist(screenpos, pt.xy);
+      float w=pt.z;
+      if (i<numDistortPoints && d<w*strength) {
+        float m = mix(0.0,fontSize*4.0,pow(sin(clamp(d,0.0,strength*w)/strength/w*PI)*0.6,3.0));
+        dy += (pt.y-screenpos.y)/d * m;
+        dx += (pt.x-screenpos.x)/d * m;
+      }
+    }
+    vec2 sampleuv = uv + vec2(dx,dy)/size;
+    if (glitch>0) {
+      sampleuv.x += perlin_fbm(vec3(0,floor(screenpos.y/20.),seed), vec3(1.0,1.0,1.0), vec3(200.0,200.0,200.0))*0.007;
+    }
+    gl_FragColor = texture2D(texture, sampleuv);
+  }`;
+
+  let vs = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vs, VS_CODE);
+  gl.compileShader(vs);
+
+  let ps = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(ps, PS_CODE);
+  gl.compileShader(ps);
+
+  let prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, ps);
+  gl.linkProgram(prog);
+
+  const vertices = [
+    -1,  1,  0,
+    -1, -1,  0,
+     1, -1,  0,
+     1,  1,  0 
+  ];
+  const indices = [3,2,1,3,1,0];
+
+  let quadVB = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadVB);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+  let quadIB = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadIB);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+  gl.clearColor(0.5, 0.5, 0.8, 0.9);
+  gl.viewport(0,0,W,H);
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadVB);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, quadIB); 
+
+  gl.useProgram(prog);
+  const attP = gl.getAttribLocation(prog, "position");
+  const texP = gl.getUniformLocation(prog, "texture");
+  const size = gl.getUniformLocation(prog, "size");
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, ctx.getImageData(0,0,W,H).data);
+  gl.uniform2f(size, W, H);
+  gl.enableVertexAttribArray(attP);
+  gl.vertexAttribPointer(attP, 3, gl.FLOAT, false, 0, 0);
+
+  GL = gl;
+  PROG = prog;
+  UNIFORM = {
+    texture: texP,
+    size: size,
+    distortPoints: gl.getUniformLocation(prog, "distortPoints"),
+    distortStrength: gl.getUniformLocation(prog, "distortStrength"),
+    numDistortPoints: gl.getUniformLocation(prog, "numDistortPoints"),
+    fontSize: gl.getUniformLocation(prog, "fontSize"),
+    glitch: gl.getUniformLocation(prog, "glitch"),
+    jitter: gl.getUniformLocation(prog, "jitter"),
+    seed: gl.getUniformLocation(prog, "seed"),
+  };
+}
 function render() {
-  const canvas = $('output');
-  const W = canvas.width;
-  const H = canvas.height;
-  let ctx = canvas.getContext('2d');
+  let ctx = CANVAS2D.getContext('2d');
+
   const invert = $('invert').checked;
   const clearcolor = invert?'#222':'white';
   const fillcolor  = invert?'white':'#222';
@@ -138,8 +337,6 @@ function render() {
         ctx.closePath();
       }
     }
-    //drawText(ctx, [-fontsize/10,-fontsize/12], 'cyan');
-    //drawText(ctx, [fontsize/10,fontsize/12], 'fuchsia');
   }
   const xoffset = (Number($('x-shift').value)/100.0-1) * W
   const endpoint = drawText(ctx, [xoffset,0], fillcolor);
@@ -161,7 +358,7 @@ function render() {
     }
   }
 
-
+  /*
   if ($("distort").checked) {
     let img = ctx.getImageData(0,0,W,H);
     let out = ctx.createImageData(W,H);
@@ -251,12 +448,31 @@ function render() {
     }
     ctx.putImageData(out, 0,0);
   }
+  */
+
+  let gl = GL;
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, ctx.getImageData(0,0,W,H).data);
+  let npt = clamp(Number($('distort-cnt').value), 0, 20);
+  let pts = []
+  for (let i=0; i<npt; ++i) {
+    pts.push(randint(0,W));
+    pts.push(randint(0,H));
+    pts.push(randfloat(5,14));
+  }
+  gl.useProgram(PROG);
+  gl.uniform2f(UNIFORM.size, W, H);
+  gl.uniform3fv(UNIFORM.distortPoints, pts);
+  gl.uniform1i(UNIFORM.numDistortPoints, npt);
+  gl.uniform1f(UNIFORM.distortStrength, Number($('distort-strength').value));
+  gl.uniform1f(UNIFORM.fontSize, fontsize);
+  gl.uniform1f(UNIFORM.seed, Math.random());
+  gl.uniform1i(UNIFORM.glitch, glitch);
+  gl.uniform1f(UNIFORM.jitter, JITTER);
+ 
+  gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 }
 function drawText(ctx, offset, color) {
-  const canvas = $('output');
-  const W = canvas.width;
-  const H = canvas.height;
-
   let msg = $('input').value
     .replaceAll('“', '﹃')
     .replaceAll('”', '﹄')
@@ -347,7 +563,7 @@ function drawText(ctx, offset, color) {
             let met = ctx.measureText(s+cc);
             let tw = met.width;
             if (y+tw > H-PADDING) {
-              console.log(`out of bound: "${s}"", fallback to "${lastblock}"`);
+              //console.log(`out of bound: "${s}"", fallback to "${lastblock}"`);
               if (lastblock!=c) {
                 s=lastblock;
                 i=lasti;
@@ -432,14 +648,15 @@ function onResize() {
   let canvas = $('output');
   let scale = window.devicePixelRatio || 1;
   let container = $('output-container');
-  //if (canvas.width != container.clientWidth || canvas.height != container.clientHeight) {
-    canvas.width = (container.clientWidth-2)*scale;
-    canvas.height = (container.clientHeight-4)*scale;
-    canvas.style.width = `${container.clientWidth-2}px`;
-    canvas.style.height = `${container.clientHeight-4}px`;
-    updateFonts();
-    doTheJob();
-  //}
+  canvas.width = (container.clientWidth-2)*scale;
+  canvas.height = (container.clientHeight-4)*scale;
+  canvas.style.width = `${container.clientWidth-2}px`;
+  canvas.style.height = `${container.clientHeight-4}px`;
+  W = canvas.width;
+  H = canvas.height;
+  initGL();
+  updateFonts();
+  doTheJob();
 }
 function checkDistortParms() {
   if ($('distort').checked) {
@@ -454,6 +671,7 @@ function checkDistortParms() {
 
 //window.addEventListener('resize', onResize);
 window.addEventListener('load', function() {
+  initGL();
   $('execute').onclick=render;
   $('input').oninput=doTheJob;
   new ResizeObserver(onResize).observe($('output-container'));
@@ -475,6 +693,7 @@ window.addEventListener('load', function() {
   $('glitch').onchange=doTheJob;
   $('invert').onchange=doTheJob;
   $('autoredraw').onchange=doTheJob;
+  $('fill').onchange=doTheJob;
   $('distort').onchange=checkDistortParms;
   $('distort-cnt').onchange=checkDistortParms;
   $('distort-strength').onchange=checkDistortParms;
