@@ -118,7 +118,8 @@ function initGL() {
   CANVAS2D.height = H;
 
   let gl = $('output').getContext('webgl', {preserveDrawingBuffer: true});
-  const VS_CODE = `precision mediump float;
+  const VS_CODE = `
+  precision mediump float;
   attribute vec3 position;
   uniform vec2 size;
   varying vec2 uv;
@@ -129,18 +130,22 @@ function initGL() {
     screenpos = uv*size;
     gl_Position = vec4(position, 1.0);
   }`;
-  const PS_CODE = `precision mediump float;
+  const PS_CODE = `
+  precision mediump float;
   uniform sampler2D texture;
-  uniform vec2 size;
-  uniform vec3 distortPoints[20];
-  uniform int  numDistortPoints;
+  uniform vec2  size;
+  uniform vec3  distortPoints[20];
+  uniform int   numDistortPoints;
   uniform float distortStrength;
   uniform float fontSize;
   uniform float glitch;
   uniform float jitter;
   uniform float seed;
-  varying vec2 uv;
-  varying vec2 screenpos;
+  uniform float contrast;
+  uniform int   doInvert;
+  uniform int   patternId;
+  varying vec2  uv;
+  varying vec2  screenpos;
   #define PI 3.1415926535898
   // from https://www.shadertoy.com/view/ft3fz4 
   vec3 hash33(vec3 p){
@@ -234,7 +239,7 @@ function initGL() {
     return res;
   }
 
-  vec3 hsl2rgb(vec3 hsl) {
+  vec3 hsv2rgb(vec3 hsl) {
     vec3 rgb;
     if (hsl.y == 0.0) {
       rgb = vec3(hsl.z); // Luminance
@@ -252,14 +257,57 @@ function initGL() {
     return rgb;
   }
 
-  vec3 hsl2rgb(float h, float s, float l) {
-    return hsl2rgb(vec3(h, s, l));
+  vec3 hsv2rgb(float h, float s, float l) {
+    return hsv2rgb(vec3(h, s, l));
   }
 
   float dist(vec2 a, vec2 b)
   {
     float dx=a.x-b.x, dy=a.y-b.y;
     return sqrt(dx*dx+dy*dy);
+  }
+  float pattern(vec2 uv)
+  {
+    vec2 R = size;
+    uv *= 4.;
+    float o =1.0;
+    for(float i=0.; i < 70.; ++i) {
+      float v = 9.-i/6.+2.*cos(uv.x + sin(i/6. + seed*PI ) ) - uv.y;
+      o = mix(o, mod(i, 2.0), smoothstep(0.,15./R.y, v) );
+    }
+    return o;
+  }
+  float pattern2(vec2 uv)
+  {
+    const float pi = PI;
+    float t = seed*100.;
+    float cell = size.y / 3.0;
+
+    vec2 p1 = screenpos / cell; // normalized pos
+    vec2 p2 = fract(p1) - 0.5; // relative pos from cell center
+
+    // random number
+    float rnd = dot(floor(p1), vec2(12.9898, 78.233));
+    rnd = fract(sin(rnd) * 43758.5453);
+
+    // rotation matrix
+    float phi = rnd * pi * 2.0 + t * 0.4;
+    mat2 rot = mat2(cos(phi), -sin(phi), sin(phi), cos(phi));
+
+    vec2 p3 = rot * p2; // apply rotation
+    p3.y += sin(p3.x * 5.0 + t * 2.0) * 0.12; // wave
+
+    float rep = fract(rnd * 13.285) * 2.0 + 2.0; // line repetition
+    float gr = fract(p3.y * rep + t * 0.8); // repeating gradient
+
+    // make antialiased line by saturating the gradient
+    float c = clamp((0.25 - abs(0.5 - gr)) * cell * 0.75 / rep, 0.0, 1.0);
+    //c *= max(0.0, 1.0 - length(p2) * 0.6); // darken corners
+
+    vec2 bd = (0.5 - abs(p2)) * cell - 2.0; // border lines
+    c *= clamp(min(bd.x, bd.y), 0.0, 1.0);
+    
+    return c;
   }
   void main()
   {
@@ -283,10 +331,13 @@ function initGL() {
     }
 
     c = texture2D(texture, sampleuv).xyz;
+    if (doInvert>0)
+      c = 1.0-c;
     if (glitch>1e-5) {
       float t = seed*102.3;
-      vec2 p0 = (uv - 0.5) * size/4.0;
-      vec2 hvp = size / 4.0 * 0.5;
+      vec2 vp = size/6.0;
+      vec2 p0 = (uv - 0.5) * vp;
+      vec2 hvp = vp * 0.5;
       vec2 p1d = vec2(cos( t / 98.0),  sin( t / 178.0)) * hvp - p0;
       vec2 p2d = vec2(sin(-t / 124.0), cos(-t / 104.0)) * hvp - p0;
       vec2 p3d = vec2(cos(-t / 165.0), cos( t / 45.0))  * hvp - p0;
@@ -295,13 +346,19 @@ function initGL() {
         cos(length(p2d) / 20.0) +
         sin(length(p3d) / 25.0) * sin(p3d.x / 20.0) * sin(p3d.y / 15.0));
       hueshift = fract(sum);
-      c = hsl2rgb(c.x+hueshift, c.x, 0.4+(1.0-glitch)*0.6)*c;
-
-      if (mod(floor(screenpos.y/(seed*20.+30.)),2.0) > 0.1) {
-        c = 1.0-c;
-      }
+      c = hsv2rgb(c.x+hueshift, c.x, 0.4+(1.0-glitch)*0.6)*c;
     }
-    gl_FragColor = vec4(c,1.0);
+    if (patternId == 3) {
+      c = mix(c,1.0-c,pattern2(uv));
+    } else if (patternId == 2) {
+      if (mod(floor(hueshift*2.), 2.0)>0.1)
+        c = 1.0-c;
+    } else if (patternId == 1) {
+      if (mod(floor(screenpos.y/(seed*20.+70.)),2.0) > 0.1)
+        c = 1.0-c;
+    }
+
+    gl_FragColor = vec4(c,1.0)*contrast+(1.0-contrast)*.5;
   }`;
 
   let vs = gl.createShader(gl.VERTEX_SHADER);
@@ -345,6 +402,8 @@ function initGL() {
   const texP = gl.getUniformLocation(prog, "texture");
   const size = gl.getUniformLocation(prog, "size");
   const tex = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
+  gl.uniform1i(texP, 0);
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -366,6 +425,9 @@ function initGL() {
     glitch: gl.getUniformLocation(prog, "glitch"),
     jitter: gl.getUniformLocation(prog, "jitter"),
     seed: gl.getUniformLocation(prog, "seed"),
+    pattern: gl.getUniformLocation(prog, "patternId"),
+    contrast: gl.getUniformLocation(prog, "contrast"),
+    invert: gl.getUniformLocation(prog, "doInvert"),
   };
 }
 function render(glonly) {
@@ -374,42 +436,20 @@ function render(glonly) {
   const fontsize = FONTSIZE;
   const glitch = Number($('glitch').value)/100.0;
   const invert = $('invert').checked;
-  const clearcolor = invert?'#222':'white';
-  const fillcolor  = invert?'white':'#222';
+  const clearcolor = 'black';
+  const fillcolor  = 'white';
   if (!glonly) {
     ctx.fillStyle = clearcolor;
     ctx.fillRect(0,0,W,H);
 
     const nf = NORMAL_FONT;
     NORMAL_FONT = `bold ${nf}`;
-    if (glitch>0) {
-      if (invert)
-        ctx.strokeStyle='#444';
-      else
-        ctx.strokeStyle='#ccc';
-
-      for (let i=0; i<10; ++i) {
-        let x = randint(-W/4, W*1.25), y = randint(-H/4, H*1.25);
-        let c = randint(20, Math.min(W,H));
-        let lw = randint(18, 36);
-        for (let cc=c/3, i=1; cc<c; cc*=1.5, ++i) {
-          ctx.lineWidth=lw/i;
-          ctx.beginPath();
-          ctx.arc(x,y,cc,0,2*Math.PI);
-          ctx.stroke();
-          ctx.closePath();
-        }
-      }
-    }
     const xoffset = (Number($('x-shift').value)/100.0-1) * W
     const endpoint = drawText(ctx, [xoffset,0], fillcolor);
     NORMAL_FONT = nf;
 
     if ($('fill').checked) {
-      if (invert)
-        ctx.fillStyle='white';
-      else
-        ctx.fillStyle='black';
+      ctx.fillStyle='white';
       ctx.font = BOLD_FONT;
       for (let y=PADDING; y<H-PADDING; y+=YSPACE*1.4) {
         for (let x=PADDING+randint(0,0)*XSPACE, e=endpoint[0]; x<e; x+=XSPACE/1.4) {
@@ -422,100 +462,12 @@ function render(glonly) {
     }
   }
 
-  /*
-  if ($("distort").checked) {
-    let img = ctx.getImageData(0,0,W,H);
-    let out = ctx.createImageData(W,H);
-    let pts = [];
-    for (let i=0; i<Number($('distort-cnt').value); ++i) {
-      pts.push({x:randint(0,W), y:randint(0,H), w:randfloat(5,14)});
-    }
-    const strength = Number($('distort-strength').value);
-    const dist=(a,b)=>{let dx=a.x-b.x, dy=a.y-b.y; return Math.sqrt(dx*dx+dy*dy); };
-    for (let y=0; y<H; ++y) {
-      for (let x=0; x<W; ++x) {
-        let dx = 0, dy = 0;
-        let npt = 0;
-        for (let idx=0; idx<pts.length; ++idx) {
-          const pt = pts[idx];
-          let d=dist(pt,{x:x, y:y});
-          const w=pt.w;
-          if (d<w*strength) {
-            const m = lerp(0,fontsize*4,Math.pow(Math.sin(clamp(d,0,strength*w)/strength/w*Math.PI)*0.6,3));
-            dy += (pt.y-y)/d * m;
-            dx += (pt.x-x)/d * m;
-            ++npt;
-          }
-        }
-        const j=y*W*4+x*4;
-        let i=j;
-        if (npt>0) {
-          const ix = x + dx;
-          const iy = y + dy;
-          i=Math.round(iy)%H*W*4+Math.round(ix)%W*4;
-        }
-        out.data[j  ]=img.data[i  ];
-        out.data[j+1]=img.data[i+1];
-        out.data[j+2]=img.data[i+2];
-        out.data[j+3]=255;
-      }
-    }
-    ctx.putImageData(out,0,0);
-  }
-  if (glitch>0) {
-    let img = ctx.getImageData(0,0,W,H);
-    let out = ctx.createImageData(W,H);
-    for (let y1=0; y1<H;) {
-      let y2 = y1+randint(20, 120);
-      if (y2>H) y2=H;
-      const shift = [randfloat(0.8, 1.2), randfloat(0.8,1.2), randfloat(0.8,1.2)];
-      const xoffset = Math.floor((Math.random()*fontsize/2-fontsize/4)*JITTER*6);
-      const J = JITTER*2;
-      let cyanoffset = [randint(-fontsize/10*J, fontsize/10*J), randint(-fontsize/12*J, fontsize/12*J)];
-      let fuchsiaoffset = [randint(-fontsize/10*J, fontsize/10*J), randint(-fontsize/12*J, fontsize/12*J)];
-      for (let y=y1; y<y2; ++y) {
-        let lineoffset = randint(-J/2,J/2);
-        for (let x=0; x<W; ++x) {
-          const i=y*W*4+(x+xoffset)%W*4;
-          const j=y*W*4+x*4;
-          let [r, g, b] = [img.data[i], img.data[i+1], img.data[i+2]]
-          const c=(y+cyanoffset[1])%H*W*4+(x+xoffset+lineoffset+cyanoffset[0])%W*4;
-          const f=(y+fuchsiaoffset[1])%H*W*4+(x+xoffset+lineoffset+fuchsiaoffset[0])%W*4;
-          let cr = img.data[c]
-          let fr = img.data[f]
-          if (invert) {
-            if (cr>180) {
-              g += 200;
-              b += 200;
-            }
-            if (fr>180) {
-              r += 200;
-              b += 200;
-            }
-          } else {
-            if (cr<100)
-              r *= 0.25;
-            if (fr<100)
-              g *= 0.25;
-          }
-          out.data[j  ] = r*shift[0];
-          out.data[j+1] = g*shift[1];
-          out.data[j+2] = b*shift[2];
-          out.data[j+3] = 255;
-        }
-      }
-      y1 = y2;
-    }
-    ctx.putImageData(out, 0,0);
-  }
-  */
-
   let gl = GL;
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, W, H, 0, gl.RGBA, gl.UNSIGNED_BYTE, ctx.getImageData(0,0,W,H).data);
   let npt = $('distort').checked? clamp(Number($('distort-cnt').value), 0, 20):0;
   let pts = []
-  for (let i=0; i<npt; ++i) {
+  for (let i=0; i<Math.max(1, npt); ++i) {
     pts.push(randint(0,W));
     pts.push(randint(0,H));
     pts.push(randfloat(YSPACE,3*YSPACE));
@@ -529,6 +481,9 @@ function render(glonly) {
   gl.uniform1f(UNIFORM.seed, Math.random());
   gl.uniform1f(UNIFORM.glitch, glitch);
   gl.uniform1f(UNIFORM.jitter, JITTER);
+  gl.uniform1f(UNIFORM.contrast, Number($('contrast').value)/100.0);
+  gl.uniform1i(UNIFORM.pattern, Number($('pattern').value));
+  gl.uniform1i(UNIFORM.invert, invert);
  
   gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 }
@@ -697,7 +652,7 @@ function updateFonts() {
   v = Number(v)*dpr;
   FONTSIZE = v;
   YSPACE = Math.ceil(v*1.15);
-  XSPACE = Math.ceil(v*1.5);
+  XSPACE = Math.ceil(v*(Number($('x-spacing').value)/100.0+1.0));
   ENSPACE = Math.ceil(v*1.15*0.5);
   PADDING = v*1.4;
   if ($('distort').checked)
@@ -756,8 +711,18 @@ window.addEventListener('load', function() {
   $('x-shift').oninput=()=>{
     $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
     doTheJob();
-  }
+  };
+  $('x-spacing').oninput=()=>{
+    $('x-spacing-disp').innerHTML = `${Number($('x-spacing').value)+100}%`;
+    updateFonts();
+    doTheJob();
+  };
   $('jitter').oninput();
+  $('contrast').oninput=()=>{
+    $('contrast-disp').innerHTML = `${$('contrast').value}%`;
+    doTheJob(true);
+  };
+  $('pattern').onchange=()=>doTheJob(true);
   $('invert').onchange=()=>doTheJob(false);
   $('autoredraw').onchange=()=>doTheJob(false);
   $('fill').onchange=()=>doTheJob(false);
@@ -782,7 +747,9 @@ window.addEventListener('load', function() {
   updateFonts();
   checkDistortParms();
   $('jitter-disp').innerHTML = `${$('jitter').value}%`;
+  $('contrast-disp').innerHTML = `${$('contrast').value}%`;
   $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
+  $('x-spacing-disp').innerHTML = `${Math.floor(XSPACE/FONTSIZE*100)}%`;
   $('glitch-disp').innerHTML = `${$('glitch').value}%`;
   onResize();
 });
@@ -800,7 +767,15 @@ window.addEventListener('load', function() {
   <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="parmvalue" id="font-size-disp">16</span></div>
   <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="parmvalue" id="jitter-disp">0%</span></div>
   <div class="parm"><span class="label">Glitch:</span><input id="glitch" style="width:50%" type="range" min="0" max="100" value="0" class="slider"/><span class="parmvalue" id="glitch-disp">0%</span></div>
+  <div class="parm"><span class="label">Contrast:</span><input id="contrast" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="contrast-disp">1.00</span></div>
   <div class="parm"><span class="label">X-Shift:</span><input id="x-shift" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="x-shift-disp">100%</span></div>
+  <div class="parm"><span class="label">X-Spacing:</span><input id="x-spacing" style="width:50%" type="range" min="0" max="100" value="50" class="slider"/><span class="parmvalue" id="x-spacing-disp">50%</span></div>
+  <div class="parm"><span class="label">Pattern:</span><select id="pattern">
+    <option value="0">None</option>
+    <option value="1">Straight Lines</option>
+    <option value="2">Curves</option>
+    <option value="3">Curves in Grids</option>
+  </select></div>
   <div>
     <div class="parm" style="display:inline-block"><input id="autoredraw" type="checkbox" checked/><label for="autoredraw">Auto Draw</label></div>
     <div class="parm" style="display:inline-block"><input id="invert" type="checkbox"/><label for="invert">Invert</label></div>
