@@ -306,12 +306,13 @@ function initGL() {
   {
     float strength = distortStrength;
     float dx=0.0, dy=0.0;
+    float r = min(resolution.x, resolution.y) / 8.;
     for (int i=0; i<20; ++i) {
       vec3 pt = distortPoints[i];
       float d=dist(screenpos, pt.xy);
       float w=pt.z;
       if (i<numDistortPoints && d<w*strength) {
-        float m = mix(0.0,fontSize*4.0,pow(sin(clamp(d,0.0,strength*w)/strength/w*PI)*0.6,3.0));
+        float m = mix(0.0,r,pow(sin(clamp(d,0.0,strength*w)/strength/w*PI)*0.6,3.0));
         dy += (pt.y-screenpos.y)/d * m;
         dx += (pt.x-screenpos.x)/d * m;
       }
@@ -325,6 +326,8 @@ function initGL() {
     c = texture2D(texture, sampleuv).xyz;
     if (glitch>1e-3) {
       vec2 duv = fontSize/3.0/resolution*min(glitch,0.3);
+      if (glitch>0.16)
+        duv*=worley_fbm(vec3(screenpos.x, 0., seed+1.3), vec3(10.), vec3(fontSize*3.))*pow(mix(0., 0.1, glitch-0.16),.55)*fontSize;
       c += texture2D(texture, sampleuv-duv).xyz * vec3(1.,0.,1.);
       c += texture2D(texture, sampleuv+duv).xyz * vec3(0.,1.,1.);
       c = clamp(c,0.,1.);
