@@ -621,6 +621,8 @@ function drawText(ctx, offset, color) {
         let kerning=[0,0];
         if (c.match(/[，。、]/u)) {
           kerning = [charsize.width/3, -yspace/2];
+        } else if (c.match(/[；：？！]/u)) {
+          kerning = [charsize.width/4, -yspace/6];
         }
         ctx.save();
         ctx.translate(x+kerning[0]+jitter[0], y+kerning[1]+jitter[1]);
