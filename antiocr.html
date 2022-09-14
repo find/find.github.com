@@ -534,6 +534,7 @@ function drawText(ctx, offset, color) {
       bold = false; // new line clears style
     }
     yspace -= JITTER*YSPACE*0.1;
+    let atnewline = false;
     for (let i=0; i<line.length; ++i) {
       //ctx.fillStyle='#a33';
       //ctx.fillRect(x-2,y-2,4,4); // debug
@@ -635,13 +636,25 @@ function drawText(ctx, offset, color) {
         y -= (1-scale)*yspace;
       }
       y += yspace;
+      atnewline = false;
       if (y+yspace>=H-PADDING) {
-        y = PADDING;
-        x -= XSPACE;
+        let pendingSymbol = false;
+        const symbols = /[，。、；：？！]/u;
+        if (i+1<line.length && line[i+1].match(symbols)) {
+          if (i+2==line.length || (i+2<line.length && !line[i+2].match(symbols))) {
+            pendingSymbol = true;
+          }
+        }
+        if (!pendingSymbol) {
+          y = PADDING;
+          x -= XSPACE;
+          atnewline = true;
+        }
       }
     }
     y = PADDING;
-    x -= XSPACE;
+    if (!atnewline)
+      x -= XSPACE;
     if (title) // extra space
       x -= XSPACE/2;
     firstline = false;
@@ -651,14 +664,15 @@ function drawText(ctx, offset, color) {
 
 function updateFonts() {
   let v=$('font-size').value
-  $('font-size-disp').innerHTML=v
+  $('font-size-value').innerHTML=v
   let dpr = window.devicePixelRatio || 1.0;
   v = Number(v)*dpr;
   FONTSIZE = v;
   YSPACE = Math.ceil(v*1.15);
   XSPACE = Math.ceil(v*(Number($('x-spacing').value)/100.0+1.0));
   ENSPACE = Math.ceil(v*1.15*0.5);
-  PADDING = v*1.4;
+  PADDING = v*1.4 * Number($('margin').value)/100.0;
+  JITTER = Number($('jitter').value)/100.0;
   if ($('distort').checked)
     PADDING*=2;
   NORMAL_FONT = `${Math.ceil(v)}px ${SERIF_FONT}`;
@@ -686,8 +700,8 @@ function checkDistortParms() {
   } else {
     $('distort-parms').style='display:none';
   }
-  $('distort-cnt-disp').innerHTML = $('distort-cnt').value
-  $('distort-strength-disp').innerHTML = $('distort-strength').value
+  $('distort-cnt-value').innerHTML = $('distort-cnt').value
+  $('distort-strength-value').innerHTML = $('distort-strength').value
   doTheJob(true);
 }
 
@@ -697,39 +711,41 @@ window.addEventListener('load', function() {
   $('execute').onclick=()=>render(false);
   $('input').oninput=()=>doTheJob(false);
   new ResizeObserver(onResize).observe($('output-container'));
-  $('font-size').oninput=()=>{
-    updateFonts();
-    doTheJob();
-  };
-  $('jitter').oninput=()=>{
-    let v=$('jitter').value;
-    $('jitter-disp').innerHTML = `${v}%`;
-    JITTER = Number(v)/100.0;
-    doTheJob();
-  };
-  $('glitch').oninput=()=>{
-    let v=$('glitch').value;
-    $('glitch-disp').innerHTML = `${v}%`;
-    doTheJob(true);
-  };
-  $('x-shift').oninput=()=>{
-    $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
-    doTheJob();
-  };
-  $('x-spacing').oninput=()=>{
-    $('x-spacing-disp').innerHTML = `${Number($('x-spacing').value)+100}%`;
-    updateFonts();
-    doTheJob();
-  };
-  $('jitter').oninput();
-  $('contrast').oninput=()=>{
-    $('contrast-disp').innerHTML = `${$('contrast').value}%`;
-    doTheJob(true);
-  };
-  $('pattern').onchange=()=>doTheJob(true);
-  $('invert').onchange=()=>doTheJob(false);
-  $('autoredraw').onchange=()=>doTheJob(false);
-  $('fill').onchange=()=>doTheJob(false);
+
+  function bind(inputid, fmt, glonly) {
+    const valueid=inputid+'-value';
+    const syncValue = (drawnow)=>{
+      const v = $(inputid).value;
+      if (fmt==null) {
+        // pass
+      } else if (fmt=='%') {
+        $(valueid).innerHTML = `${v}%`;
+      } else if (fmt=='+%') {
+        $(valueid).innerHTML = `${Number($(inputid).value)+100}%`;
+      } else if (fmt=='f') {
+        $(valueid).innerHTML = `${Number(v)}`;
+      } else {
+        $(valueid).innerHTML = `${v}`;
+      }
+      if (!glonly)
+        updateFonts();
+      if (drawnow)
+        doTheJob(glonly);
+    };
+    syncValue(false);
+    $(inputid).oninput=()=>syncValue(true);
+  }
+  bind('font-size', '', false);
+  bind('margin', '%', false);
+  bind('jitter', '%', false);
+  bind('glitch', '%', true);
+  bind('x-shift', '%', false);
+  bind('x-spacing', '+%', false);
+  bind('contrast', '%', true);
+  bind('pattern', null, true);
+  bind('invert', null, true);
+  bind('autoredraw', null, false);
+  bind('fill', null, false);
   $('distort').oninput=checkDistortParms;
   $('distort-cnt').oninput=checkDistortParms;
   $('distort-strength').oninput=checkDistortParms;
@@ -750,11 +766,6 @@ window.addEventListener('load', function() {
   }
   updateFonts();
   checkDistortParms();
-  $('jitter-disp').innerHTML = `${$('jitter').value}%`;
-  $('contrast-disp').innerHTML = `${$('contrast').value}%`;
-  $('x-shift-disp').innerHTML = `${$('x-shift').value}%`;
-  $('x-spacing-disp').innerHTML = `${Math.floor(XSPACE/FONTSIZE*100)}%`;
-  $('glitch-disp').innerHTML = `${$('glitch').value}%`;
   onResize();
 });
 </script>
@@ -766,14 +777,15 @@ window.addEventListener('load', function() {
 <textarea id="input" rows="12">
 </textarea>
 
-<h1>Config:</h1>
+<h1>Parameters:</h1>
 <div id="config">
-  <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="parmvalue" id="font-size-disp">16</span></div>
-  <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="parmvalue" id="jitter-disp">0%</span></div>
-  <div class="parm"><span class="label">Glitch:</span><input id="glitch" style="width:50%" type="range" min="0" max="100" value="0" class="slider"/><span class="parmvalue" id="glitch-disp">0%</span></div>
-  <div class="parm"><span class="label">Contrast:</span><input id="contrast" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="contrast-disp">1.00</span></div>
-  <div class="parm"><span class="label">X-Shift:</span><input id="x-shift" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="x-shift-disp">100%</span></div>
-  <div class="parm"><span class="label">Line Spacing:</span><input id="x-spacing" style="width:50%" type="range" min="0" max="100" value="50" class="slider"/><span class="parmvalue" id="x-spacing-disp">50%</span></div>
+  <div class="parm"><span class="label">Font Size:</span><input id="font-size" style="width:50%" type="range" min="10" max="80" value="16" class="slider"/><span class="parmvalue" id="font-size-value">16</span></div>
+  <div class="parm"><span class="label">Margin:</span><input id="margin" style="width:50%" type="range" min="100" max="500" value="100" class="slider"/><span class="parmvalue" id="margin-value">100%</span></div>
+  <div class="parm"><span class="label">Jitter:</span><input id="jitter" style="width:50%" type="range" min="0" max="200" value="0" class="slider"/><span class="parmvalue" id="jitter-value">0%</span></div>
+  <div class="parm"><span class="label">Glitch:</span><input id="glitch" style="width:50%" type="range" min="0" max="100" value="0" class="slider"/><span class="parmvalue" id="glitch-value">0%</span></div>
+  <div class="parm"><span class="label">Contrast:</span><input id="contrast" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="contrast-value">1.00</span></div>
+  <div class="parm"><span class="label">X-Shift:</span><input id="x-shift" style="width:50%" type="range" min="0" max="100" value="100" class="slider"/><span class="parmvalue" id="x-shift-value">100%</span></div>
+  <div class="parm"><span class="label">Line Spacing:</span><input id="x-spacing" style="width:50%" type="range" min="0" max="100" value="50" class="slider"/><span class="parmvalue" id="x-spacing-value">50%</span></div>
   <div class="parm"><span class="label">Pattern:</span><select id="pattern">
     <option value="0">None</option>
     <option value="1">Line Strips</option>
@@ -788,8 +800,8 @@ window.addEventListener('load', function() {
     <div class="parm" style="display:inline-block"><input id="distort" type="checkbox"/><label for="distort">Distort</label></div>
   </div>
   <div id="distort-parms">
-    <div class="parm"><span class="label">Distort Amount:</span><input id="distort-cnt" style="width:50%" type="range" min="1" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-cnt-disp">10</span></div>
-    <div class="parm"><span class="label">Distort Strength:</span><input id="distort-strength" style="width:50%" type="range" min="0" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-strength-disp">10</span></div>
+    <div class="parm"><span class="label">Distort Amount:</span><input id="distort-cnt" style="width:50%" type="range" min="1" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-cnt-value">10</span></div>
+    <div class="parm"><span class="label">Distort Strength:</span><input id="distort-strength" style="width:50%" type="range" min="0" max="20" value="10" class="slider"/><span class="parmvalue" id="distort-strength-value">10</span></div>
   </div>
 </div>
 
@@ -801,7 +813,7 @@ window.addEventListener('load', function() {
 </div>
 
 <div class="container">
-<button id="execute">Update</button>
+<button id="execute">Redraw</button>
 <button id="view">View In New Tab</button>
 <a id="download-anchor" download="image.png">
   <button id="download">Download Image</button>
