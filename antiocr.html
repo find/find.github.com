@@ -334,7 +334,7 @@ function initGL() {
     }
     if (doInvert>0)
       c = 1.0-c;
-    if (glitch > 1e-5 || patternId == 3) {
+    if (glitch>1e-5 || patternId==3) {
       float t = seed*102.3;
       vec2 vp = resolution/6.0;
       vec2 p0 = (uv - 0.5) * vp;
@@ -639,7 +639,7 @@ function drawText(ctx, offset, color) {
       atnewline = false;
       if (y+yspace>=H-PADDING) {
         let pendingSymbol = false;
-        const symbols = /[，。、；：？！]/u;
+        const symbols = /[，。、；：？！﹄﹂︾︸︼︶]/u;
         if (i+1<line.length && line[i+1].match(symbols)) {
           if (i+2==line.length || (i+2<line.length && !line[i+2].match(symbols))) {
             pendingSymbol = true;
